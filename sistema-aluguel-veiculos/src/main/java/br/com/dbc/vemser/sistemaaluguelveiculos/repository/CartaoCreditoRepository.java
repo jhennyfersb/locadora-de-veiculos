@@ -3,6 +3,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.repository;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.model.BandeiraCartao;
 import br.com.dbc.vemser.sistemaaluguelveiculos.model.CartaoCredito;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -10,7 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredito> {
+    private final ConexaoBancoDeDados conexaoBancoDeDados;
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_CARTAO_CREDITO.nextval mysequence from DUAL";
@@ -26,10 +29,10 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
     }
 
     @Override
-    public CartaoCredito adicionar(CartaoCredito cartaoCredito) throws BancoDeDadosException {
+    public CartaoCredito create(CartaoCredito cartaoCredito) throws BancoDeDadosException {
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             Integer proximoId = this.getProximoId(con);
             cartaoCredito.setIdCartaoCredito(proximoId);
@@ -63,10 +66,10 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
     }
 
     @Override
-    public boolean remover(Integer id) throws BancoDeDadosException {
+    public boolean delete(Integer id) throws BancoDeDadosException {
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             String sql = "DELETE FROM CARTAO_CREDITO WHERE id_cartao = ?";
 
@@ -94,10 +97,10 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
     }
 
     @Override
-    public boolean editar(Integer id, CartaoCredito cartaoCredito) throws BancoDeDadosException {
+    public boolean update(Integer id, CartaoCredito cartaoCredito) throws BancoDeDadosException {
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE CARTAO_CREDITO SET");
@@ -134,11 +137,11 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
     }
 
     @Override
-    public List<CartaoCredito> listar() throws BancoDeDadosException {
+    public List<CartaoCredito> list() throws BancoDeDadosException {
         List<CartaoCredito> cartoes = new ArrayList<>();
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
             Statement stmt = con.createStatement();
 
             String sql = "SELECT * FROM CARTAO_CREDITO";
@@ -172,7 +175,7 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
         CartaoCredito  cartaoCredito = new CartaoCredito();
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT * FROM CARTAO_CREDITO\n" +
                     "WHERE id_cartao = ?";

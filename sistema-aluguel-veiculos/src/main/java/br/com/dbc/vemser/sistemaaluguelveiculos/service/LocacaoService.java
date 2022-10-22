@@ -16,36 +16,36 @@ public class LocacaoService {
         this.locacaoRepository = locacaoRepository;
     }
 
-    public void adicionarLocacao(Locacao locacao) {
+    public void create(Locacao locacao) {
         try {
-            Locacao locacaoAdicionado = locacaoRepository.adicionar(locacao);
+            Locacao locacaoAdicionado = locacaoRepository.create(locacao);
             System.out.println("locação adicinado com sucesso! \n" + locacaoAdicionado);
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
         }
     }
 
-    public void remover(Integer id) {
+    public void delete(Integer id) {
         try {
-            boolean conseguiuRemover = locacaoRepository.remover(id);
+            boolean conseguiuRemover = locacaoRepository.delete(id);
             System.out.println("removido? " + conseguiuRemover + "| com id=" + id);
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
         }
     }
 
-    public void editar(Integer id, Locacao locacao) {
+    public void update(Integer id, Locacao locacao) {
         try {
-            boolean conseguiuEditar = locacaoRepository.editar(id, locacao);
+            boolean conseguiuEditar = locacaoRepository.update(id, locacao);
             System.out.println("editado? " + conseguiuEditar + "| com id=" + id);
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
         }
     }
 
-    public void listar() {
+    public void list() {
         try {
-            List<Locacao> list = locacaoRepository.listar();
+            List<Locacao> list = locacaoRepository.list();
             list.forEach(System.out::println);
         } catch (BancoDeDadosException e) {
             e.printStackTrace();

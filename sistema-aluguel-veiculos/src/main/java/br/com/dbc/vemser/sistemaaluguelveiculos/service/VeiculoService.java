@@ -1,5 +1,4 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.service;
-
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.model.Veiculo;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.VeiculoRepository;
@@ -9,63 +8,50 @@ import java.util.List;
 
 @Service
 public class VeiculoService {
+
     private VeiculoRepository veiculoRepository;
 
     public VeiculoService(VeiculoRepository veiculoRepository) {
-
         this.veiculoRepository = veiculoRepository;
     }
 
-    // criação de um objeto
-    public void adicionarVeiculo(Veiculo veiculo) {
-        try {
-            Veiculo veiculoAdicionado = veiculoRepository.adicionar(veiculo);
-            System.out.println("veiculo adicinado com sucesso! " + veiculoAdicionado);
-        } catch (BancoDeDadosException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            System.out.println("ERRO: " + e.getMessage());
-//            System.out.println("TRACE: ");
-//            e.printStackTrace();
-        }
+    public Veiculo create(Veiculo veiculo) throws Exception {
+        findById(veiculo.getIdVeiculo());
+        return veiculoRepository.create(veiculo);
     }
 
-    // remoção
-    public void removerVeiculo(Integer id) {
-        try {
-            boolean conseguiuRemover = veiculoRepository.remover(id);
-            System.out.println("veiculo removido? " + conseguiuRemover + "| com id=" + id);
-        } catch (BancoDeDadosException e) {
-            e.printStackTrace();
-        }
+    private Veiculo findById(Integer id) throws Exception {
+        Veiculo veiculoRecuperado = veiculoRepository.list().stream()
+                .filter(veiculo -> veiculo.getIdVeiculo().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new Exception("Veiculo não encontrado"));
+        return veiculoRecuperado;
     }
 
-    // atualização de um objeto
-    public void editarVeiculo(Integer id, Veiculo veiculo) {
-        try {
-            boolean conseguiuEditar = veiculoRepository.editar(id, veiculo);
-            System.out.println("veiculo editado? " + conseguiuEditar + "| com id=" + id);
-        } catch (BancoDeDadosException e) {
-            e.printStackTrace();
-        }
+    public Veiculo update(Integer id, Veiculo veiculoAtualizar) throws Exception {
+        Veiculo veiculoRecuperado = findById(id);
+        veiculoRecuperado.setIdVeiculo(veiculoAtualizar.getIdVeiculo());
+        veiculoRecuperado.setDisponibilidadeVeiculo(veiculoAtualizar.getDisponibilidadeVeiculo());
+        veiculoRecuperado.setMarca(veiculoAtualizar.getMarca());
+        veiculoRecuperado.setAno(veiculoAtualizar.getAno());
+        veiculoRecuperado.setModelo(veiculoAtualizar.getModelo());
+        veiculoRecuperado.setPlaca(veiculoAtualizar.getPlaca());
+        veiculoRecuperado.setValorLocacao(veiculoAtualizar.getValorLocacao());
+        veiculoRecuperado.setQuilometragem(veiculoAtualizar.getQuilometragem());
+
+        return veiculoRecuperado;
     }
 
-    // leitura
-    public void listarVeiculos() {
-        try {
-            List<Veiculo> listar = veiculoRepository.listar();
-            listar.forEach(System.out::println);
-        } catch (BancoDeDadosException e) {
-            e.printStackTrace();
-        }
+    public void delete(Integer id) throws Exception {
+        Veiculo veiculoDeletado = findById(id);
+        veiculoRepository.delete(veiculoDeletado.getIdVeiculo());
     }
 
-    public void listarVeiculosDisponiveis() {
-        try {
-            List<Veiculo> listar = veiculoRepository.listarVeiculosDisponiveis();
-            listar.forEach(System.out::println);
-        } catch (BancoDeDadosException e) {
-            e.printStackTrace();
-        }
+       public List<Veiculo> list() throws BancoDeDadosException {
+        return veiculoRepository.list();
     }
+//    public List<Veiculo> listByVeiculo(Integer id){
+//        return veiculoRepository.listByVeiculo(id);
+//    }
+
 }

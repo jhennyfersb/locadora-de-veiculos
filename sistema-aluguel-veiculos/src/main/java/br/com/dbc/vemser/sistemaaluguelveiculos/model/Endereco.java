@@ -2,7 +2,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.model;
 
 public class Endereco {
 
-    private int id_endereco;
+    private int idEndereco;
     private String rua;
     private String numero;
     private String bairro;
@@ -21,18 +21,18 @@ public class Endereco {
         this.complemento = complemento;
     }
 
-    public Endereco(int id_endereco) {
-        this.id_endereco = id_endereco;
+    public Endereco(int idEndereco) {
+        this.idEndereco = idEndereco;
     }
 
     public Endereco(){}
 
-    public int getId_endereco() {
-        return id_endereco;
+    public int getIdEndereco() {
+        return idEndereco;
     }
 
-    public void setId_endereco(int id_endereco) {
-        this.id_endereco = id_endereco;
+    public void setIdEndereco(int idEndereco) {
+        this.idEndereco = idEndereco;
     }
 
     public String getRua() {
@@ -94,7 +94,7 @@ public class Endereco {
     @Override
     public String toString() {
         return "Endereco{" +
-                "id_endereco=" + id_endereco +
+                "id_endereco=" + idEndereco +
                 ", rua='" + rua + '\'' +
                 ", numero='" + numero + '\'' +
                 ", bairro='" + bairro + '\'' +

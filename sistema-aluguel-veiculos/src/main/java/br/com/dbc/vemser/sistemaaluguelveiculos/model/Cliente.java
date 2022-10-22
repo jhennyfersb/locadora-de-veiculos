@@ -1,13 +1,16 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.model;
 
-public class Cliente extends Pessoa {
+public class Cliente {
 
     private int id_cliente;
     private Contato contato;
     private Endereco endereco;
+    private String nome;
+    private String cpf;
 
     public Cliente(String nome, String cpf, Contato contato, Endereco endereco){
-        super(nome, cpf);
+        this.nome = nome;
+        this.cpf = cpf;
         this.contato = contato;
         this.endereco = endereco;
     }
@@ -44,12 +47,28 @@ public class Cliente extends Pessoa {
         this.endereco = endereco;
     }
 
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
     @Override
     public String toString() {
         return "Cliente{" +
                 "id_cliente=" + id_cliente +
-                ", nome=" + super.getNome() +
-                ", cpf=" + super.getCpf() +
+                ", nome=" + this.getNome() +
+                ", cpf=" + this.getCpf() +
                 ", contato=" + contato +
                 ", endereco=" + endereco +
                 '}';

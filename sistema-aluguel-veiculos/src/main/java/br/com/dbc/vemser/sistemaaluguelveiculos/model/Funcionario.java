@@ -1,12 +1,16 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.model;
 
-public class Funcionario extends Pessoa {
+
+public class Funcionario {
 
     private Integer idFuncionario;
     private Integer matricula;
+    private String nome;
+    private String cpf;
 
     public Funcionario(String nome, String cpf, Integer matricula){
-        super(nome, cpf);
+        this.nome = nome;
+        this.cpf = cpf;
         this.matricula = matricula;
     }
 
@@ -24,24 +28,20 @@ public class Funcionario extends Pessoa {
         this.idFuncionario = idFuncionario;
     }
 
-    @Override
-    public void setNome(String nome) {
-        super.setNome(nome);
-    }
-
-    @Override
     public String getNome() {
-        return super.getNome();
+        return nome;
     }
 
-    @Override
-    public void setCpf(String cpf) {
-        super.setCpf(cpf);
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    @Override
     public String getCpf() {
-        return super.getCpf();
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public Integer getMatricula() {
@@ -52,12 +52,11 @@ public class Funcionario extends Pessoa {
         this.matricula = matricula;
     }
 
-    @Override
     public String toString() {
         return "Funcionario{" +
                 "idFuncionario=" + this.idFuncionario +
-                ", nome=" + super.getNome() +
-                ", cpf=" + super.getCpf() +
+                ", nome=" + this.getNome() +
+                ", cpf=" + this.getCpf() +
                 ", matricula=" + this.matricula +
                 '}';
     }

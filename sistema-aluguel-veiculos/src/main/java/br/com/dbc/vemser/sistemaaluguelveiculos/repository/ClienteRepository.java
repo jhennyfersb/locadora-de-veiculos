@@ -4,6 +4,7 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException
 import br.com.dbc.vemser.sistemaaluguelveiculos.model.Cliente;
 import br.com.dbc.vemser.sistemaaluguelveiculos.model.Contato;
 import br.com.dbc.vemser.sistemaaluguelveiculos.model.Endereco;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -11,7 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class ClienteRepository implements Repositorio<Integer, Cliente> {
+    private final ConexaoBancoDeDados conexaoBancoDeDados;
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_CLIENTE.nextval mysequence from DUAL";
@@ -26,10 +29,10 @@ public class ClienteRepository implements Repositorio<Integer, Cliente> {
         return null;
     }
 
-    public Cliente adicionar(Cliente cliente) throws BancoDeDadosException {
+    public Cliente create(Cliente cliente) throws BancoDeDadosException {
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             Integer proximoId = this.getProximoId(con);
             cliente.setId_cliente(proximoId);
@@ -43,8 +46,8 @@ public class ClienteRepository implements Repositorio<Integer, Cliente> {
             stmt.setInt(1, cliente.getId_cliente());
             stmt.setString(2, cliente.getNome());
             stmt.setString(3, cliente.getCpf());
-            stmt.setInt(4, cliente.getContato().getId_contato());
-            stmt.setInt(5, cliente.getEndereco().getId_endereco());
+            stmt.setInt(4, cliente.getContato().getIdContato());
+            stmt.setInt(5, cliente.getEndereco().getIdEndereco());
 
             int res = stmt.executeUpdate();
             System.out.println("adicionarCliente.res=" + res);
@@ -63,12 +66,12 @@ public class ClienteRepository implements Repositorio<Integer, Cliente> {
     }
 
     @Override
-    public boolean remover(Integer id) throws BancoDeDadosException {
+    public boolean delete(Integer id) throws BancoDeDadosException {
         Connection con = null;
         int idEndereco = 0;
         int idContato = 0;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             String sql2 = "SELECT C.ID_ENDERECO FROM CLIENTE C WHERE C.ID_CLIENTE = ?";
             PreparedStatement stmt2 = con.prepareStatement(sql2);
@@ -128,10 +131,10 @@ public class ClienteRepository implements Repositorio<Integer, Cliente> {
     }
 
     @Override
-    public boolean editar(Integer id, Cliente cliente) throws BancoDeDadosException {
+    public boolean update(Integer id, Cliente cliente) throws BancoDeDadosException {
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE CLIENTE SET ");
@@ -145,8 +148,8 @@ public class ClienteRepository implements Repositorio<Integer, Cliente> {
 
             stmt.setString(1, cliente.getNome());
             stmt.setString(2, cliente.getCpf());
-            stmt.setInt(3, cliente.getContato().getId_contato());
-            stmt.setInt(4, cliente.getEndereco().getId_endereco());
+            stmt.setInt(3, cliente.getContato().getIdContato());
+            stmt.setInt(4, cliente.getEndereco().getIdEndereco());
             stmt.setInt(5, id);
 
             int res = stmt.executeUpdate();
@@ -167,11 +170,11 @@ public class ClienteRepository implements Repositorio<Integer, Cliente> {
     }
 
     @Override
-    public List<Cliente> listar() throws BancoDeDadosException {
+    public List<Cliente> list() throws BancoDeDadosException {
         List<Cliente> clientes = new ArrayList<>();
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
             Statement stmt = con.createStatement();
 
             String sql = "SELECT * FROM CLIENTE CL\n" +
@@ -209,7 +212,7 @@ public class ClienteRepository implements Repositorio<Integer, Cliente> {
         Cliente cliente = new Cliente();
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT * FROM CLIENTE CL\n" +
                     "FULL OUTER JOIN CONTATO C\n" +
@@ -248,7 +251,7 @@ public class ClienteRepository implements Repositorio<Integer, Cliente> {
 
     private Contato getContatoFromResultSet(ResultSet res) throws SQLException {
         Contato contato = new Contato();
-        contato.setId_contato(res.getInt("id_contato"));
+        contato.setIdContato(res.getInt("id_contato"));
         contato.setTelefone(res.getString("telefone"));
         contato.setEmail(res.getString("email"));
         return contato;
@@ -256,7 +259,7 @@ public class ClienteRepository implements Repositorio<Integer, Cliente> {
 
     private Endereco getEnderecoResultSet(ResultSet res) throws SQLException {
         Endereco endereco = new Endereco();
-        endereco.setId_endereco(res.getInt("id_endereco"));
+        endereco.setIdEndereco(res.getInt("id_endereco"));
         endereco.setRua(res.getString("rua"));
         endereco.setNumero(res.getString("numero"));
         endereco.setBairro(res.getString("bairro"));
@@ -270,7 +273,7 @@ public class ClienteRepository implements Repositorio<Integer, Cliente> {
     public int retornarIndiceContatoPorIdCliente(int id) {
         int idContato = 0;
         try {
-            Connection con = ConexaoBancoDeDados.getConnection();
+            Connection con = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT C.ID_CONTATO FROM CLIENTE C WHERE C.ID_CLIENTE = ?";
             PreparedStatement stmt = con.prepareStatement(sql);
@@ -288,7 +291,7 @@ public class ClienteRepository implements Repositorio<Integer, Cliente> {
     public int retornarIndiceEnderecoPorIdCliente(int id) {
         int idEndereco = 0;
         try {
-            Connection con = ConexaoBancoDeDados.getConnection();
+            Connection con = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT C.ID_ENDERECO FROM CLIENTE C WHERE C.ID_CLIENTE = ?";
             PreparedStatement stmt = con.prepareStatement(sql);

@@ -16,9 +16,9 @@ public class CartaoCreditoService {
     }
 
 
-    public void adicionarCartao(CartaoCredito cartaoCredito) {
+    public void create(CartaoCredito cartaoCredito) {
         try {
-            CartaoCredito cartaoAdicionado = cartaoCreditoRepository.adicionar(cartaoCredito);
+            CartaoCredito cartaoAdicionado = cartaoCreditoRepository.create(cartaoCredito);
             //System.out.println("cartão adicinado com sucesso! " + cartaoAdicionado);
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
@@ -27,27 +27,27 @@ public class CartaoCreditoService {
         }
     }
 
-    public void removerCartao(Integer id) {
+    public void delete(Integer id) {
         try {
-            boolean conseguiuRemover = cartaoCreditoRepository.remover(id);
+            boolean conseguiuRemover = cartaoCreditoRepository.delete(id);
             //System.out.println("cartão removido? " + conseguiuRemover + "| com id=" + id);
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
         }
     }
 
-    public void editarCartao(Integer id, CartaoCredito cartaoCredito) {
+    public void update(Integer id, CartaoCredito cartaoCredito) {
         try {
-            boolean conseguiuEditar = cartaoCreditoRepository.editar(id, cartaoCredito);
+            boolean conseguiuEditar = cartaoCreditoRepository.update(id, cartaoCredito);
             //System.out.println("cartão editado? " + conseguiuEditar + "| com id=" + id);
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
         }
     }
 
-    public void listarCartoes() {
+    public void list() {
         try {
-            List<CartaoCredito> listar = cartaoCreditoRepository.listar();
+            List<CartaoCredito> listar = cartaoCreditoRepository.list();
             listar.forEach(System.out::println);
         } catch (BancoDeDadosException e) {
             e.printStackTrace();

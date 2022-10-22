@@ -12,7 +12,8 @@ public class Veiculo {
     private DisponibilidadeVeiculo disponibilidadeVeiculo;
     private String placa;
 
-    public Veiculo(String marca, String modelo, String cor, Integer ano, Double quilometragem, Double valorLocacao, String placa) {
+    public Veiculo(Integer idVeiculo,String marca, String modelo, String cor, Integer ano, Double quilometragem, Double valorLocacao, String placa) {
+        this.idVeiculo = idVeiculo;
         this.marca = marca;
         this.modelo = modelo;
         this.cor = cor;
@@ -22,12 +23,10 @@ public class Veiculo {
         this.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.DISPONIVEL);
         this.placa = placa;
     }
-    public Veiculo(Integer idVeiculo) {
-        this.idVeiculo = idVeiculo;
-    }
 
     public Veiculo() {
     }
+
 
     public Integer getIdVeiculo() {
         return idVeiculo;

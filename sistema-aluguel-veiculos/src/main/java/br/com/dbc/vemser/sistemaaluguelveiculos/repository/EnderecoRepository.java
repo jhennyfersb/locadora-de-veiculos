@@ -2,6 +2,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.repository;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.model.Endereco;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -9,7 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class EnderecoRepository implements Repositorio<Integer, Endereco> {
+    private final ConexaoBancoDeDados conexaoBancoDeDados;
+
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_ENDERECO.nextval mysequence from DUAL";
@@ -24,13 +28,13 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
         return null;
     }
 
-    public Endereco adicionar(Endereco endereco) throws BancoDeDadosException {
+    public Endereco create(Endereco endereco) throws BancoDeDadosException {
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             Integer proximoId = this.getProximoId(con);
-            endereco.setId_endereco(proximoId);
+            endereco.setIdEndereco(proximoId);
 
             String sql = "INSERT INTO ENDERECO_CLIENTE\n" +
                     "(ID_ENDERECO, RUA, NUMERO, BAIRRO, CIDADE, ESTADO, CEP, COMPLEMENTO)\n" +
@@ -38,7 +42,7 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
-            stmt.setInt(1, endereco.getId_endereco());
+            stmt.setInt(1, endereco.getIdEndereco());
             stmt.setString(2, endereco.getRua());
             stmt.setString(3, endereco.getNumero());
             stmt.setString(4, endereco.getBairro());
@@ -64,10 +68,10 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
     }
 
     @Override
-    public boolean remover(Integer id) throws BancoDeDadosException {
+    public boolean delete(Integer id) throws BancoDeDadosException {
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             String sql = "DELETE FROM ENDERECO_CLIENTE WHERE ID_ENDERECO = ?";
 
@@ -93,10 +97,10 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
     }
 
     @Override
-    public boolean editar(Integer id, Endereco endereco) throws BancoDeDadosException {
+    public boolean update(Integer id, Endereco endereco) throws BancoDeDadosException {
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE ENDERECO_CLIENTE SET ");
@@ -138,11 +142,11 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
     }
 
     @Override
-    public List<Endereco> listar() throws BancoDeDadosException {
+    public List<Endereco> list() throws BancoDeDadosException {
         List<Endereco> enderecos = new ArrayList<>();
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
             Statement stmt = con.createStatement();
 
             String sql = "SELECT * FROM ENDERECO_CLIENTE";
@@ -151,7 +155,7 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
 
             while (res.next()) {
                 Endereco endereco = new Endereco();
-                endereco.setId_endereco(res.getInt("id_endereco"));
+                endereco.setIdEndereco(res.getInt("id_endereco"));
                 endereco.setRua(res.getString("rua"));
                 endereco.setNumero(res.getString("numero"));
                 endereco.setBairro(res.getString("bairro"));
@@ -180,7 +184,7 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
         Endereco endereco = new Endereco();
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
             Statement stmt = con.createStatement();
 
             String sql = "SELECT EC.ID_ENDERECO FROM ENDERECO_CLIENTE EC\n" +
@@ -189,7 +193,7 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
             ResultSet res = stmt.executeQuery(sql);
 
             while (res.next()) {
-                endereco.setId_endereco(res.getInt("id_endereco"));
+                endereco.setIdEndereco(res.getInt("id_endereco"));
             }
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
@@ -202,14 +206,14 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
                 e.printStackTrace();
             }
         }
-        return endereco.getId_endereco();
+        return endereco.getIdEndereco();
     }
 
     public List<Endereco> listarEnderecoSemVinculo() throws BancoDeDadosException {
         List<Endereco> enderecos = new ArrayList<>();
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
             Statement stmt = con.createStatement();
 
             String sql = "SELECT * FROM ENDERECO_CLIENTE E\n" +
@@ -221,7 +225,7 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
 
             while (res.next()) {
                 Endereco endereco = new Endereco();
-                endereco.setId_endereco(res.getInt("id_endereco"));
+                endereco.setIdEndereco(res.getInt("id_endereco"));
                 endereco.setRua(res.getString("rua"));
                 endereco.setNumero(res.getString("numero"));
                 endereco.setBairro(res.getString("bairro"));
@@ -249,7 +253,7 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
         Connection con = null;
 
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT * FROM ENDERECO_CLIENTE\n" +
                     "WHERE id_endereco = ?";
@@ -259,7 +263,7 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
             ResultSet res = stmt.executeQuery();
 
             while (res.next()){
-                endereco.setId_endereco(res.getInt("id_endereco"));
+                endereco.setIdEndereco(res.getInt("id_endereco"));
                 endereco.setRua(res.getString("rua"));
                 endereco.setNumero(res.getString("numero"));
                 endereco.setBairro(res.getString("bairro"));

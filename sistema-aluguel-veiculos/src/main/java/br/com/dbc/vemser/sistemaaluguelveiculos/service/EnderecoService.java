@@ -1,89 +1,86 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoCreateDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.model.Endereco;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.EnderecoRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
+@RequiredArgsConstructor
 public class EnderecoService {
-    private EnderecoRepository enderecoRepository;
+    private final EnderecoRepository enderecoRepository;
+    private final ObjectMapper objectMapper;
 
-    public EnderecoService(EnderecoRepository enderecoRepository) {
-
-        this.enderecoRepository = enderecoRepository;
+    public EnderecoDTO create(EnderecoCreateDTO enderecoCreateDTO) throws BancoDeDadosException {
+        //        try {
+        Endereco enderecoAdicionado = enderecoRepository.create(converterEmEndereco(enderecoCreateDTO));
+        return converterEmDTO(enderecoAdicionado);
+//        } catch (BancoDeDadosException e) {
+//            e.printStackTrace();
+//        }
     }
 
-    public void adicionarEndereco(Endereco endereco) {
-        try {
-            if(!validarEndereco(endereco)){
-                throw new RuntimeException("Endereço Inválido");
-            }
-            Endereco enderecoAdicionado = enderecoRepository.adicionar(endereco);
-            System.out.println("Endereço adicinado com sucesso! " + enderecoAdicionado);
-        } catch (BancoDeDadosException e) {
-            e.printStackTrace();
-        }
+    // remoção
+    public void delete(Integer id) throws BancoDeDadosException {
+//        try {
+        enderecoRepository.delete(id);
+//        } catch (BancoDeDadosException e) {
+//            e.printStackTrace();
+//        }
     }
 
-    public void remover(Integer id) {
-        try {
-            boolean conseguiuRemover = enderecoRepository.remover(id);
-            System.out.println("removido? " + conseguiuRemover + "| com id=" + id);
-        } catch (BancoDeDadosException e) {
-            e.printStackTrace();
-        }
+    // atualização de um objeto
+    public EnderecoDTO update(Integer id, EnderecoCreateDTO enderecoCreateDTO) throws BancoDeDadosException {
+//        try {
+        boolean conseguiuEditar = enderecoRepository.update(id, converterEmEndereco(enderecoCreateDTO));
+//            System.out.println("funcionario editado? " + conseguiuEditar + "| com id=" + id);
+//        } catch (BancoDeDadosException e) {
+//            e.printStackTrace();
+//        }
+        return null;
+    }
+
+    // leitura
+    public List<EnderecoDTO> list() throws BancoDeDadosException {
+//        try {
+        List<Endereco> listar = enderecoRepository.list();
+        return listar.stream()
+                .map(this::converterEmDTO)
+                .collect(Collectors.toList());
+//        } catch (BancoDeDadosException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    public Endereco converterEmEndereco(EnderecoCreateDTO enderecoCreateDTO){
+        return objectMapper.convertValue(enderecoCreateDTO, Endereco.class);
+    }
+
+    public EnderecoDTO converterEmDTO(Endereco endereco){
+        return objectMapper.convertValue(endereco, EnderecoDTO.class);
     }
 
     public void removerEnderecosOciosos() throws BancoDeDadosException {
-        try {
+//        try {
             enderecoRepository.listarEnderecoSemVinculo()
                     .stream()
-                    .forEach(enderecos -> remover(enderecos.getId_endereco()));
-        }
-        catch (BancoDeDadosException e){
-            e.printStackTrace();
-        }
-    }
-
-    public void editar(Integer id, Endereco endereco) {
-        try {
-            boolean conseguiuEditar = enderecoRepository.editar(id, endereco);
-            System.out.println("editado? " + conseguiuEditar + "| com id=" + id);
-        } catch (BancoDeDadosException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void listar() {
-        try {
-            enderecoRepository.listar().forEach(System.out::println);
-        } catch (BancoDeDadosException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public int retornarId(){
-        try{
-            return enderecoRepository.retornarUltimoIdRegistrado();
-        }
-        catch (BancoDeDadosException e){
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    public void listarSemVinculo() {
-        try {
-            enderecoRepository.listarEnderecoSemVinculo().forEach(System.out::println);
-        } catch (BancoDeDadosException e) {
-            e.printStackTrace();
-        }
-    }
-    public boolean validarEndereco (Endereco endereco){
-        if(endereco.getCep().length() == 9){
-            return endereco.getCep().charAt(5) != '-';
-        }
-        return false;
+                    .forEach(enderecos -> {
+                        try {
+                            delete(enderecos.getIdEndereco());
+                        } catch (BancoDeDadosException e) {
+                            e.printStackTrace();
+                        }
+                    });
+//        }
+//        catch (BancoDeDadosException e){
+//            e.printStackTrace();
+//        }
     }
 }

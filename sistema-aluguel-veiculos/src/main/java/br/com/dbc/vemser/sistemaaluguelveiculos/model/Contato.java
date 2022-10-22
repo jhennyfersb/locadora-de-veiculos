@@ -2,7 +2,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.model;
 
 public class Contato {
 
-    private int id_contato;
+    private int idContato;
     private String telefone;
     private String email;
 
@@ -11,20 +11,20 @@ public class Contato {
         this.email = email;
     }
 
-    public Contato(int id_contato) {
-        this.id_contato = id_contato;
+    public Contato(int idContato) {
+        this.idContato = idContato;
     }
 
     public Contato(){
 
     }
 
-    public int getId_contato() {
-        return id_contato;
+    public int getIdContato() {
+        return idContato;
     }
 
-    public void setId_contato(int id_contato) {
-        this.id_contato = id_contato;
+    public void setIdContato(int idContato) {
+        this.idContato = idContato;
     }
 
     public String getTelefone() {
@@ -46,7 +46,7 @@ public class Contato {
     @Override
     public String toString() {
         return "Contato{" +
-                "id_contato=" + id_contato +
+                "id_contato=" + idContato +
                 ", telefone='" + telefone + '\'' +
                 ", email='" + email + '\'' +
                 '}';

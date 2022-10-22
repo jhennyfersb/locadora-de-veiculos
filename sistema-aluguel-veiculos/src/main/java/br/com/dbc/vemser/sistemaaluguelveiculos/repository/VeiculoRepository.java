@@ -1,8 +1,10 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.repository;
 
+
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.model.DisponibilidadeVeiculo;
 import br.com.dbc.vemser.sistemaaluguelveiculos.model.Veiculo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -10,7 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class VeiculoRepository implements Repositorio<Integer, Veiculo> {
+    private final ConexaoBancoDeDados conexaoBancoDeDados;
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_VEICULO.nextval mysequence from DUAL";
@@ -25,11 +29,10 @@ public class VeiculoRepository implements Repositorio<Integer, Veiculo> {
         return null;
     }
 
-    @Override
-    public Veiculo adicionar(Veiculo veiculo) throws BancoDeDadosException {
+    public Veiculo create(Veiculo veiculo) throws BancoDeDadosException {
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             Integer proximoId = this.getProximoId(con);
             veiculo.setIdVeiculo(proximoId);
@@ -66,11 +69,10 @@ public class VeiculoRepository implements Repositorio<Integer, Veiculo> {
         }
     }
 
-    @Override
-    public boolean remover(Integer id) throws BancoDeDadosException {
+    public boolean delete(Integer id) throws BancoDeDadosException {
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             String sql = "DELETE FROM VEICULO WHERE id_veiculo = ?";
 
@@ -96,11 +98,10 @@ public class VeiculoRepository implements Repositorio<Integer, Veiculo> {
         }
     }
 
-    @Override
-    public boolean editar(Integer id, Veiculo veiculo) throws BancoDeDadosException {
+    public boolean update(Integer id, Veiculo veiculo) throws BancoDeDadosException {
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE VEICULO SET");
@@ -144,12 +145,11 @@ public class VeiculoRepository implements Repositorio<Integer, Veiculo> {
         }
     }
 
-    @Override
-    public List<Veiculo> listar() throws BancoDeDadosException {
+    public List<Veiculo> list() throws BancoDeDadosException {
         List<Veiculo> veiculos = new ArrayList<>();
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
             Statement stmt = con.createStatement();
 
             String sql = "SELECT * FROM VEICULO";
@@ -188,7 +188,7 @@ public class VeiculoRepository implements Repositorio<Integer, Veiculo> {
         List<Veiculo> veiculos = new ArrayList<>();
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
             Statement stmt = con.createStatement();
 
             String sql = "SELECT * FROM VEICULO WHERE DISPONIBILIDADE = 2";
@@ -231,7 +231,7 @@ public class VeiculoRepository implements Repositorio<Integer, Veiculo> {
         Veiculo veiculo = new Veiculo();
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             String sql = "SELECT * FROM VEICULO\n" +
                     "WHERE ID_VEICULO = ?";

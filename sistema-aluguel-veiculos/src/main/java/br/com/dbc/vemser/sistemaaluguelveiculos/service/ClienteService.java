@@ -3,25 +3,22 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.model.Cliente;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.ClienteRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ClienteService {
-    private ClienteRepository clienteRepository;
+    private final ClienteRepository clienteRepository;
+    private final EnderecoService enderecoService;
+    private final ContatoService contatoService;
 
-    public ClienteService(ClienteRepository clienteRepository) {
-
-        this.clienteRepository = clienteRepository;
-    }
-
-    public void adicionarCliente(Cliente cliente) {
-        EnderecoService enderecoService = new EnderecoService();
-        ContatoService contatoService = new ContatoService();
+    public void create(Cliente cliente) {
         try {
             if(!validarCliente(cliente)){
                 throw new RuntimeException("Cliente inválido");
             }
-            Cliente clienteAdicionado = clienteRepository.adicionar(cliente);
+            Cliente clienteAdicionado = clienteRepository.create(cliente);
             System.out.println("Cliente adicinado com sucesso! " + clienteAdicionado);
             enderecoService.removerEnderecosOciosos();
             contatoService.removerContatosOciosos();
@@ -30,27 +27,27 @@ public class ClienteService {
         }
     }
 
-    public void remover(Integer id) {
+    public void delete(Integer id) {
         try {
-            boolean conseguiuRemover = clienteRepository.remover(id);
+            boolean conseguiuRemover = clienteRepository.delete(id);
             System.out.println("Removido? " + conseguiuRemover + "| com id=" + id);
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
         }
     }
 
-    public void editar(Integer id, Cliente cliente) {
+    public void update(Integer id, Cliente cliente) {
         try {
-            boolean conseguiuEditar = clienteRepository.editar(id, cliente);
+            boolean conseguiuEditar = clienteRepository.update(id, cliente);
             System.out.println("editado? " + conseguiuEditar + "| com id=" + id);
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
         }
     }
 
-    public void listar() {
+    public void list() {
         try {
-            clienteRepository.listar().forEach(System.out::println);
+            clienteRepository.list().forEach(System.out::println);
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
         }

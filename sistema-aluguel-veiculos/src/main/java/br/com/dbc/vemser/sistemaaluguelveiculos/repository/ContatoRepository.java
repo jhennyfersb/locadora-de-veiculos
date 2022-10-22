@@ -2,6 +2,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.repository;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.model.Contato;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -9,7 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class ContatoRepository implements Repositorio<Integer, Contato> {
+    private final ConexaoBancoDeDados conexaoBancoDeDados;
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_CONTATO.nextval mysequence from DUAL";
@@ -24,13 +27,13 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
         return null;
     }
 
-    public Contato adicionar(Contato contato) throws BancoDeDadosException {
+    public Contato create(Contato contato) throws BancoDeDadosException {
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             Integer proximoId = this.getProximoId(con);
-            contato.setId_contato(proximoId);
+            contato.setIdContato(proximoId);
 
             String sql = "INSERT INTO CONTATO\n" +
                     "(ID_CONTATO, TELEFONE, EMAIL)\n" +
@@ -38,7 +41,7 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
-            stmt.setInt(1, contato.getId_contato());
+            stmt.setInt(1, contato.getIdContato());
             stmt.setString(2, contato.getTelefone());
             stmt.setString(3, contato.getEmail());
 
@@ -59,10 +62,10 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
     }
 
     @Override
-    public boolean remover(Integer id) throws BancoDeDadosException {
+    public boolean delete(Integer id) throws BancoDeDadosException {
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             String sql = "DELETE FROM CONTATO WHERE ID_CONTATO = ?";
 
@@ -88,10 +91,10 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
     }
 
     @Override
-    public boolean editar(Integer id, Contato contato) throws BancoDeDadosException {
+    public boolean update(Integer id, Contato contato) throws BancoDeDadosException {
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE CONTATO SET ");
@@ -123,11 +126,11 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
     }
 
     @Override
-    public List<Contato> listar() throws BancoDeDadosException {
+    public List<Contato> list() throws BancoDeDadosException {
         List<Contato> contatos = new ArrayList<>();
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
             Statement stmt = con.createStatement();
 
             String sql = "SELECT * FROM CONTATO";
@@ -136,7 +139,7 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
 
             while (res.next()) {
                 Contato contato = new Contato();
-                contato.setId_contato(res.getInt("id_contato"));
+                contato.setIdContato(res.getInt("id_contato"));
                 contato.setTelefone(res.getString("telefone"));
                 contato.setEmail(res.getString("email"));
                 contatos.add(contato);
@@ -161,7 +164,7 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
         Contato contato = new Contato();
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
             Statement stmt = con.createStatement();
 
             String sql = "SELECT C.ID_CONTATO  FROM CONTATO C\n" +
@@ -171,7 +174,7 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
             ResultSet res = stmt.executeQuery(sql);
 
             while (res.next()) {
-                contato.setId_contato(res.getInt("id_contato"));
+                contato.setIdContato(res.getInt("id_contato"));
             }
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
@@ -184,14 +187,14 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
                 e.printStackTrace();
             }
         }
-        return contato.getId_contato();
+        return contato.getIdContato();
     }
 
     public List<Contato> listarContatoSemVinculo() throws BancoDeDadosException {
         List<Contato> contatos = new ArrayList<>();
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
             Statement stmt = con.createStatement();
 
             String sql = "SELECT * FROM CONTATO C\n" +
@@ -203,7 +206,7 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
 
             while (res.next()) {
                 Contato contato = new Contato();
-                contato.setId_contato(res.getInt("id_contato"));
+                contato.setIdContato(res.getInt("id_contato"));
                 contato.setTelefone(res.getString("telefone"));
                 contato.setEmail(res.getString("email"));
                 contatos.add(contato);

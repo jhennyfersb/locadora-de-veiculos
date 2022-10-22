@@ -1,6 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.model;
 
-import exceptions.DatasInvalidasException;
+import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.DatasInvalidasException;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

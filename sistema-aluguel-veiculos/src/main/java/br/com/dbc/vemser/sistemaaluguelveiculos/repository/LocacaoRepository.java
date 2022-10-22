@@ -2,6 +2,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.repository;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.model.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -9,8 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class LocacaoRepository implements Repositorio<Integer, Locacao> {
-
+    private final ConexaoBancoDeDados conexaoBancoDeDados;
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_LOCACAO.nextval mysequence from DUAL";
@@ -25,10 +27,10 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
     }
 
     @Override
-    public Locacao adicionar(Locacao locacao) throws BancoDeDadosException {
+    public Locacao create(Locacao locacao) throws BancoDeDadosException {
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
             Integer proximoId = this.getProximoId(con);
             locacao.setIdlocacao(proximoId);
 
@@ -68,11 +70,11 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
     }
 
     @Override
-    public boolean remover(Integer id) throws BancoDeDadosException {
+    public boolean delete(Integer id) throws BancoDeDadosException {
         Connection con = null;
         int idCartao = 0;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             String sql2 = "SELECT L.ID_CARTAO FROM LOCACAO L WHERE L.ID_LOCACAO = ?";
             PreparedStatement stmt2 = con.prepareStatement(sql2);
@@ -107,10 +109,10 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
     }
 
     @Override
-    public boolean editar(Integer id, Locacao locacao) throws BancoDeDadosException {
+    public boolean update(Integer id, Locacao locacao) throws BancoDeDadosException {
         Connection con = null;
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE LOCACAO SET \n");
@@ -192,12 +194,12 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
     }
 
     @Override
-    public List<Locacao> listar() throws BancoDeDadosException {
+    public List<Locacao> list() throws BancoDeDadosException {
         List<Locacao> locacoes = new ArrayList<>();
         Connection con = null;
 
         try {
-            con = ConexaoBancoDeDados.getConnection();
+            con = conexaoBancoDeDados.getConnection();
             Statement stmt = con.createStatement();
 
             String sql = "select * from LOCACAO L\n" +
@@ -273,7 +275,7 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
 
     private Contato getContatoFromResultSet(ResultSet res) throws SQLException {
         Contato contato = new Contato();
-        contato.setId_contato(res.getInt("id_contato"));
+        contato.setIdContato(res.getInt("id_contato"));
         contato.setTelefone(res.getString("telefone"));
         contato.setEmail(res.getString("email"));
         return contato;
@@ -281,7 +283,7 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
 
     private Endereco getEnderecoResultSet(ResultSet res) throws SQLException {
         Endereco endereco = new Endereco();
-        endereco.setId_endereco(res.getInt("id_endereco"));
+        endereco.setIdEndereco(res.getInt("id_endereco"));
         endereco.setRua(res.getString("rua"));
         endereco.setNumero(res.getString("numero"));
         endereco.setBairro(res.getString("bairro"));
