@@ -18,12 +18,12 @@ import java.util.List;
 @RestController
 @Validated
 @RequiredArgsConstructor
-@RequestMapping("/contato") // localhost:8080/endereco
+@RequestMapping("/contato") // localhost:8080/contato
 public class ContatoController {
 
     private final ContatoService contatoService;
 
-    @GetMapping // localhost:8080/enderecp OK
+    @GetMapping // localhost:8080/contato OK
     public List<ContatoDTO> list() throws BancoDeDadosException {
         return contatoService.list();
     }
@@ -33,7 +33,7 @@ public class ContatoController {
 //        return funcionarioService.listByIdEndereco(id);
 //    }
 
-    @PostMapping // localhost:8080/endereco/4 OK
+    @PostMapping // localhost:8080/contato/4 OK
     public ResponseEntity<ContatoDTO> create(@Valid @RequestBody ContatoCreateDTO contatoCreateDTO) throws Exception {
         log.info("Criando contato...");
         ContatoDTO contatoDTO = contatoService.create(contatoCreateDTO);
@@ -41,7 +41,7 @@ public class ContatoController {
         return new ResponseEntity<>(contatoDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/{idContato}") // localhost:8080/endereco/1000 OK
+    @PutMapping("/{idContato}") // localhost:8080/contato/1000 OK
     public ResponseEntity<ContatoDTO> update(@PathVariable("idContato") Integer id,
                                                  @Valid @RequestBody ContatoCreateDTO contatoAtualizar) throws Exception {
         log.info("Atualizando contato...");
@@ -50,7 +50,7 @@ public class ContatoController {
         return new ResponseEntity<>(contatoDTO,HttpStatus.OK);
     }
 
-    @DeleteMapping("/{idContato}") // localhost:8080/endereco/10 OK
+    @DeleteMapping("/{idContato}") // localhost:8080/contato/10 OK
     public ResponseEntity<ContatoDTO> delete(@PathVariable("idContato") Integer id) throws Exception {
         log.info("Deletando contato...");
         contatoService.delete(id);

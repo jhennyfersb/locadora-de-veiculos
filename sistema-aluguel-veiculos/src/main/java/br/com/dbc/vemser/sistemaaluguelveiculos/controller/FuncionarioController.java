@@ -17,17 +17,17 @@ import java.util.List;
 @RestController
 @Validated
 @RequiredArgsConstructor
-@RequestMapping("/funcionario") // localhost:8080/endereco
+@RequestMapping("/funcionario") // localhost:8080/funcionario
 public class FuncionarioController {
 
     private final FuncionarioService funcionarioService;
 
-    @GetMapping // localhost:8080/enderecp OK
+    @GetMapping // localhost:8080/funcionario OK
     public List<FuncionarioDTO> list() throws BancoDeDadosException {
         return funcionarioService.list();
     }
 
-    @PostMapping // localhost:8080/endereco/4 OK
+    @PostMapping // localhost:8080/funcionario/4 OK
     public ResponseEntity<FuncionarioDTO> create(@Valid @RequestBody FuncionarioCreateDTO funcionarioCreateDTO) throws Exception {
         log.info("Criando funcionário...");
         FuncionarioDTO funcionarioDTO = funcionarioService.create(funcionarioCreateDTO);
@@ -35,7 +35,7 @@ public class FuncionarioController {
         return new ResponseEntity<>(funcionarioDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/{idFuncionario}") // localhost:8080/endereco/1000 OK
+    @PutMapping("/{idFuncionario}") // localhost:8080/funcionario/1000 OK
     public ResponseEntity<FuncionarioDTO> update(@PathVariable("idFuncionario") Integer id,
                                               @Valid @RequestBody FuncionarioDTO funcionarioAtualizar) throws Exception {
         log.info("Atualizando funcionário...");
@@ -44,7 +44,7 @@ public class FuncionarioController {
         return new ResponseEntity<>(funcionarioDTO,HttpStatus.OK);
     }
 
-    @DeleteMapping("/{idFuncionario}") // localhost:8080/endereco/10 OK
+    @DeleteMapping("/{idFuncionario}") // localhost:8080/funcionario/10 OK
     public ResponseEntity<FuncionarioDTO> delete(@PathVariable("idFuncionario") Integer id) throws Exception {
         log.info("Deletando funcionário...");
         funcionarioService.delete(id);

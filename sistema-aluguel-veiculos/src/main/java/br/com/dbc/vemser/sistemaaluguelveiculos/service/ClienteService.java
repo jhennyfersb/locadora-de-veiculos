@@ -72,4 +72,5 @@ public class ClienteService {
 
     public ClienteDTO converterEmDTO(Cliente cliente){
         return objectMapper.convertValue(cliente, ClienteDTO.class);
-    }}
+    }
+}
