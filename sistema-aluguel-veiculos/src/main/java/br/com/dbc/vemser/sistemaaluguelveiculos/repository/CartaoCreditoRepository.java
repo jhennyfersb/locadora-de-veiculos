@@ -14,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredito> {
     private final ConexaoBancoDeDados conexaoBancoDeDados;
+
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_CARTAO_CREDITO.nextval mysequence from DUAL";
@@ -45,12 +46,11 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
 
             stmt.setInt(1, cartaoCredito.getIdCartaoCredito());
             stmt.setString(2, cartaoCredito.getNumero());
-            stmt.setString(3, cartaoCredito.getBandeira().toString());
+            stmt.setString(3, cartaoCredito.getBandeiraCartao().toString());
             stmt.setString(4, cartaoCredito.getValidade());
             stmt.setDouble(5, cartaoCredito.getLimite());
 
             int res = stmt.executeUpdate();
-            //System.out.println("adicionarCartaoCredito.res=" + res);
             return cartaoCredito;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
@@ -77,10 +77,7 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
 
             stmt.setInt(1, id);
 
-
             int res = stmt.executeUpdate();
-            //System.out.println("removerCartaoPorId.res=" + res);
-
 
             return res > 0;
         } catch (SQLException e) {
@@ -103,24 +100,22 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
             con = conexaoBancoDeDados.getConnection();
 
             StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE CARTAO_CREDITO SET");
-            sql.append(" numero_cartao = ?");
-            sql.append(", bandeira_cartao = ?");
-            sql.append(", validade = ?");
-            sql.append(", limite = ?");
+            sql.append("UPDATE CARTAO_CREDITO SET ");
+            sql.append(" numero_cartao = ?,");
+            sql.append(" bandeira_cartao = ?,");
+            sql.append(" validade = ?,");
+            sql.append(" limite = ?");
             sql.append(" WHERE id_cartao = ?");
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
             stmt.setString(1, cartaoCredito.getNumero());
-            stmt.setString(2, cartaoCredito.getBandeira().toString());
+            stmt.setString(2, cartaoCredito.getBandeiraCartao().toString());
             stmt.setString(3, cartaoCredito.getValidade());
             stmt.setDouble(4, cartaoCredito.getLimite());
             stmt.setInt(5, id);
 
-
             int res = stmt.executeUpdate();
-           // System.out.println("editarCartaoCredito.res=" + res);
 
             return res > 0;
         } catch (SQLException e) {
@@ -146,14 +141,13 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
 
             String sql = "SELECT * FROM CARTAO_CREDITO";
 
-
             ResultSet res = stmt.executeQuery(sql);
 
             while (res.next()) {
                 CartaoCredito cartaoCredito = new CartaoCredito();
                 cartaoCredito.setIdCartaoCredito(res.getInt("id_cartao"));
                 cartaoCredito.setNumero(res.getString("numero_cartao"));
-                cartaoCredito.setBandeira(BandeiraCartao.valueOf(res.getString("bandeira_cartao")));
+                cartaoCredito.setBandeiraCartao(BandeiraCartao.valueOf(res.getString("bandeira_cartao")));
                 cartaoCredito.setValidade(res.getString("validade"));
                 cartaoCredito.setLimite(res.getDouble("limite"));
                 cartoes.add(cartaoCredito);
@@ -186,11 +180,11 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
 
             while (res.next()){
                 cartaoCredito.setIdCartaoCredito(res.getInt("id_cartao"));
-                cartaoCredito.setBandeira(BandeiraCartao.valueOf(res.getString("bandeira")));
+                cartaoCredito.setNumero(res.getString("numero_cartao"));
+                cartaoCredito.setBandeiraCartao(BandeiraCartao.valueOf(res.getString("bandeira_cartao")));
                 cartaoCredito.setValidade(res.getString("validade"));
                 cartaoCredito.setLimite(res.getDouble("limite"));
             }
-            System.out.println("buscarCartao.res="+ res);
             return cartaoCredito;
         }catch (SQLException e){
             throw new BancoDeDadosException(e.getCause());

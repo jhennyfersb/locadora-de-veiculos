@@ -13,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FuncionarioRepository implements Repositorio<Integer, Funcionario> {
     private final ConexaoBancoDeDados conexaoBancoDeDados;
+
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_FUNCIONARIO.nextval mysequence from DUAL";
@@ -23,7 +24,6 @@ public class FuncionarioRepository implements Repositorio<Integer, Funcionario> 
         if (res.next()) {
             return res.getInt("mysequence");
         }
-
         return null;
     }
 
@@ -48,7 +48,7 @@ public class FuncionarioRepository implements Repositorio<Integer, Funcionario> 
             stmt.setInt(4, funcionario.getMatricula());
 
             int res = stmt.executeUpdate();
-            System.out.println("adicionarFuncionario.res=" + res);
+
             return funcionario;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
@@ -77,7 +77,6 @@ public class FuncionarioRepository implements Repositorio<Integer, Funcionario> 
 
             // Executa-se a consulta
             int res = stmt.executeUpdate();
-            System.out.println("removerFuncionarioPorId.res=" + res);
 
             return res > 0;
         } catch (SQLException e) {
@@ -113,9 +112,7 @@ public class FuncionarioRepository implements Repositorio<Integer, Funcionario> 
             stmt.setInt(3, funcionario.getMatricula());
             stmt.setInt(4, id);
 
-            // Executa-se a consulta
             int res = stmt.executeUpdate();
-            System.out.println("editarFuncionario.res=" + res);
 
             return res > 0;
         } catch (SQLException e) {
@@ -141,7 +138,6 @@ public class FuncionarioRepository implements Repositorio<Integer, Funcionario> 
 
             String sql = "SELECT * FROM FUNCIONARIO";
 
-            // Executa-se a consulta
             ResultSet res = stmt.executeQuery(sql);
 
             while (res.next()) {
@@ -187,7 +183,7 @@ public class FuncionarioRepository implements Repositorio<Integer, Funcionario> 
                 funcionario.setCpf(res.getString("cpf_funcionario"));
                 funcionario.setMatricula(res.getInt("matricula"));
             }
-            //System.out.println("buscarFuncionario.res="+ res);
+
             return funcionario;
         }catch (SQLException e){
             throw new BancoDeDadosException(e.getCause());
@@ -201,5 +197,4 @@ public class FuncionarioRepository implements Repositorio<Integer, Funcionario> 
             }
         }
     }
-
 }

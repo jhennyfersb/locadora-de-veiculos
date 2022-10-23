@@ -1,17 +1,16 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.model;
 
 public enum BandeiraCartao {
-
     VISA(1),
     MASTERCARD(2);
 
-    private int tipoBandeira;
+    private Integer tipoBandeira;
 
-    BandeiraCartao(int tipoBandeira){
+    BandeiraCartao(Integer tipoBandeira){
         this.tipoBandeira = tipoBandeira;
     }
 
-    public int getTipoBandeira() {
+    public Integer getTipoBandeira() {
         return tipoBandeira;
     }
 }

@@ -3,18 +3,15 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.model.CartaoCredito;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.CartaoCreditoRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CartaoCreditoService {
-    private CartaoCreditoRepository cartaoCreditoRepository;
-
-    public CartaoCreditoService(CartaoCreditoRepository cartaoCreditoRepository) {
-        this.cartaoCreditoRepository = cartaoCreditoRepository;
-    }
-
+    private final CartaoCreditoRepository cartaoCreditoRepository;
 
     public void create(CartaoCredito cartaoCredito) {
         try {

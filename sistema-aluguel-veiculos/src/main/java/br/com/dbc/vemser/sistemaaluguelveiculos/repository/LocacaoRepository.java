@@ -13,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LocacaoRepository implements Repositorio<Integer, Locacao> {
     private final ConexaoBancoDeDados conexaoBancoDeDados;
+
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_LOCACAO.nextval mysequence from DUAL";
@@ -32,28 +33,25 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
         try {
             con = conexaoBancoDeDados.getConnection();
             Integer proximoId = this.getProximoId(con);
-            locacao.setIdlocacao(proximoId);
+            locacao.setIdLocacao(proximoId);
 
             String sql = "INSERT INTO LOCACAO\n" +
-                    "(ID_LOCACAO, DATA_LOCACAO, DATA_DEVOLUCAO, QUILOMETRAGEM_ADICAO, VALOR_LOCACAO_TOTAL, ID_CLIENTE, ID_VEICULO, ID_FUNCIONARIO, ID_CARTAO)\n" +
-                    "VALUES(?,?,?,?,?,?,?,?,?)\n";
+                    "(id_locacao, data_locacao, data_devolucao, valor_locacao_total, id_cliente, id_veiculo, id_funcionario, id_cartao)\n" +
+                    "VALUES(?,?,?,?,?,?,?,?)\n";
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
-
-            stmt.setInt(1, locacao.getIdlocacao());
+            stmt.setInt(1, locacao.getIdLocacao());
             stmt.setDate(2, Date.valueOf(locacao.getDataLocacao()));
             stmt.setDate(3, Date.valueOf(locacao.getDataDevolucao()));
-            stmt.setDouble(4, locacao.getVeiculo().getQuilometragem());
-            stmt.setDouble(5, locacao.getValorLocacao());
-            stmt.setInt(6, locacao.getCliente().getId_cliente());
-            stmt.setInt(7, locacao.getVeiculo().getIdVeiculo());
-            stmt.setInt(8, locacao.getFuncionario().getIdFuncionario());
-            stmt.setInt(9, locacao.getCartaoCredito().getIdCartaoCredito());
-
+            stmt.setDouble(4, locacao.getValorLocacao());
+            stmt.setInt(5, locacao.getCliente().getIdCliente());
+            stmt.setInt(6, locacao.getVeiculo().getIdVeiculo());
+            stmt.setInt(7, locacao.getFuncionario().getIdFuncionario());
+            stmt.setInt(8, locacao.getCartaoCredito().getIdCartaoCredito());
 
             int res = stmt.executeUpdate();
-            //System.out.println("adicionarLocacao.res=" + res);
+
             return locacao;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
@@ -66,7 +64,6 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
                 e.printStackTrace();
             }
         }
-
     }
 
     @Override
@@ -83,8 +80,6 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
             while (res.next()) {
                 idCartao = res.getInt("id_cartao");
             }
-            //System.out.println("removerCartaoPorId.res=" + res);
-
 
             String sql = "DELETE FROM LOCACAO WHERE id_locacao = ?";
 
@@ -93,7 +88,7 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
             stmt.setInt(1, id);
 
             int resultado = stmt.executeUpdate();
-            //System.out.println("removerLocacaoPorId.res=" + resultado);
+
             return resultado > 0;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
@@ -126,14 +121,11 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
             if (locacao.getValorLocacao() != null) {
                 sql.append(" valor_locacao_total = ?,");
             }
-            Veiculo veiculo = locacao.getVeiculo();
-            if (veiculo.getQuilometragem() != null) {
-                sql.append("quilometragem_adicao = ?,");
-            }
             Cliente cliente = locacao.getCliente();
             if (cliente != null) {
                 sql.append("id_cliente = ?,");
             }
+            Veiculo veiculo = locacao.getVeiculo();
             if (veiculo.getIdVeiculo() != null) {
                 sql.append(" id_veiculo = ?,");
             }
@@ -156,14 +148,11 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
             if (locacao.getDataDevolucao() != null) {
                 stmt.setDate(index++, Date.valueOf(locacao.getDataDevolucao()));
             }
-            if (veiculo.getQuilometragem() != null) {
-                stmt.setDouble(index++, locacao.getVeiculo().getQuilometragem());
-            }
             if (locacao.getValorLocacao() != null) {
                 stmt.setDouble(index++, locacao.getValorLocacao());
             }
             if (cliente != null) {
-                stmt.setInt(index++, cliente.getId_cliente());
+                stmt.setInt(index++, cliente.getIdCliente());
             }
             if (veiculo.getIdVeiculo() != null) {
                 stmt.setInt(index++, veiculo.getIdVeiculo());
@@ -177,7 +166,6 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
             stmt.setInt(index++, id);
 
             int res = stmt.executeUpdate();
-            System.out.println("editarLocacao.res=" + res);
 
             return res > 0;
         } catch (SQLException e) {
@@ -230,10 +218,9 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
         }
     }
 
-
     private Locacao getLocacaoFromResultset(ResultSet res) throws SQLException {
         Locacao locacao = new Locacao();
-        locacao.setIdlocacao(res.getInt("id_locacao"));
+        locacao.setIdLocacao(res.getInt("id_locacao"));
         locacao.setDataLocacao(res.getDate("data_locacao").toLocalDate());
         locacao.setDataDevolucao(res.getDate("data_devolucao").toLocalDate());
         locacao.setValorLocacao(res.getDouble("valor_locacao_total"));
@@ -257,7 +244,7 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
         CartaoCredito cartaoCredito = new CartaoCredito();
         cartaoCredito.setIdCartaoCredito(res.getInt("id_cartao"));
         cartaoCredito.setNumero(res.getString("numero_cartao"));
-        cartaoCredito.setBandeira(BandeiraCartao.valueOf(res.getString("bandeira_cartao")));
+        cartaoCredito.setBandeiraCartao(BandeiraCartao.valueOf(res.getString("bandeira_cartao")));
         cartaoCredito.setValidade(res.getString("validade"));
         cartaoCredito.setLimite(res.getDouble("limite"));
         return cartaoCredito;
@@ -265,9 +252,9 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
 
     private Cliente getClientFromResultSet(ResultSet res) throws SQLException {
         Cliente cliente = new Cliente();
-        cliente.setId_cliente(res.getInt("id_cliente"));
-        cliente.setNome(res.getString("nome"));
-        cliente.setCpf(res.getString("cpf"));
+        cliente.setIdCliente(res.getInt("id_cliente"));
+        cliente.setNome(res.getString("nome_cliente"));
+        cliente.setCpf(res.getString("cpf_cliente"));
         cliente.setContato(getContatoFromResultSet(res));
         cliente.setEndereco(getEnderecoResultSet(res));
         return cliente;
@@ -303,7 +290,7 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
         veiculo.setAno(res.getInt("ano"));
         veiculo.setQuilometragem(res.getDouble("quilometragem"));
         veiculo.setValorLocacao(res.getDouble("valor_locacao_diario"));
-        veiculo.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.getByValue(res.getInt("disponibilidade")));
+        veiculo.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.valueOf(res.getString("disponibilidade")));
         veiculo.setPlaca(res.getString("placa"));
         return veiculo;
     }

@@ -1,5 +1,6 @@
-package br.com.dbc.vemser.sistemaaluguelveiculos.model;
+package br.com.dbc.vemser.sistemaaluguelveiculos.dto;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.model.DisponibilidadeVeiculo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Veiculo {
-    private Integer idVeiculo;
+public class VeiculoCreateDTO {
     private String marca;
     private String modelo;
     private String cor;

@@ -1,7 +1,7 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.repository;
 
-
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
+import br.com.dbc.vemser.sistemaaluguelveiculos.model.BandeiraCartao;
 import br.com.dbc.vemser.sistemaaluguelveiculos.model.DisponibilidadeVeiculo;
 import br.com.dbc.vemser.sistemaaluguelveiculos.model.Veiculo;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VeiculoRepository implements Repositorio<Integer, Veiculo> {
     private final ConexaoBancoDeDados conexaoBancoDeDados;
+
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_VEICULO.nextval mysequence from DUAL";
@@ -25,7 +26,6 @@ public class VeiculoRepository implements Repositorio<Integer, Veiculo> {
         if (res.next()) {
             return res.getInt("mysequence");
         }
-
         return null;
     }
 
@@ -54,7 +54,7 @@ public class VeiculoRepository implements Repositorio<Integer, Veiculo> {
             stmt.setString(9, veiculo.getPlaca());
 
             int res = stmt.executeUpdate();
-            System.out.println("adicionarVeiculo.res=" + res);
+
             return veiculo;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
@@ -80,9 +80,7 @@ public class VeiculoRepository implements Repositorio<Integer, Veiculo> {
 
             stmt.setInt(1, id);
 
-            // Executa-se a consulta
             int res = stmt.executeUpdate();
-            System.out.println("removerVeiculoPorId.res=" + res);
 
             return res > 0;
         } catch (SQLException e) {
@@ -105,14 +103,14 @@ public class VeiculoRepository implements Repositorio<Integer, Veiculo> {
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE VEICULO SET");
-            sql.append(" marca = ?");
-            sql.append(", modelo = ?");
-            sql.append(", cor = ?");
-            sql.append(", ano = ?");
-            sql.append(", quilometragem = ?");
-            sql.append(", valor_locacao_diario = ?");
-            sql.append(", disponibilidade = ?");
-            sql.append(", placa = ?");
+            sql.append(" marca = ?,");
+            sql.append(" modelo = ?,");
+            sql.append(" cor = ?,");
+            sql.append(" ano = ?,");
+            sql.append(" quilometragem = ?,");
+            sql.append(" valor_locacao_diario = ?,");
+            sql.append(" disponibilidade = ?,");
+            sql.append(" placa = ?");
             sql.append(" WHERE id_veiculo = ?");
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
@@ -127,9 +125,7 @@ public class VeiculoRepository implements Repositorio<Integer, Veiculo> {
             stmt.setString(8, veiculo.getPlaca());
             stmt.setInt(9, id);
 
-            // Executa-se a consulta
             int res = stmt.executeUpdate();
-            System.out.println("editarVeiculo.res=" + res);
 
             return res > 0;
         } catch (SQLException e) {
@@ -154,7 +150,6 @@ public class VeiculoRepository implements Repositorio<Integer, Veiculo> {
 
             String sql = "SELECT * FROM VEICULO";
 
-            // Executa-se a consulta
             ResultSet res = stmt.executeQuery(sql);
 
             while (res.next()) {
@@ -166,7 +161,7 @@ public class VeiculoRepository implements Repositorio<Integer, Veiculo> {
                 veiculo.setAno(res.getInt("ano"));
                 veiculo.setQuilometragem(res.getDouble("quilometragem"));
                 veiculo.setValorLocacao(res.getDouble("valor_locacao_diario"));
-                veiculo.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.getByValue(res.getInt("disponibilidade")));
+                veiculo.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.valueOf(res.getString("disponibilidade")));
                 veiculo.setPlaca(res.getString("placa"));
                 veiculos.add(veiculo);
             }
@@ -191,9 +186,8 @@ public class VeiculoRepository implements Repositorio<Integer, Veiculo> {
             con = conexaoBancoDeDados.getConnection();
             Statement stmt = con.createStatement();
 
-            String sql = "SELECT * FROM VEICULO WHERE DISPONIBILIDADE = 2";
+            String sql = "SELECT * FROM VEICULO WHERE DISPONIBILIDADE = 'DISPONIVEL'";
 
-            // Executa-se a consulta
             ResultSet res = stmt.executeQuery(sql);
 
             while (res.next()) {
@@ -205,7 +199,7 @@ public class VeiculoRepository implements Repositorio<Integer, Veiculo> {
                 veiculo.setAno(res.getInt("ano"));
                 veiculo.setQuilometragem(res.getDouble("quilometragem"));
                 veiculo.setValorLocacao(res.getDouble("valor_locacao_diario"));
-                veiculo.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.getByValue(res.getInt("disponibilidade")));
+                veiculo.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.valueOf(res.getString("disponibilidade")));
                 veiculo.setPlaca(res.getString("placa"));
                 veiculos.add(veiculo);
             }
@@ -250,10 +244,10 @@ public class VeiculoRepository implements Repositorio<Integer, Veiculo> {
                 veiculo.setAno(res.getInt("ano"));
                 veiculo.setQuilometragem(res.getDouble("quilometragem"));
                 veiculo.setValorLocacao(res.getDouble("valor_locacao_diario"));
-                veiculo.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.getByValue(res.getInt("disponibilidade")));
+                veiculo.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.valueOf(res.getString("disponibilidade")));
                 veiculo.setPlaca(res.getString("placa"));
             }
-            //System.out.println("buscarVeiculo.res=" + res);
+
             return veiculo;
         }catch (SQLException e){
             throw new BancoDeDadosException(e.getCause());

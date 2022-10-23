@@ -2,18 +2,16 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.model.Veiculo;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.VeiculoRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class VeiculoService {
 
-    private VeiculoRepository veiculoRepository;
-
-    public VeiculoService(VeiculoRepository veiculoRepository) {
-        this.veiculoRepository = veiculoRepository;
-    }
+    private final VeiculoRepository veiculoRepository;
 
     public Veiculo create(Veiculo veiculo) throws Exception {
         findById(veiculo.getIdVeiculo());

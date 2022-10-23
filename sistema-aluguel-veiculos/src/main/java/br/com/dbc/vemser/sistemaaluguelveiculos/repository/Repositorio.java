@@ -16,6 +16,4 @@ public interface Repositorio<CHAVE, OBJETO> {
     boolean update(CHAVE id, OBJETO objeto) throws BancoDeDadosException;
 
     List<OBJETO> list() throws BancoDeDadosException;
-
-
 }

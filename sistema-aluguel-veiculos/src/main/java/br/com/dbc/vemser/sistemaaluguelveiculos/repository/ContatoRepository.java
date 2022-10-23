@@ -13,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ContatoRepository implements Repositorio<Integer, Contato> {
     private final ConexaoBancoDeDados conexaoBancoDeDados;
+
     @Override
     public Integer getProximoId(Connection connection) throws SQLException {
         String sql = "SELECT SEQ_CONTATO.nextval mysequence from DUAL";
@@ -23,7 +24,6 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
         if (res.next()) {
             return res.getInt("mysequence");
         }
-
         return null;
     }
 
@@ -36,7 +36,7 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
             contato.setIdContato(proximoId);
 
             String sql = "INSERT INTO CONTATO\n" +
-                    "(ID_CONTATO, TELEFONE, EMAIL)\n" +
+                    "(id_contato, telefone, email)\n" +
                     "VALUES(?, ?, ?)\n";
 
             PreparedStatement stmt = con.prepareStatement(sql);
@@ -46,7 +46,7 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
             stmt.setString(3, contato.getEmail());
 
             int res = stmt.executeUpdate();
-            System.out.println("adicionarPessoa.res=" + res);
+
             return contato;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
@@ -74,7 +74,6 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
             stmt.setInt(1, id);
 
             int res = stmt.executeUpdate();
-            System.out.println("removerContatoPorId.res=" + res);
 
             return res > 0;
         } catch (SQLException e) {
@@ -109,7 +108,6 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
             stmt.setInt(3, id);
 
             int res = stmt.executeUpdate();
-            System.out.println("editarContato.res=" + res);
 
             return res > 0;
         } catch (SQLException e) {
@@ -157,8 +155,6 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
         }
         return contatos;
     }
-
-
 
     public int retornarUltimoIdRegistrado() throws BancoDeDadosException {
         Contato contato = new Contato();
