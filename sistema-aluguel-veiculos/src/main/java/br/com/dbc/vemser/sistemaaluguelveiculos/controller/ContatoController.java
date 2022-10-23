@@ -33,11 +33,6 @@ public class ContatoController {
 //        return funcionarioService.listByIdEndereco(id);
 //    }
 
-//    @GetMapping("/{idPessoa}/pessoa") // localhost:8080/endereco/2/pessoa OK
-//    public List<FuncionarioDTO> listByIdPessoa(@PathVariable("idPessoa") Integer id) {
-//        return funcionarioService.listByIdPessoa(id);
-//    }
-
     @PostMapping // localhost:8080/endereco/4 OK
     public ResponseEntity<ContatoDTO> create(@Valid @RequestBody ContatoCreateDTO contatoCreateDTO) throws Exception {
         log.info("Criando contato...");

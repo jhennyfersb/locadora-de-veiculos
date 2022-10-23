@@ -1,10 +1,16 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ClienteCreateDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ClienteDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.model.Cliente;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.ClienteRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -12,19 +18,18 @@ public class ClienteService {
     private final ClienteRepository clienteRepository;
     private final EnderecoService enderecoService;
     private final ContatoService contatoService;
+    private final ObjectMapper objectMapper;
 
-    public void create(Cliente cliente) {
-        try {
-            if(!validarCliente(cliente)){
-                throw new RuntimeException("Cliente inválido");
-            }
-            Cliente clienteAdicionado = clienteRepository.create(cliente);
+    public ClienteDTO create(ClienteCreateDTO cliente) throws BancoDeDadosException {
+//        try {
+            Cliente clienteAdicionado = clienteRepository.create(converterEmCliente(cliente));
             System.out.println("Cliente adicinado com sucesso! " + clienteAdicionado);
             enderecoService.removerEnderecosOciosos();
             contatoService.removerContatosOciosos();
-        } catch (BancoDeDadosException e) {
-            e.printStackTrace();
-        }
+            return converterEmDTO(clienteAdicionado);
+//        } catch (BancoDeDadosException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void delete(Integer id) {
@@ -36,21 +41,21 @@ public class ClienteService {
         }
     }
 
-    public void update(Integer id, Cliente cliente) {
-        try {
-            boolean conseguiuEditar = clienteRepository.update(id, cliente);
+    public ClienteDTO update(Integer id, ClienteCreateDTO cliente) throws BancoDeDadosException {
+//        try {
+            boolean conseguiuEditar = clienteRepository.update(id, converterEmCliente(cliente));
             System.out.println("editado? " + conseguiuEditar + "| com id=" + id);
-        } catch (BancoDeDadosException e) {
-            e.printStackTrace();
-        }
+            return null;
+//        } catch (BancoDeDadosException e) {
+//            e.printStackTrace();
+//        }
     }
 
-    public void list() {
-        try {
-            clienteRepository.list().forEach(System.out::println);
-        } catch (BancoDeDadosException e) {
-            e.printStackTrace();
-        }
+    public List<ClienteDTO> list() throws BancoDeDadosException {
+        List<Cliente> listar = clienteRepository.list();
+        return listar.stream()
+                .map(this::converterEmDTO)
+                .collect(Collectors.toList());
     }
 
     public int retornarIdContato(int id){
@@ -61,7 +66,10 @@ public class ClienteService {
         return clienteRepository.retornarIndiceEnderecoPorIdCliente(id);
     }
 
-    public boolean validarCliente (Cliente cliente){
-        return cliente.getCpf().length() == 11;
+    public Cliente converterEmCliente(ClienteCreateDTO clienteCreateDTO){
+        return objectMapper.convertValue(clienteCreateDTO, Cliente.class);
     }
-}
+
+    public ClienteDTO converterEmDTO(Cliente cliente){
+        return objectMapper.convertValue(cliente, ClienteDTO.class);
+    }}
