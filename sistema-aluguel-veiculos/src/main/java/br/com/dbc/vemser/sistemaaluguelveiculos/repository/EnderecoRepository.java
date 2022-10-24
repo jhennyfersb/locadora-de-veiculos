@@ -95,7 +95,7 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
     }
 
     @Override
-    public boolean update(Integer id, Endereco endereco) throws BancoDeDadosException {
+    public Endereco update(Integer id, Endereco endereco) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = conexaoBancoDeDados.getConnection();
@@ -113,6 +113,7 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
+            endereco.setIdEndereco(id);
             stmt.setString(1, endereco.getRua());
             stmt.setString(2, endereco.getNumero());
             stmt.setString(3, endereco.getBairro());
@@ -122,9 +123,9 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
             stmt.setString(7, endereco.getComplemento());
             stmt.setInt(8, id);
 
-            int res = stmt.executeUpdate();
+            stmt.executeUpdate();
 
-            return res > 0;
+            return endereco;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {

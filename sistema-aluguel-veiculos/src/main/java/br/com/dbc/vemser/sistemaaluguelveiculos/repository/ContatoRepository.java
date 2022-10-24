@@ -90,7 +90,7 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
     }
 
     @Override
-    public boolean update(Integer id, Contato contato) throws BancoDeDadosException {
+    public Contato update(Integer id, Contato contato) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = conexaoBancoDeDados.getConnection();
@@ -103,13 +103,14 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
+            contato.setIdContato(id);
             stmt.setString(1, contato.getTelefone());
             stmt.setString(2, contato.getEmail());
             stmt.setInt(3, id);
 
             int res = stmt.executeUpdate();
 
-            return res > 0;
+            return contato;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {

@@ -31,7 +31,7 @@ public class FuncionarioController {
     public ResponseEntity<FuncionarioDTO> create(@Valid @RequestBody FuncionarioCreateDTO funcionarioCreateDTO) throws Exception {
         log.info("Criando funcionário...");
         FuncionarioDTO funcionarioDTO = funcionarioService.create(funcionarioCreateDTO);
-        log.info("Funcionário criado");
+        log.info("Funcionário criado!");
         return new ResponseEntity<>(funcionarioDTO, HttpStatus.OK);
     }
 
@@ -40,7 +40,7 @@ public class FuncionarioController {
                                               @Valid @RequestBody FuncionarioDTO funcionarioAtualizar) throws Exception {
         log.info("Atualizando funcionário...");
         FuncionarioDTO funcionarioDTO = funcionarioService.update(id, funcionarioAtualizar);
-        log.info("funcionário atualizado");
+        log.info("Funcionário atualizado!");
         return new ResponseEntity<>(funcionarioDTO,HttpStatus.OK);
     }
 
@@ -48,7 +48,7 @@ public class FuncionarioController {
     public ResponseEntity<FuncionarioDTO> delete(@PathVariable("idFuncionario") Integer id) throws Exception {
         log.info("Deletando funcionário...");
         funcionarioService.delete(id);
-        log.info("funcionário deletado");
+        log.info("Funcionário deletado!");
         return ResponseEntity.noContent().build();
     }
 }

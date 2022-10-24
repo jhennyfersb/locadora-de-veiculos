@@ -39,12 +39,10 @@ public class FuncionarioService {
     // atualização de um objeto
     public FuncionarioDTO update(Integer id, FuncionarioCreateDTO funcionario) throws BancoDeDadosException {
 //        try {
-            boolean conseguiuEditar = funcionarioRepository.update(id, converterEmFuncionario(funcionario));
-//            System.out.println("funcionario editado? " + conseguiuEditar + "| com id=" + id);
+            return objectMapper.convertValue(funcionarioRepository.update(id, converterEmFuncionario(funcionario)), FuncionarioDTO.class);
 //        } catch (BancoDeDadosException e) {
 //            e.printStackTrace();
 //        }
-        return null;
     }
 
     // leitura

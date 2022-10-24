@@ -39,12 +39,11 @@ public class ContatoService {
     // atualização de um objeto
     public ContatoDTO update(Integer id, ContatoCreateDTO contato) throws BancoDeDadosException {
 //        try {
-        boolean conseguiuEditar = contatoRepository.update(id, converterEmContato(contato));
+        return objectMapper.convertValue(contatoRepository.update(id, converterEmContato(contato)), ContatoDTO.class);
 //            System.out.println("funcionario editado? " + conseguiuEditar + "| com id=" + id);
 //        } catch (BancoDeDadosException e) {
 //            e.printStackTrace();
 //        }
-        return null;
     }
 
     // leitura

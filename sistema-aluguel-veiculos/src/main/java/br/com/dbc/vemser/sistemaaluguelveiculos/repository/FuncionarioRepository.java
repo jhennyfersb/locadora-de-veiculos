@@ -93,7 +93,7 @@ public class FuncionarioRepository implements Repositorio<Integer, Funcionario> 
     }
 
     @Override
-    public boolean update(Integer id, Funcionario funcionario) throws BancoDeDadosException {
+    public Funcionario update(Integer id, Funcionario funcionario) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = conexaoBancoDeDados.getConnection();
@@ -107,14 +107,15 @@ public class FuncionarioRepository implements Repositorio<Integer, Funcionario> 
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
+            funcionario.setIdFuncionario(id);
             stmt.setString(1, funcionario.getNome());
             stmt.setString(2, funcionario.getCpf());
             stmt.setInt(3, funcionario.getMatricula());
             stmt.setInt(4, id);
 
-            int res = stmt.executeUpdate();
+            stmt.executeUpdate();
 
-            return res > 0;
+            return funcionario;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {

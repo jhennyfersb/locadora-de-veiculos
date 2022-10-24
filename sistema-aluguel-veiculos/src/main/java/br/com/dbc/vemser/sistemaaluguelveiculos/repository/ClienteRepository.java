@@ -126,7 +126,7 @@ public class ClienteRepository implements Repositorio<Integer, Cliente> {
     }
 
     @Override
-    public boolean update(Integer id, Cliente cliente) throws BancoDeDadosException {
+    public Cliente update(Integer id, Cliente cliente) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = conexaoBancoDeDados.getConnection();
@@ -141,15 +141,16 @@ public class ClienteRepository implements Repositorio<Integer, Cliente> {
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
+            cliente.setIdCliente(id);
             stmt.setString(1, cliente.getNome());
             stmt.setString(2, cliente.getCpf());
             stmt.setInt(3, cliente.getContato().getIdContato());
             stmt.setInt(4, cliente.getEndereco().getIdEndereco());
             stmt.setInt(5, id);
 
-            int res = stmt.executeUpdate();
+            stmt.executeUpdate();
 
-            return res > 0;
+            return cliente;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {

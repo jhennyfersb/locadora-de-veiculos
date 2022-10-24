@@ -25,7 +25,6 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
         if (res.next()) {
             return res.getInt("mysequence");
         }
-
         return null;
     }
 
@@ -50,8 +49,48 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
             stmt.setString(4, cartaoCredito.getValidade());
             stmt.setDouble(5, cartaoCredito.getLimite());
 
-            int res = stmt.executeUpdate();
+            stmt.executeUpdate();
             return cartaoCredito;
+        } catch (SQLException e) {
+            throw new BancoDeDadosException(e.getCause());
+        } finally {
+            try {
+                if (con != null) {
+                    con.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public CartaoCredito update(Integer id, CartaoCredito cartaoCredito) throws BancoDeDadosException {
+        Connection con = null;
+        try {
+            con = conexaoBancoDeDados.getConnection();
+
+            StringBuilder sql = new StringBuilder();
+            sql.append("UPDATE CARTAO_CREDITO SET ");
+            sql.append(" numero_cartao = ?,");
+            sql.append(" bandeira_cartao = ?,");
+            sql.append(" validade = ?,");
+            sql.append(" limite = ?");
+            sql.append(" WHERE id_cartao = ?");
+
+            PreparedStatement stmt = con.prepareStatement(sql.toString());
+
+            cartaoCredito.setIdCartaoCredito(id);
+            stmt.setString(1, cartaoCredito.getNumero());
+            stmt.setString(2, cartaoCredito.getBandeiraCartao().toString());
+            stmt.setString(3, cartaoCredito.getValidade());
+            stmt.setDouble(4, cartaoCredito.getLimite());
+            stmt.setInt(5, id);
+
+            stmt.executeUpdate();
+
+            return cartaoCredito;
+
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
@@ -94,49 +133,12 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
     }
 
     @Override
-    public boolean update(Integer id, CartaoCredito cartaoCredito) throws BancoDeDadosException {
-        Connection con = null;
-        try {
-            con = conexaoBancoDeDados.getConnection();
-
-            StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE CARTAO_CREDITO SET ");
-            sql.append(" numero_cartao = ?,");
-            sql.append(" bandeira_cartao = ?,");
-            sql.append(" validade = ?,");
-            sql.append(" limite = ?");
-            sql.append(" WHERE id_cartao = ?");
-
-            PreparedStatement stmt = con.prepareStatement(sql.toString());
-
-            stmt.setString(1, cartaoCredito.getNumero());
-            stmt.setString(2, cartaoCredito.getBandeiraCartao().toString());
-            stmt.setString(3, cartaoCredito.getValidade());
-            stmt.setDouble(4, cartaoCredito.getLimite());
-            stmt.setInt(5, id);
-
-            int res = stmt.executeUpdate();
-
-            return res > 0;
-        } catch (SQLException e) {
-            throw new BancoDeDadosException(e.getCause());
-        } finally {
-            try {
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
     public List<CartaoCredito> list() throws BancoDeDadosException {
         List<CartaoCredito> cartoes = new ArrayList<>();
         Connection con = null;
         try {
             con = conexaoBancoDeDados.getConnection();
+
             Statement stmt = con.createStatement();
 
             String sql = "SELECT * FROM CARTAO_CREDITO";
@@ -165,7 +167,8 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
         }
         return cartoes;
     }
-    public CartaoCredito getPorId(Integer chave) throws BancoDeDadosException {
+
+    public CartaoCredito getPorId(Integer idCartao) throws BancoDeDadosException {
         CartaoCredito  cartaoCredito = new CartaoCredito();
         Connection con = null;
         try {
@@ -173,9 +176,11 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
 
             String sql = "SELECT * FROM CARTAO_CREDITO\n" +
                     "WHERE id_cartao = ?";
-            PreparedStatement stmt = con.prepareStatement(sql.toString());
 
-            stmt.setInt(1,chave);
+            PreparedStatement stmt = con.prepareStatement(sql);
+
+            stmt.setInt(1,idCartao);
+
             ResultSet res = stmt.executeQuery();
 
             while (res.next()){

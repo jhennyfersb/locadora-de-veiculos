@@ -39,12 +39,11 @@ public class EnderecoService {
     // atualização de um objeto
     public EnderecoDTO update(Integer id, EnderecoCreateDTO enderecoCreateDTO) throws BancoDeDadosException {
 //        try {
-        boolean conseguiuEditar = enderecoRepository.update(id, converterEmEndereco(enderecoCreateDTO));
+        return objectMapper.convertValue(enderecoRepository.update(id, converterEmEndereco(enderecoCreateDTO)), EnderecoDTO.class);
 //            System.out.println("funcionario editado? " + conseguiuEditar + "| com id=" + id);
 //        } catch (BancoDeDadosException e) {
 //            e.printStackTrace();
 //        }
-        return null;
     }
 
     // leitura

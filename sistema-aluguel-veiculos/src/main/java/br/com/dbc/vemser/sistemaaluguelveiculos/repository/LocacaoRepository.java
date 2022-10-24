@@ -104,7 +104,7 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
     }
 
     @Override
-    public boolean update(Integer id, Locacao locacao) throws BancoDeDadosException {
+    public Locacao update(Integer id, Locacao locacao) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = conexaoBancoDeDados.getConnection();
@@ -165,9 +165,9 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
             }
             stmt.setInt(index++, id);
 
-            int res = stmt.executeUpdate();
+            stmt.executeUpdate();
 
-            return res > 0;
+            return locacao;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {

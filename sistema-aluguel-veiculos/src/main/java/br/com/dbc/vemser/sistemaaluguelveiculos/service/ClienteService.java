@@ -43,9 +43,7 @@ public class ClienteService {
 
     public ClienteDTO update(Integer id, ClienteCreateDTO cliente) throws BancoDeDadosException {
 //        try {
-            boolean conseguiuEditar = clienteRepository.update(id, converterEmCliente(cliente));
-            System.out.println("editado? " + conseguiuEditar + "| com id=" + id);
-            return null;
+            return objectMapper.convertValue(clienteRepository.update(id, converterEmCliente(cliente)), ClienteDTO.class);
 //        } catch (BancoDeDadosException e) {
 //            e.printStackTrace();
 //        }

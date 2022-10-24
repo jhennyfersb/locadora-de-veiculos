@@ -34,9 +34,7 @@ public class LocacaoService {
     }
 
     public LocacaoDTO update(Integer id, LocacaoCreateDTO locacao) throws BancoDeDadosException {
-            boolean conseguiuEditar = locacaoRepository.update(id, converterEmLocacao(locacao));
-            System.out.println("editado? " + conseguiuEditar + "| com id=" + id);
-            return null;
+            return objectMapper.convertValue(locacaoRepository.update(id, converterEmLocacao(locacao)), LocacaoDTO.class);
 
     }
 

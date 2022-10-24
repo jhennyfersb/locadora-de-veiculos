@@ -47,9 +47,9 @@ public class EnderecoController {
 
     @DeleteMapping("/{idEndereco}") // localhost:8080/endereco/10 OK
     public ResponseEntity<EnderecoDTO> delete(@PathVariable("idEndereco") Integer id) throws Exception {
-        log.info("Deletando endereco...");
+        log.info("Deletando endereço...");
         enderecoService.delete(id);
-        log.info("Endereco deletado");
+        log.info("Endereço deletado!");
         return ResponseEntity.noContent().build();
     }
 }
