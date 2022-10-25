@@ -3,7 +3,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ContatoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ContatoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
-import br.com.dbc.vemser.sistemaaluguelveiculos.model.Contato;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Contato;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.ContatoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

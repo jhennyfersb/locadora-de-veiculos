@@ -4,7 +4,7 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
-import br.com.dbc.vemser.sistemaaluguelveiculos.model.Veiculo;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Veiculo;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.VeiculoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

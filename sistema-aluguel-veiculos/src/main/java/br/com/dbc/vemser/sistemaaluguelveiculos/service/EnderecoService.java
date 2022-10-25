@@ -3,7 +3,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
-import br.com.dbc.vemser.sistemaaluguelveiculos.model.Endereco;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Endereco;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.EnderecoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

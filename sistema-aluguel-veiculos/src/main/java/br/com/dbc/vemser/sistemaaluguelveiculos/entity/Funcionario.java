@@ -1,4 +1,4 @@
-package br.com.dbc.vemser.sistemaaluguelveiculos.model;
+package br.com.dbc.vemser.sistemaaluguelveiculos.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,10 +9,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Cliente {
-    private Integer idCliente;
-    private Contato contato;
-    private Endereco endereco;
+public class Funcionario {
+    private Integer idFuncionario;
+    private String email;
+    private Integer matricula;
     private String nome;
     private String cpf;
 }

@@ -1,7 +1,7 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.dto;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.model.Contato;
-import br.com.dbc.vemser.sistemaaluguelveiculos.model.Endereco;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Contato;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Endereco;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

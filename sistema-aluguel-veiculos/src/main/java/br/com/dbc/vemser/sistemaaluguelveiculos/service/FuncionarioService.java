@@ -2,7 +2,8 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
-import br.com.dbc.vemser.sistemaaluguelveiculos.model.Funcionario;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Funcionario;
+import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.FuncionarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -65,4 +66,13 @@ public class FuncionarioService {
     public FuncionarioDTO converterEmDTO(Funcionario funcionario){
         return objectMapper.convertValue(funcionario, FuncionarioDTO.class);
     }
+
+     Funcionario findById(Integer id) throws RegraDeNegocioException, BancoDeDadosException {
+        return funcionarioRepository.list()
+                .stream()
+                .filter(funcionario -> funcionario.getIdFuncionario().equals(id))
+                .findFirst()
+                .orElseThrow(()-> new RegraDeNegocioException("Funcionario não encontrado"));
+    }
 }
+

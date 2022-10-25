@@ -1,4 +1,4 @@
-package br.com.dbc.vemser.sistemaaluguelveiculos.model;
+package br.com.dbc.vemser.sistemaaluguelveiculos.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

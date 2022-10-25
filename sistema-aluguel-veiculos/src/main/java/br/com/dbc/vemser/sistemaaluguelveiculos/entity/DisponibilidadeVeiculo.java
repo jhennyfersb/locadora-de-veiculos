@@ -1,4 +1,4 @@
-package br.com.dbc.vemser.sistemaaluguelveiculos.model;
+package br.com.dbc.vemser.sistemaaluguelveiculos.entity;
 
 public enum DisponibilidadeVeiculo {
     ALUGADO(1),

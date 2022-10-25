@@ -1,6 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.dto;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.model.DisponibilidadeVeiculo;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.DisponibilidadeVeiculo;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;

@@ -1,9 +1,6 @@
-package br.com.dbc.vemser.sistemaaluguelveiculos.model;
+package br.com.dbc.vemser.sistemaaluguelveiculos.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -11,8 +8,10 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Locacao {
     private Integer idLocacao;
+    private Funcionario idFuncionario;
     private LocalDate dataLocacao;
     private LocalDate dataDevolucao;
     private Double valorLocacao;
