@@ -19,7 +19,7 @@ import java.util.List;
 @Validated
 @RequiredArgsConstructor
 @RequestMapping("/cliente") // localhost:8080/cliente
-public class ClienteController {
+public class ClienteController implements ClienteControllerInterface {
 
     private final ClienteService clienteService;
 

@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @ToString
 public class Locacao {
     private Integer idLocacao;
-    private Funcionario idFuncionario;
     private LocalDate dataLocacao;
     private LocalDate dataDevolucao;
     private Double valorLocacao;

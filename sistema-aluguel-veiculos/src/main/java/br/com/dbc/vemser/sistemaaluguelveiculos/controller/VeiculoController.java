@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/veiculo")
-public class VeiculoController {
+public class VeiculoController implements VeiculoControllerInterface{
     private final VeiculoService veiculoService;
 
     @GetMapping

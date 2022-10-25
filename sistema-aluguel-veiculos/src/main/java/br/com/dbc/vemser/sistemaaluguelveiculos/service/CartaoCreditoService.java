@@ -26,8 +26,6 @@ public class CartaoCreditoService {
             return cartaoCreditoDTO;
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
-        } catch (Exception e) {
-            System.out.println("ERRO: " + e.getMessage());
         }
         return null;
     }
@@ -52,7 +50,6 @@ public class CartaoCreditoService {
     public void delete(Integer idCartao) throws RegraDeNegocioException {
         try {
             CartaoCredito cartaoRecuperado = cartaoCreditoRepository.getPorId(idCartao);
-
             if(cartaoRecuperado.getIdCartaoCredito() != null) {
                 cartaoCreditoRepository.delete(idCartao);
             }else {

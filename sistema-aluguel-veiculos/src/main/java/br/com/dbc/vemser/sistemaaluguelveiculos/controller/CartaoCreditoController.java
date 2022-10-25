@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/cartao")
-public class CartaoCreditoController {
+public class CartaoCreditoController implements CartaoCreditoControllerInterface{
 
     private final CartaoCreditoService cartaoCreditoService;
 

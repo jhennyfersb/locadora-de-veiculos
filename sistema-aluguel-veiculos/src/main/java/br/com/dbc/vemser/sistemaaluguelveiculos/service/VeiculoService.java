@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class VeiculoService {
-
     private final VeiculoRepository veiculoRepository;
     private final ObjectMapper objectMapper;
 

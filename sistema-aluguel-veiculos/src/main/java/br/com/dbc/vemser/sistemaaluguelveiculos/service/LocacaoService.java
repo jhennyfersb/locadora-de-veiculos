@@ -28,11 +28,7 @@ public class LocacaoService {
         Locacao locacaoAdicionada = locacaoRepository.create(converterEmLocacao(locacao));
         System.out.println("locação adicinado com sucesso! \n" + locacaoAdicionada);
         Funcionario funcionario = funcionarioService.findById(locacaoAdicionada.getFuncionario().getIdFuncionario());
-        Map<String, Object> dados = new HashMap<>();
-        dados.put("nome", funcionario.getNome());
-        dados.put("id", funcionario.getIdFuncionario());
-        dados.put("email", funcionario.getEmail());
-        emailService.sendEmail(dados, "locacao-template.ftl");
+        emailService.sendEmail(locacaoAdicionada, "locacao-template.ftl", funcionario.getEmail());
         return converterEmDTO(locacaoAdicionada);
     }
 
@@ -44,30 +40,22 @@ public class LocacaoService {
             e.printStackTrace();
         }
         Locacao locacaoDeletada = findById(id);
-        Funcionario funcionario = funcionarioService.findById(locacaoDeletada.getIdLocacao());
-        Map<String,Object> dados = new HashMap<>();
-        dados.put("nome",funcionario.getNome());
-        dados.put("email",funcionario.getEmail());
-        dados.put("id",locacaoDeletada.getIdLocacao());
-        emailService.sendEmail(dados,"locacao-template-delete.ftl");
+        Funcionario funcionario = funcionarioService.findById(locacaoDeletada.getFuncionario().getIdFuncionario());
+        emailService.sendEmail(locacaoDeletada, "locacao-template-delete.ftl", funcionario.getEmail());
     }
+
     public Locacao findById(Integer idLocacao) throws RegraDeNegocioException, BancoDeDadosException {
         Locacao locacaoRecuperada = locacaoRepository.list().stream()
-                .filter(locacao -> locacao.getIdLocacao().equals(idLocacao))
+                .filter(locacao -> locacao.getFuncionario().getIdFuncionario().equals(idLocacao))
                 .findFirst()
                 .orElseThrow(() -> new RegraDeNegocioException("Locação não encontrada"));
 
         return locacaoRecuperada;
     }
-
     public LocacaoDTO update(Integer id, LocacaoCreateDTO locacao) throws Exception {
-        Map<String,Object> dados = new HashMap<>();
         Funcionario funcionario = funcionarioService.findById(id);
-        dados.put("nome",funcionario.getNome());
-        dados.put("email",funcionario.getEmail());
-        emailService.sendEmail(dados,"locacao-template-update.ftl");
-            return objectMapper.convertValue(locacaoRepository.update(id, converterEmLocacao(locacao)), LocacaoDTO.class);
-
+        emailService.sendEmail(locacao, "locacao-template-update.ftl", funcionario.getEmail());
+        return objectMapper.convertValue(locacaoRepository.update(id, converterEmLocacao(locacao)), LocacaoDTO.class);
     }
 
     public List<LocacaoDTO> list() throws BancoDeDadosException {
@@ -77,11 +65,11 @@ public class LocacaoService {
                 .collect(Collectors.toList());
     }
 
-    public Locacao converterEmLocacao(LocacaoCreateDTO locacaoCreateDTO){
+    public Locacao converterEmLocacao(LocacaoCreateDTO locacaoCreateDTO) {
         return objectMapper.convertValue(locacaoCreateDTO, Locacao.class);
     }
 
-    public LocacaoDTO converterEmDTO(Locacao locacao){
+    public LocacaoDTO converterEmDTO(Locacao locacao) {
         return objectMapper.convertValue(locacao, LocacaoDTO.class);
     }
 }

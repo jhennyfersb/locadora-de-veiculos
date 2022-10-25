@@ -20,33 +20,34 @@ public class ClienteService {
     private final ContatoService contatoService;
     private final ObjectMapper objectMapper;
 
-    public ClienteDTO create(ClienteCreateDTO cliente) throws BancoDeDadosException {
-//        try {
+    public ClienteDTO create(ClienteCreateDTO cliente) {
+        try {
             Cliente clienteAdicionado = clienteRepository.create(converterEmCliente(cliente));
             System.out.println("Cliente adicinado com sucesso! " + clienteAdicionado);
             enderecoService.removerEnderecosOciosos();
             contatoService.removerContatosOciosos();
             return converterEmDTO(clienteAdicionado);
-//        } catch (BancoDeDadosException e) {
-//            e.printStackTrace();
-//        }
+        } catch (BancoDeDadosException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ClienteDTO update(Integer id, ClienteCreateDTO cliente) throws BancoDeDadosException {
+        try {
+            return objectMapper.convertValue(clienteRepository.update(id, converterEmCliente(cliente)), ClienteDTO.class);
+        } catch (BancoDeDadosException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void delete(Integer id) {
         try {
             boolean conseguiuRemover = clienteRepository.delete(id);
-            System.out.println("Removido? " + conseguiuRemover + "| com id=" + id);
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
         }
-    }
-
-    public ClienteDTO update(Integer id, ClienteCreateDTO cliente) throws BancoDeDadosException {
-//        try {
-            return objectMapper.convertValue(clienteRepository.update(id, converterEmCliente(cliente)), ClienteDTO.class);
-//        } catch (BancoDeDadosException e) {
-//            e.printStackTrace();
-//        }
     }
 
     public List<ClienteDTO> list() throws BancoDeDadosException {

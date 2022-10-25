@@ -49,7 +49,7 @@ public class ClienteRepository implements Repositorio<Integer, Cliente> {
             stmt.setInt(4, cliente.getContato().getIdContato());
             stmt.setInt(5, cliente.getEndereco().getIdEndereco());
 
-            int res = stmt.executeUpdate();
+            stmt.executeUpdate();
 
             return cliente;
         } catch (SQLException e) {
@@ -175,7 +175,7 @@ public class ClienteRepository implements Repositorio<Integer, Cliente> {
             String sql = "SELECT * FROM CLIENTE CL\n" +
                     "FULL OUTER JOIN CONTATO C\n" +
                     "ON CL.ID_CONTATO = C.ID_CONTATO \n" +
-                    "FULL OUTER JOIN ENDERECO_CLIENTE E \n" +
+                    "LEFT JOIN ENDERECO_CLIENTE E \n" +
                     "ON CL.ID_ENDERECO = E.ID_ENDERECO";
 
             ResultSet res = stmt.executeQuery(sql);

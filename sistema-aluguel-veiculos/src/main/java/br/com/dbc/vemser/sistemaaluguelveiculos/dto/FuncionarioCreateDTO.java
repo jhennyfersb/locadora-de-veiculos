@@ -1,5 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,9 +15,15 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class FuncionarioCreateDTO{
     @NotNull
+    @Schema(description = "Número de matrícula do funcionário.", example="8")
     private Integer matricula;
+
     @NotNull
+    @Schema(description = "Nome do funcionário.", example="Maifa")
     private String nome;
+
+    @NotNull
     @Size(min = 11, max = 11)
+    @Schema(description = "Cpf do funcionário.", example="99999999999")
     private String cpf;
 }

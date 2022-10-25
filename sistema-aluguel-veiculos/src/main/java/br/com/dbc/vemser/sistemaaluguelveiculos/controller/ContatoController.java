@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.List;
 
@@ -19,7 +18,7 @@ import java.util.List;
 @Validated
 @RequiredArgsConstructor
 @RequestMapping("/contato") // localhost:8080/contato
-public class ContatoController {
+public class ContatoController implements ContatoControllerInterface {
 
     private final ContatoService contatoService;
 

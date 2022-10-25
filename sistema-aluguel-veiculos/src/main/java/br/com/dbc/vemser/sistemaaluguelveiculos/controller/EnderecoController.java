@@ -19,7 +19,7 @@ import java.util.List;
 @Validated
 @RequiredArgsConstructor
 @RequestMapping("/endereco") // localhost:8080/endereco
-public class EnderecoController {
+public class EnderecoController implements EnderecoControllerInterface{
 
     private final EnderecoService enderecoService;
 

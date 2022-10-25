@@ -18,7 +18,7 @@ import java.util.List;
 @Validated
 @RequiredArgsConstructor
 @RequestMapping("/funcionario") // localhost:8080/funcionario
-public class FuncionarioController {
+public class FuncionarioController implements FuncionarioControllerInterface{
 
     private final FuncionarioService funcionarioService;
 

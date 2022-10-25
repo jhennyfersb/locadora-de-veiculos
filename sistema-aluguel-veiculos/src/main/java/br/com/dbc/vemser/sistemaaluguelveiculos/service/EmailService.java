@@ -1,5 +1,7 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Funcionario;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Locacao;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -29,7 +32,6 @@ public class EmailService {
     private String from;
 
     private static final String TO = "jhennyfer.sobrinho@dbccompany.com.br";
-
 
     private final JavaMailSender emailSender;
 
@@ -52,7 +54,6 @@ public class EmailService {
         helper.setTo(TO);
         helper.setSubject("Subject");
         helper.setText("Teste\n minha mensagem \n\nAtt,\nSistema.");
-
         File file1 = ResourceUtils.getFile("classpath:imagem.jpg");
         //File file1 = new File("imagem.jpg");
         FileSystemResource file
@@ -62,13 +63,16 @@ public class EmailService {
         emailSender.send(message);
     }
 
-    public void sendEmail(Map<String,Object> dados , String templateName) {
+    public void sendEmail(Locacao locacao, String templateName, String destinatario) {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
+        Map<String,Object> dados = new HashMap<>();
+        dados.put("nome", locacao.getFuncionario().getNome());
+        dados.put("id", locacao.getIdLocacao());
+        dados.put("email",locacao.getFuncionario().getEmail());
         try {
-
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
             mimeMessageHelper.setFrom(from);
-            mimeMessageHelper.setTo(TO);
+            mimeMessageHelper.setTo(destinatario);
             mimeMessageHelper.setSubject("subject");
             mimeMessageHelper.setText(geContentFromTemplate(dados,templateName), true);
             emailSender.send(mimeMessageHelper.getMimeMessage());
@@ -79,7 +83,6 @@ public class EmailService {
 
     public String geContentFromTemplate(Map<String,Object> dados, String templateName) throws IOException, TemplateException {
         Template template = fmConfiguration.getTemplate(templateName);
-        String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, dados);
-        return html;
+        return FreeMarkerTemplateUtils.processTemplateIntoString(template, dados);
     }
 }

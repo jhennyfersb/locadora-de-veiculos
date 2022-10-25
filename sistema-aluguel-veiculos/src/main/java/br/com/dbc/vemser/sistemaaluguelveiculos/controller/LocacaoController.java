@@ -18,7 +18,7 @@ import java.util.List;
 @Validated
 @RequiredArgsConstructor
 @RequestMapping("/locacao") // localhost:8080/locacao
-public class LocacaoController {
+public class LocacaoController implements LocacaoControllerInterface{
 
     private final LocacaoService locacaoService;
 
