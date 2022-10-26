@@ -116,10 +116,10 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
                 sql.append(" data_locacao = ?,");
             }
             if (locacao.getDataDevolucao() != null) {
-                sql.append(" data_devolucao = ?,");
+                sql.append(" dataDevolucao = ?,");
             }
             if (locacao.getValorLocacao() != null) {
-                sql.append(" valor_locacao_total = ?,");
+                sql.append(" valorlocacao_total = ?,");
             }
             Cliente cliente = locacao.getCliente();
             if (cliente != null) {

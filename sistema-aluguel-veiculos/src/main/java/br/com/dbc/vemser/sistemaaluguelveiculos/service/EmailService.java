@@ -65,9 +65,16 @@ public class EmailService {
     public void sendEmail(Locacao locacao, String templateName, String destinatario) {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         Map<String,Object> dados = new HashMap<>();
-        dados.put("nome", locacao.getFuncionario().getNome());
-        dados.put("id", locacao.getIdLocacao());
-        dados.put("email",locacao.getFuncionario().getEmail());
+        dados.put("nome", locacao.getCliente().getNome());
+        dados.put("id", locacao.getCliente().getIdCliente());
+        dados.put("email",locacao.getCliente().getContato().getEmail());
+        dados.put("idLocacao",locacao.getIdLocacao());
+        dados.put("valorLocacao",locacao.getValorLocacao());
+        dados.put("modeloVeiculo",locacao.getVeiculo().getModelo());
+        dados.put("marcaVeiculo",locacao.getVeiculo().getMarca());
+        dados.put("placaVeiculo",locacao.getVeiculo().getPlaca());
+        dados.put("dataLocacao",locacao.getDataLocacao());
+        dados.put("dataDevolucao",locacao.getDataDevolucao());
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
             mimeMessageHelper.setFrom(from);
