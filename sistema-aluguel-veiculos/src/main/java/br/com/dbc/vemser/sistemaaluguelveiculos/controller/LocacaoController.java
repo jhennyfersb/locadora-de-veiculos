@@ -1,7 +1,7 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
+import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.service.LocacaoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class LocacaoController implements LocacaoControllerInterface{
     private final LocacaoService locacaoService;
 
     @GetMapping // localhost:8080/locacao OK
-    public List<LocacaoDTO> list() throws BancoDeDadosException {
+    public List<LocacaoDTO> list() {
         return locacaoService.list();
     }
 
@@ -33,7 +33,7 @@ public class LocacaoController implements LocacaoControllerInterface{
 //    }
 
     @PostMapping // localhost:8080/locacao/4 OK
-    public ResponseEntity<LocacaoDTO> create(@Valid @RequestBody LocacaoCreateDTO locacaoCreateDTO) throws Exception {
+    public ResponseEntity<LocacaoDTO> create(@Valid @RequestBody LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
         log.info("Criando locação...");
         LocacaoDTO locacaoDTO = locacaoService.create(locacaoCreateDTO);
         log.info("Locação criada");
@@ -42,7 +42,7 @@ public class LocacaoController implements LocacaoControllerInterface{
 
     @PutMapping("/{idLocacao}") // localhost:8080/locacao/1000 OK
     public ResponseEntity<LocacaoDTO> update(@PathVariable("idLocacao") Integer id,
-                                             @Valid @RequestBody LocacaoCreateDTO locacaoAtualizar) throws Exception {
+                                             @Valid @RequestBody LocacaoCreateDTO locacaoAtualizar) throws RegraDeNegocioException {
         log.info("Atualizando locação...");
         LocacaoDTO locacaoDTO = locacaoService.update(id, locacaoAtualizar);
         log.info("Locação atualizado");
@@ -50,7 +50,7 @@ public class LocacaoController implements LocacaoControllerInterface{
     }
 
     @DeleteMapping("/{idLocacao}") // localhost:8080/locacao/10 OK
-    public ResponseEntity<LocacaoDTO> delete(@PathVariable("idLocacao") Integer id) throws Exception {
+    public ResponseEntity<LocacaoDTO> delete(@PathVariable("idLocacao") Integer id) throws RegraDeNegocioException {
         log.info("Deletando locação...");
         locacaoService.delete(id);
         log.info("Locação deletada");

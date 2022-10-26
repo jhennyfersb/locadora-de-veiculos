@@ -23,12 +23,12 @@ public class FuncionarioController implements FuncionarioControllerInterface{
     private final FuncionarioService funcionarioService;
 
     @GetMapping // localhost:8080/funcionario OK
-    public List<FuncionarioDTO> list() throws BancoDeDadosException {
+    public List<FuncionarioDTO> list() {
         return funcionarioService.list();
     }
 
     @PostMapping // localhost:8080/funcionario/4 OK
-    public ResponseEntity<FuncionarioDTO> create(@Valid @RequestBody FuncionarioCreateDTO funcionarioCreateDTO) throws Exception {
+    public ResponseEntity<FuncionarioDTO> create(@Valid @RequestBody FuncionarioCreateDTO funcionarioCreateDTO) {
         log.info("Criando funcionário...");
         FuncionarioDTO funcionarioDTO = funcionarioService.create(funcionarioCreateDTO);
         log.info("Funcionário criado!");
@@ -37,7 +37,7 @@ public class FuncionarioController implements FuncionarioControllerInterface{
 
     @PutMapping("/{idFuncionario}") // localhost:8080/funcionario/1000 OK
     public ResponseEntity<FuncionarioDTO> update(@PathVariable("idFuncionario") Integer id,
-                                              @Valid @RequestBody FuncionarioDTO funcionarioAtualizar) throws Exception {
+                                              @Valid @RequestBody FuncionarioDTO funcionarioAtualizar) {
         log.info("Atualizando funcionário...");
         FuncionarioDTO funcionarioDTO = funcionarioService.update(id, funcionarioAtualizar);
         log.info("Funcionário atualizado!");
@@ -45,7 +45,7 @@ public class FuncionarioController implements FuncionarioControllerInterface{
     }
 
     @DeleteMapping("/{idFuncionario}") // localhost:8080/funcionario/10 OK
-    public ResponseEntity<FuncionarioDTO> delete(@PathVariable("idFuncionario") Integer id) throws Exception {
+    public ResponseEntity<FuncionarioDTO> delete(@PathVariable("idFuncionario") Integer id) {
         log.info("Deletando funcionário...");
         funcionarioService.delete(id);
         log.info("Funcionário deletado!");

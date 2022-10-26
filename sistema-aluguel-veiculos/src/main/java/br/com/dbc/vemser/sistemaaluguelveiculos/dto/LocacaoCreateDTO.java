@@ -18,15 +18,15 @@ public class LocacaoCreateDTO {
 
 
     @FutureOrPresent
-    @Schema(description = "Data de locação.", example = "20/12/2022")
+    @Schema(description = "Data de locação.", example = "2022-12-20")
     private LocalDate dataLocacao;
 
     @Future
-    @Schema(description = "Data de devolução.", example = "26/12/2022")
+    @Schema(description = "Data de devolução.", example = "2022-12-26")
     private LocalDate dataDevolucao;
 
     @Min(1)
-    @Schema(description = "Data de devolução.", example = "26/12/2022")
+    @Schema(description = "Valor da locação", example = "1200")
     private Double valorLocacao;
 
     @NotNull

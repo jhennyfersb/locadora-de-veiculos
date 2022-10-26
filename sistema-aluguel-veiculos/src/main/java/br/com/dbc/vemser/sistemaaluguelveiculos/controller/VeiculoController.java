@@ -2,7 +2,6 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.service.VeiculoService;
 import lombok.RequiredArgsConstructor;

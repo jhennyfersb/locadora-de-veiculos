@@ -1,6 +1,5 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Funcionario;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Locacao;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;

@@ -33,7 +33,7 @@ public class ClienteService {
         return null;
     }
 
-    public ClienteDTO update(Integer id, ClienteCreateDTO cliente) throws BancoDeDadosException {
+    public ClienteDTO update(Integer id, ClienteCreateDTO cliente) {
         try {
             return objectMapper.convertValue(clienteRepository.update(id, converterEmCliente(cliente)), ClienteDTO.class);
         } catch (BancoDeDadosException e) {
@@ -50,11 +50,15 @@ public class ClienteService {
         }
     }
 
-    public List<ClienteDTO> list() throws BancoDeDadosException {
-        List<Cliente> listar = clienteRepository.list();
-        return listar.stream()
-                .map(this::converterEmDTO)
-                .collect(Collectors.toList());
+    public List<ClienteDTO> list() {
+        try {
+            return clienteRepository.list().stream()
+                    .map(this::converterEmDTO)
+                    .collect(Collectors.toList());
+        } catch (BancoDeDadosException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public int retornarIdContato(int id){

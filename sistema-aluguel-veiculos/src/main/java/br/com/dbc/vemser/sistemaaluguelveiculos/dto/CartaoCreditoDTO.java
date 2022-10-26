@@ -4,10 +4,6 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.entity.BandeiraCartao;
 import lombok.Data;
 
 @Data
-public class CartaoCreditoDTO {
+public class CartaoCreditoDTO extends CartaoCreditoCreateDTO{
     private Integer idCartaoCredito;
-    private String numero;
-    private BandeiraCartao bandeiraCartao;
-    private String validade;
-    private Double limite;
 }

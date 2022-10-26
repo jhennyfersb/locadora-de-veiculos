@@ -11,8 +11,8 @@ import lombok.Setter;
 @Setter
 public class Funcionario {
     private Integer idFuncionario;
-    private String email;
-    private Integer matricula;
     private String nome;
     private String cpf;
+    private String email;
+    private Integer matricula;
 }

@@ -29,7 +29,7 @@ public class EnderecoController implements EnderecoControllerInterface{
     }
 
     @PostMapping // localhost:8080/endereco/4 OK
-    public ResponseEntity<EnderecoDTO> create(@Valid @RequestBody EnderecoCreateDTO enderecoCreateDTO) throws Exception {
+    public ResponseEntity<EnderecoDTO> create(@Valid @RequestBody EnderecoCreateDTO enderecoCreateDTO) {
         log.info("Criando endereco...");
         EnderecoDTO enderecoDTO = enderecoService.create(enderecoCreateDTO);
         log.info("endereco criado");
@@ -38,7 +38,7 @@ public class EnderecoController implements EnderecoControllerInterface{
 
     @PutMapping("/{idEndereco}") // localhost:8080/endereco/1000 OK
     public ResponseEntity<EnderecoDTO> update(@PathVariable("idEndereco") Integer id,
-                                             @Valid @RequestBody EnderecoCreateDTO enderecoAtualizar) throws Exception {
+                                             @Valid @RequestBody EnderecoCreateDTO enderecoAtualizar) {
         log.info("Atualizando endereco...");
         EnderecoDTO enderecoDTO = enderecoService.update(id, enderecoAtualizar);
         log.info("endereco atualizado");
@@ -46,7 +46,7 @@ public class EnderecoController implements EnderecoControllerInterface{
     }
 
     @DeleteMapping("/{idEndereco}") // localhost:8080/endereco/10 OK
-    public ResponseEntity<EnderecoDTO> delete(@PathVariable("idEndereco") Integer id) throws Exception {
+    public ResponseEntity<EnderecoDTO> delete(@PathVariable("idEndereco") Integer id) {
         log.info("Deletando endereço...");
         enderecoService.delete(id);
         log.info("Endereço deletado!");

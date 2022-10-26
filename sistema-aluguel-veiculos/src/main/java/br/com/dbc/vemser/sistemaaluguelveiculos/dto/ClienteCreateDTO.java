@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @AllArgsConstructor
@@ -16,7 +17,11 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 public class ClienteCreateDTO {
+
+    @NotNull
     private Contato contato;
+
+    @NotNull
     private Endereco endereco;
 
     @NotBlank

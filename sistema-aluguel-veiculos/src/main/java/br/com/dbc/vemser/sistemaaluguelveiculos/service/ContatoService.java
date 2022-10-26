@@ -18,44 +18,43 @@ public class ContatoService {
     private final ContatoRepository contatoRepository;
     private final ObjectMapper objectMapper;
 
-    public ContatoDTO create(ContatoCreateDTO contato) throws BancoDeDadosException {
-        //        try {
+    public ContatoDTO create(ContatoCreateDTO contato) {
+        try {
         Contato contatoAdicionado = contatoRepository.create(converterEmContato(contato));
         return converterEmDTO(contatoAdicionado);
-//        } catch (BancoDeDadosException e) {
-//            e.printStackTrace();
-//        }
+        } catch (BancoDeDadosException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    // remoção
-    public void delete(Integer id) throws BancoDeDadosException {
-//        try {
+    public void delete(Integer id) {
+        try {
         contatoRepository.delete(id);
-//        } catch (BancoDeDadosException e) {
-//            e.printStackTrace();
-//        }
+        } catch (BancoDeDadosException e) {
+            e.printStackTrace();
+        }
     }
 
-    // atualização de um objeto
-    public ContatoDTO update(Integer id, ContatoCreateDTO contato) throws BancoDeDadosException {
-//        try {
+    public ContatoDTO update(Integer id, ContatoCreateDTO contato) {
+        try {
         return objectMapper.convertValue(contatoRepository.update(id, converterEmContato(contato)), ContatoDTO.class);
-//            System.out.println("funcionario editado? " + conseguiuEditar + "| com id=" + id);
-//        } catch (BancoDeDadosException e) {
-//            e.printStackTrace();
-//        }
+        } catch (BancoDeDadosException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    // leitura
-    public List<ContatoDTO> list() throws BancoDeDadosException {
-//        try {
+    public List<ContatoDTO> list() {
+        try {
         List<Contato> listar = contatoRepository.list();
         return listar.stream()
                 .map(this::converterEmDTO)
                 .collect(Collectors.toList());
-//        } catch (BancoDeDadosException e) {
-//            e.printStackTrace();
-//        }
+        } catch (BancoDeDadosException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public Contato converterEmContato(ContatoCreateDTO contatoCreateDTO){
@@ -66,15 +65,13 @@ public class ContatoService {
         return objectMapper.convertValue(contato, ContatoDTO.class);
     }
 
-    public void removerContatosOciosos() throws BancoDeDadosException {
+    public void removerContatosOciosos() {
+        try{
         contatoRepository.listarContatoSemVinculo()
-                .stream()
-                .forEach(contato -> {
-                    try {
-                        delete(contato.getIdContato());
-                    } catch (BancoDeDadosException e) {
-                        e.printStackTrace();
-                    }
-                });
+            .stream()
+            .forEach(contato -> delete(contato.getIdContato()));
+        }catch (BancoDeDadosException e) {
+            e.printStackTrace();
+        }
     }
 }

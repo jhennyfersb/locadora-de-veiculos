@@ -24,7 +24,7 @@ public class ClienteController implements ClienteControllerInterface {
     private final ClienteService clienteService;
 
     @GetMapping // localhost:8080/cliente OK
-    public List<ClienteDTO> list() throws BancoDeDadosException {
+    public List<ClienteDTO> list() {
         return clienteService.list();
     }
 
@@ -34,7 +34,7 @@ public class ClienteController implements ClienteControllerInterface {
 //    }
 
     @PostMapping // localhost:8080/cliente/4 OK
-    public ResponseEntity<ClienteDTO> create(@Valid @RequestBody ClienteCreateDTO clienteCreateDTO) throws Exception {
+    public ResponseEntity<ClienteDTO> create(@Valid @RequestBody ClienteCreateDTO clienteCreateDTO) {
         log.info("Criando cliente...");
         ClienteDTO clienteDTO = clienteService.create(clienteCreateDTO);
         log.info("Cliente criado");
@@ -43,7 +43,7 @@ public class ClienteController implements ClienteControllerInterface {
 
     @PutMapping("/{idCliente}") // localhost:8080/cliente/1000 OK
     public ResponseEntity<ClienteDTO> update(@PathVariable("idCliente") Integer id,
-                                             @Valid @RequestBody ClienteCreateDTO clienteAtualizar) throws Exception {
+                                             @Valid @RequestBody ClienteCreateDTO clienteAtualizar) {
         log.info("Atualizando cliente...");
         ClienteDTO clienteDTO = clienteService.update(id, clienteAtualizar);
         log.info("Cliente atualizado");
@@ -51,7 +51,7 @@ public class ClienteController implements ClienteControllerInterface {
     }
 
     @DeleteMapping("/{idCliente}") // localhost:8080/cliente/10 OK
-    public ResponseEntity<ClienteDTO> delete(@PathVariable("idCliente") Integer id) throws Exception {
+    public ResponseEntity<ClienteDTO> delete(@PathVariable("idCliente") Integer id) {
         log.info("Deletando cliente...");
         clienteService.delete(id);
         log.info("Cliente deletado");

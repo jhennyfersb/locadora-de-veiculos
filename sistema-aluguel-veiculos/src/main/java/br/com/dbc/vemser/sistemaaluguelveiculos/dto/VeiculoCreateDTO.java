@@ -14,13 +14,13 @@ public class VeiculoCreateDTO {
     @NotBlank
     @NotEmpty
     @NotNull
-    @Schema(description = "Marca do veículo.", example="Honda")
+    @Schema(description = "Marca do veículo.", example="Chevrolet")
     private String marca;
 
     @NotBlank
     @NotEmpty
     @NotNull
-    @Schema(description = "Modelo do veículo.", example="Fit")
+    @Schema(description = "Modelo do veículo.", example="Corsa Premium")
     private String modelo;
 
     @NotBlank
@@ -30,24 +30,24 @@ public class VeiculoCreateDTO {
     private String cor;
 
     @NotNull
-    @Schema(description = "Ano do veículo.", example= "2021")
+    @Schema(description = "Ano do veículo.", example= "2009")
     private Integer ano;
 
     @NotNull
-    @Schema(description = "Quilometragem do veículo.", example="1800")
+    @Schema(description = "Quilometragem do veículo.", example="87000")
     private Double quilometragem;
 
     @NotNull
-    @Schema(description = "Valor de locação do veículo.", example="220")
+    @Schema(description = "Valor de locação do veículo.", example="110")
     private Double valorLocacao;
 
     @NotNull
-    @Schema(description = "Disponibilidade do veículo.")
+    @Schema(description = "Disponibilidade do veículo (ALUGADO ou DISPONIVEL)", example = "DISPONIVEL")
     private DisponibilidadeVeiculo disponibilidadeVeiculo;
 
     @NotBlank
     @NotEmpty
     @NotNull
-    @Schema(description = "Placa do veículo.", example="KOT9898")
+    @Schema(description = "Placa do veículo.", example="PID2836")
     private String placa;
 }

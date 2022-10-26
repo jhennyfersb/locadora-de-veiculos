@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -14,9 +15,6 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FuncionarioCreateDTO{
-    @NotNull
-    @Schema(description = "Número de matrícula do funcionário.", example="8")
-    private Integer matricula;
 
     @NotNull
     @Schema(description = "Nome do funcionário.", example="Maifa")
@@ -26,4 +24,13 @@ public class FuncionarioCreateDTO{
     @Size(min = 11, max = 11)
     @Schema(description = "Cpf do funcionário.", example="99999999999")
     private String cpf;
+
+    @NotEmpty
+    @NotNull
+    @Schema(description = "E-mail do funcionário", example="maifa@javamail.com.br")
+    private String email;
+
+    @NotNull
+    @Schema(description = "Número de matrícula do funcionário.", example="8")
+    private Integer matricula;
 }

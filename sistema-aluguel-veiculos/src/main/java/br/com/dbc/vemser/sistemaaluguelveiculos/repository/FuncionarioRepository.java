@@ -37,17 +37,18 @@ public class FuncionarioRepository implements Repositorio<Integer, Funcionario> 
             funcionario.setIdFuncionario(proximoId);
 
             String sql = "INSERT INTO FUNCIONARIO\n" +
-                    "(id_funcionario, nome_funcionario, cpf_funcionario, matricula)\n" +
-                    "VALUES(?, ?, ?, ?)\n";
+                    "(id_funcionario, nome_funcionario, cpf_funcionario, email_funcionario, matricula)\n" +
+                    "VALUES(?, ?, ?, ?, ?)\n";
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
             stmt.setInt(1, funcionario.getIdFuncionario());
             stmt.setString(2, funcionario.getNome());
             stmt.setString(3, funcionario.getCpf());
-            stmt.setInt(4, funcionario.getMatricula());
+            stmt.setString(4, funcionario.getEmail());
+            stmt.setInt(5, funcionario.getMatricula());
 
-            int res = stmt.executeUpdate();
+            stmt.executeUpdate();
 
             return funcionario;
         } catch (SQLException e) {
@@ -75,7 +76,6 @@ public class FuncionarioRepository implements Repositorio<Integer, Funcionario> 
 
             stmt.setInt(1, id);
 
-            // Executa-se a consulta
             int res = stmt.executeUpdate();
 
             return res > 0;
@@ -102,6 +102,7 @@ public class FuncionarioRepository implements Repositorio<Integer, Funcionario> 
             sql.append("UPDATE FUNCIONARIO SET ");
             sql.append(" nome_funcionario = ?,");
             sql.append(" cpf_funcionario = ?,");
+            sql.append(" email_funcionario = ?,");
             sql.append(" matricula = ? ");
             sql.append(" WHERE id_funcionario = ? ");
 
@@ -110,8 +111,9 @@ public class FuncionarioRepository implements Repositorio<Integer, Funcionario> 
             funcionario.setIdFuncionario(id);
             stmt.setString(1, funcionario.getNome());
             stmt.setString(2, funcionario.getCpf());
-            stmt.setInt(3, funcionario.getMatricula());
-            stmt.setInt(4, id);
+            stmt.setString(3, funcionario.getEmail());
+            stmt.setInt(4, funcionario.getMatricula());
+            stmt.setInt(5, id);
 
             stmt.executeUpdate();
 
@@ -146,6 +148,7 @@ public class FuncionarioRepository implements Repositorio<Integer, Funcionario> 
                 funcionario.setIdFuncionario(res.getInt("id_funcionario"));
                 funcionario.setNome(res.getString("nome_funcionario"));
                 funcionario.setCpf(res.getString("cpf_funcionario"));
+                funcionario.setEmail(res.getString("email_funcionario"));
                 funcionario.setMatricula(res.getInt("matricula"));
                 funcionarios.add(funcionario);
             }
@@ -182,6 +185,7 @@ public class FuncionarioRepository implements Repositorio<Integer, Funcionario> 
                 funcionario.setIdFuncionario(res.getInt("id_funcionario"));
                 funcionario.setNome(res.getString("nome_funcionario"));
                 funcionario.setCpf(res.getString("cpf_funcionario"));
+                funcionario.setEmail(res.getString("email_funcionario"));
                 funcionario.setMatricula(res.getInt("matricula"));
             }
 

@@ -18,45 +18,44 @@ public class FuncionarioService {
     private final FuncionarioRepository funcionarioRepository;
     private final ObjectMapper objectMapper;
 
-    // criação de um objeto
-    public FuncionarioDTO create(FuncionarioCreateDTO funcionario) throws BancoDeDadosException {
-//        try {
+    public FuncionarioDTO create(FuncionarioCreateDTO funcionario) {
+        try {
             Funcionario funcionarioAdicionado = funcionarioRepository.create(converterEmFuncionario(funcionario));
             return converterEmDTO(funcionarioAdicionado);
-//        } catch (BancoDeDadosException e) {
-//            e.printStackTrace();
-//        }
+        } catch (BancoDeDadosException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    // remoção
-    public void delete(Integer id) throws BancoDeDadosException {
-//        try {
+    public void delete(Integer id) {
+        try {
             funcionarioRepository.delete(id);
-//        } catch (BancoDeDadosException e) {
-//            e.printStackTrace();
-//        }
+        } catch (BancoDeDadosException e) {
+            e.printStackTrace();
+        }
     }
 
-    // atualização de um objeto
-    public FuncionarioDTO update(Integer id, FuncionarioCreateDTO funcionario) throws BancoDeDadosException {
-//        try {
+    public FuncionarioDTO update(Integer id, FuncionarioCreateDTO funcionario) {
+        try {
             return objectMapper.convertValue(funcionarioRepository.update(id, converterEmFuncionario(funcionario)), FuncionarioDTO.class);
-//        } catch (BancoDeDadosException e) {
-//            e.printStackTrace();
-//        }
+        }catch (BancoDeDadosException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    // leitura
-    public List<FuncionarioDTO> list() throws BancoDeDadosException {
-//        try {
+    public List<FuncionarioDTO> list() {
+        try {
             List<Funcionario> listar = funcionarioRepository.list();
             return listar
-                    .stream()
-                    .map(this::converterEmDTO)
-                    .collect(Collectors.toList());
-//        } catch (BancoDeDadosException e) {
-//            e.printStackTrace();
-//        }
+                .stream()
+                .map(this::converterEmDTO)
+                .collect(Collectors.toList());
+        }catch (BancoDeDadosException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public Funcionario converterEmFuncionario(FuncionarioCreateDTO funcionarioCreateDTO){
@@ -67,12 +66,17 @@ public class FuncionarioService {
         return objectMapper.convertValue(funcionario, FuncionarioDTO.class);
     }
 
-     Funcionario findById(Integer id) throws RegraDeNegocioException, BancoDeDadosException {
-        return funcionarioRepository.list()
-                .stream()
-                .filter(funcionario -> funcionario.getIdFuncionario().equals(id))
-                .findFirst()
-                .orElseThrow(()-> new RegraDeNegocioException("Funcionario não encontrado"));
-    }
+     Funcionario findById(Integer id) throws RegraDeNegocioException{
+        try {
+            return funcionarioRepository.list()
+                    .stream()
+                    .filter(funcionario -> funcionario.getIdFuncionario().equals(id))
+                    .findFirst()
+                    .orElseThrow(() -> new RegraDeNegocioException("Funcionario não encontrado"));
+        }catch (BancoDeDadosException e) {
+            e.printStackTrace();
+        }
+         return null;
+     }
 }
 

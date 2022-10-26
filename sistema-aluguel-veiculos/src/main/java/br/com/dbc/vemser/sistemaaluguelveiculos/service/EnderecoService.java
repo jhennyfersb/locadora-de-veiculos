@@ -18,44 +18,43 @@ public class EnderecoService {
     private final EnderecoRepository enderecoRepository;
     private final ObjectMapper objectMapper;
 
-    public EnderecoDTO create(EnderecoCreateDTO enderecoCreateDTO) throws BancoDeDadosException {
-        //        try {
-        Endereco enderecoAdicionado = enderecoRepository.create(converterEmEndereco(enderecoCreateDTO));
-        return converterEmDTO(enderecoAdicionado);
-//        } catch (BancoDeDadosException e) {
-//            e.printStackTrace();
-//        }
+    public EnderecoDTO create(EnderecoCreateDTO enderecoCreateDTO) {
+        try {
+            Endereco enderecoAdicionado = enderecoRepository.create(converterEmEndereco(enderecoCreateDTO));
+            return converterEmDTO(enderecoAdicionado);
+        }catch (BancoDeDadosException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    // remoção
-    public void delete(Integer id) throws BancoDeDadosException {
-//        try {
-        enderecoRepository.delete(id);
-//        } catch (BancoDeDadosException e) {
-//            e.printStackTrace();
-//        }
+    public void delete(Integer id) {
+        try {
+            enderecoRepository.delete(id);
+        } catch (BancoDeDadosException e) {
+            e.printStackTrace();
+        }
     }
 
-    // atualização de um objeto
-    public EnderecoDTO update(Integer id, EnderecoCreateDTO enderecoCreateDTO) throws BancoDeDadosException {
-//        try {
-        return objectMapper.convertValue(enderecoRepository.update(id, converterEmEndereco(enderecoCreateDTO)), EnderecoDTO.class);
-//            System.out.println("funcionario editado? " + conseguiuEditar + "| com id=" + id);
-//        } catch (BancoDeDadosException e) {
-//            e.printStackTrace();
-//        }
+    public EnderecoDTO update(Integer id, EnderecoCreateDTO enderecoCreateDTO) {
+        try {
+            return objectMapper.convertValue(enderecoRepository.update(id, converterEmEndereco(enderecoCreateDTO)), EnderecoDTO.class);
+        }catch (BancoDeDadosException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    // leitura
-    public List<EnderecoDTO> list() throws BancoDeDadosException {
-//        try {
-        List<Endereco> listar = enderecoRepository.list();
+    public List<EnderecoDTO> list() {
+        try {
+            List<Endereco> listar = enderecoRepository.list();
         return listar.stream()
-                .map(this::converterEmDTO)
-                .collect(Collectors.toList());
-//        } catch (BancoDeDadosException e) {
-//            e.printStackTrace();
-//        }
+            .map(this::converterEmDTO)
+            .collect(Collectors.toList());
+        } catch (BancoDeDadosException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public Endereco converterEmEndereco(EnderecoCreateDTO enderecoCreateDTO){
@@ -66,20 +65,16 @@ public class EnderecoService {
         return objectMapper.convertValue(endereco, EnderecoDTO.class);
     }
 
-    public void removerEnderecosOciosos() throws BancoDeDadosException {
-//        try {
+    public void removerEnderecosOciosos() {
+        try {
             enderecoRepository.listarEnderecoSemVinculo()
-                    .stream()
-                    .forEach(enderecos -> {
-                        try {
-                            delete(enderecos.getIdEndereco());
-                        } catch (BancoDeDadosException e) {
-                            e.printStackTrace();
-                        }
-                    });
-//        }
-//        catch (BancoDeDadosException e){
-//            e.printStackTrace();
-//        }
+                .stream()
+                .forEach(enderecos -> {
+                    delete(enderecos.getIdEndereco());
+                });
+        }
+        catch (BancoDeDadosException e){
+            e.printStackTrace();
+        }
     }
 }
