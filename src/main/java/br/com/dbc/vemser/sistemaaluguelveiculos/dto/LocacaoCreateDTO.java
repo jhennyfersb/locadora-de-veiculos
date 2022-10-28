@@ -19,7 +19,6 @@ import java.time.LocalDate;
 @Setter
 public class LocacaoCreateDTO {
 
-
     @FutureOrPresent
     @Schema(description = "Data de locação.", example = "2022-12-20")
     private LocalDate dataLocacao;
@@ -38,7 +37,7 @@ public class LocacaoCreateDTO {
 
     @NotNull
     @Schema(description = "Id Veículo da locação.")
-    private Integer idveiculo;
+    private Integer idVeiculo;
 
     @NotNull
     @Schema(description = "Id Cartão de crédito da locação.")
@@ -47,5 +46,4 @@ public class LocacaoCreateDTO {
     @NotNull
     @Schema(description = "Id Cartão da locação.")
     private Integer idFuncionario;
-
 }

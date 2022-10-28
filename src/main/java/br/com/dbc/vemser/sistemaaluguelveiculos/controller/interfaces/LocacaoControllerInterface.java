@@ -1,10 +1,11 @@
-package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
+package br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
+import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -24,7 +25,7 @@ public interface LocacaoControllerInterface {
             }
     )
     @GetMapping
-    List<LocacaoDTO> list() throws BancoDeDadosException;
+    List<LocacaoDTO> list() throws RegraDeNegocioException;
 
     @Operation(summary = "Criar um registro de locação.", description = "Cria um cadastro de locação no banco de dados.")
     @ApiResponses(
@@ -35,7 +36,7 @@ public interface LocacaoControllerInterface {
             }
     )
     @PostMapping
-    ResponseEntity<LocacaoDTO> create(@Valid @RequestBody LocacaoCreateDTO locacaoCreateDTO) throws Exception;
+    ResponseEntity<LocacaoDTO> create(@Valid @RequestBody LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException;
 
     @Operation(summary = "Atualizar um registro de locação.", description = "Atualiza um cadastro de locação no banco de dados.")
     @ApiResponses(
@@ -47,7 +48,7 @@ public interface LocacaoControllerInterface {
     )
     @PutMapping("/{idLocacao}")
     ResponseEntity<LocacaoDTO> update(@PathVariable("idLocacao") Integer id,
-                                             @Valid @RequestBody LocacaoCreateDTO locacaoAtualizar) throws Exception;
+                                             @Valid @RequestBody LocacaoCreateDTO locacaoAtualizar) throws RegraDeNegocioException;
 
     @Operation(summary = "Excluir um registro de locação.", description = "Exclui um cadastro de locação no banco de dados.")
     @ApiResponses(
@@ -58,5 +59,5 @@ public interface LocacaoControllerInterface {
             }
     )
     @DeleteMapping("/{idLocacao}")
-    ResponseEntity<LocacaoDTO> delete(@PathVariable("idLocacao") Integer id) throws Exception;
+    ResponseEntity<LocacaoDTO> delete(@PathVariable("idLocacao") Integer id) throws RegraDeNegocioException;
 }

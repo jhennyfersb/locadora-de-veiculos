@@ -4,6 +4,7 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.BandeiraCartao;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.CartaoCredito;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -168,7 +169,7 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
         return cartoes;
     }
 
-    public CartaoCredito getPorId(Integer idCartao) throws BancoDeDadosException {
+    public CartaoCredito findById(Integer idCartao) throws BancoDeDadosException {
         CartaoCredito  cartaoCredito = new CartaoCredito();
         Connection con = null;
         try {
@@ -203,4 +204,6 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
             }
         }
     }
+
+
 }

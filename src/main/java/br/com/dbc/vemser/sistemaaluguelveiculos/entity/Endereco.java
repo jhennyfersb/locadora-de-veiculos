@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 public class Endereco {
     private Integer idEndereco;
+    private Integer idCliente;
     private String rua;
     private String numero;
     private String bairro;

@@ -1,5 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.repository;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Funcionario;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Contato;
 import lombok.RequiredArgsConstructor;
@@ -36,16 +37,17 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
             contato.setIdContato(proximoId);
 
             String sql = "INSERT INTO CONTATO\n" +
-                    "(id_contato, telefone, email)\n" +
-                    "VALUES(?, ?, ?)\n";
+                    "(id_contato, id_cliente, telefone, email)\n" +
+                    "VALUES(?, ?, ?, ?)\n";
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
             stmt.setInt(1, contato.getIdContato());
-            stmt.setString(2, contato.getTelefone());
-            stmt.setString(3, contato.getEmail());
+            stmt.setInt(2, contato.getIdCliente());
+            stmt.setString(3, contato.getTelefone());
+            stmt.setString(4, contato.getEmail());
 
-            int res = stmt.executeUpdate();
+            stmt.executeUpdate();
 
             return contato;
         } catch (SQLException e) {
@@ -97,6 +99,7 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE CONTATO SET ");
+            sql.append(" id_cliente = ?,");
             sql.append(" telefone = ?,");
             sql.append(" email = ?");
             sql.append(" WHERE id_contato = ? ");
@@ -104,11 +107,12 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
             contato.setIdContato(id);
-            stmt.setString(1, contato.getTelefone());
-            stmt.setString(2, contato.getEmail());
-            stmt.setInt(3, id);
+            stmt.setInt(1, contato.getIdCliente());
+            stmt.setString(2, contato.getTelefone());
+            stmt.setString(3, contato.getEmail());
+            stmt.setInt(4, id);
 
-            int res = stmt.executeUpdate();
+            stmt.executeUpdate();
 
             return contato;
         } catch (SQLException e) {
@@ -139,6 +143,7 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
             while (res.next()) {
                 Contato contato = new Contato();
                 contato.setIdContato(res.getInt("id_contato"));
+                contato.setIdCliente(res.getInt("id_cliente"));
                 contato.setTelefone(res.getString("telefone"));
                 contato.setEmail(res.getString("email"));
                 contatos.add(contato);
@@ -220,5 +225,41 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
             }
         }
         return contatos;
+    }
+
+    public Contato findById(Integer chave) throws BancoDeDadosException {
+        Contato contato = new Contato();
+        Connection con = null;
+        try {
+            con = conexaoBancoDeDados.getConnection();
+
+            String sql = "SELECT * FROM CONTATO\n" +
+                    "WHERE id_contato = ?";
+
+            PreparedStatement stmt = con.prepareStatement(sql.toString());
+
+            stmt.setInt(1,chave);
+
+            ResultSet res = stmt.executeQuery();
+
+            while (res.next()){
+                contato.setIdContato(res.getInt("id_contato"));
+                contato.setIdCliente(res.getInt("id_cliente"));
+                contato.setTelefone(res.getString("telefone"));
+                contato.setEmail(res.getString("email"));
+            }
+
+            return contato;
+        }catch (SQLException e){
+            throw new BancoDeDadosException(e.getCause());
+        }finally {
+            try {
+                if(con != null){
+                    con.close();
+                }
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
     }
 }

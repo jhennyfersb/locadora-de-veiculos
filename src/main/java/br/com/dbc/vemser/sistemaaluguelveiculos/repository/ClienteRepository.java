@@ -159,7 +159,7 @@ public class ClienteRepository implements Repositorio<Integer, Cliente> {
         return clientes;
     }
 
-    public Cliente getPorId(Integer chave) throws BancoDeDadosException {
+    public Cliente findById(Integer chave) throws BancoDeDadosException {
         Cliente cliente = new Cliente();
         Connection con = null;
         try {
@@ -194,9 +194,9 @@ public class ClienteRepository implements Repositorio<Integer, Cliente> {
         }
     }
 
-    public Cliente findById(Integer idCliente) {
-        return null;
-    }
+//    public Cliente findById(Integer idCliente) {
+//        return null;
+//    }
 
 //    private Contato getContatoFromResultSet(ResultSet res) throws SQLException {
 //        Contato contato = new Contato();

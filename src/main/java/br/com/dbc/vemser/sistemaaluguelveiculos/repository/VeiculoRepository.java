@@ -179,7 +179,7 @@ public class VeiculoRepository implements Repositorio<Integer, Veiculo> {
         return veiculos;
     }
 
-    public Veiculo getPorId(Integer chave) throws BancoDeDadosException {
+    public Veiculo findById(Integer chave) throws BancoDeDadosException {
         Veiculo veiculo = new Veiculo();
         Connection con = null;
         try {

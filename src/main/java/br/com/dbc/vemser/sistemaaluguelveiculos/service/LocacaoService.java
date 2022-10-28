@@ -1,11 +1,10 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoCreateDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
-import br.com.dbc.vemser.sistemaaluguelveiculos.repository.LocacaoRepository;
+import br.com.dbc.vemser.sistemaaluguelveiculos.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,20 +16,19 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LocacaoService {
     private final LocacaoRepository locacaoRepository;
-    private final FuncionarioService funcionarioService;
-    private final ClienteService clienteService;
-    private final CartaoCreditoService cartaoCreditoService;
-    private final VeiculoService veiculoService;
+    private final FuncionarioRepository funcionarioRepository;
+    private final ClienteRepository clienteRepository;
+    private final CartaoCreditoRepository cartaoCreditoRepository;
+    private final VeiculoRepository veiculoRepository;
 
     private final ObjectMapper objectMapper;
     private final EmailService emailService;
 
     public LocacaoDTO create(LocacaoCreateDTO locacaoDTO) throws RegraDeNegocioException {
         try {
-            Locacao locacaoAdicionada = locacaoRepository.create(converterEmLocacao(locacaoDTO));
-            System.out.println("locação adicinado com sucesso! \n" + locacaoAdicionada);
-            Funcionario funcionario = funcionarioService.findById(locacaoAdicionada.getFuncionario().getIdFuncionario());
-            emailService.sendEmail(locacaoAdicionada, "locacao-template.ftl", funcionario.getEmail());
+            Locacao locacaoAdicionada = locacaoRepository.create(converterDTOEmLocacao(converterEmLocacao(locacaoDTO)));
+            //Funcionario funcionario = funcionarioRepository.findById(locacaoAdicionada.getFuncionario().getIdFuncionario());
+           // emailService.sendEmail(locacaoAdicionada, "locacao-template.ftl", funcionario.getEmail());
             return converterEmDTO(locacaoAdicionada);
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
@@ -41,22 +39,18 @@ public class LocacaoService {
     public void delete(Integer id) throws RegraDeNegocioException {
         try {
             boolean conseguiuRemover = locacaoRepository.delete(id);
-            System.out.println("removido? " + conseguiuRemover + "| com id=" + id);
+            Locacao locacaoDeletada = findById(id);
+            Funcionario funcionario = funcionarioRepository.findById(locacaoDeletada.getFuncionario().getIdFuncionario());
+
+            emailService.sendEmail(locacaoDeletada, "locacao-template-delete.ftl", funcionario.getEmail());
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
         }
-        Locacao locacaoDeletada = findById(id);
-        Funcionario funcionario = funcionarioService.findById(locacaoDeletada.getFuncionario().getIdFuncionario());
-        emailService.sendEmail(locacaoDeletada, "locacao-template-delete.ftl", funcionario.getEmail());
     }
 
     public Locacao findById(Integer idLocacao) throws RegraDeNegocioException {
         try {
-            Locacao locacaoRecuperada = locacaoRepository.list().stream()
-                    .filter(locacao -> locacao.getFuncionario().getIdFuncionario().equals(idLocacao))
-                    .findFirst()
-                    .orElseThrow(() -> new RegraDeNegocioException("Locação não encontrada"));
-            return locacaoRecuperada;
+            return locacaoRepository.findById(idLocacao);
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
         }
@@ -65,10 +59,10 @@ public class LocacaoService {
 
     public LocacaoDTO update(Integer id, LocacaoCreateDTO locacao) throws RegraDeNegocioException {
         try {
-            Funcionario funcionario = funcionarioService.findById(id);
+            Funcionario funcionario = funcionarioRepository.findById(id);
             Locacao locacaoEntity = objectMapper.convertValue(locacao, Locacao.class);
-            emailService.sendEmail(locacaoEntity, "locacao-template-update.ftl", funcionario.getEmail());
-            return objectMapper.convertValue(locacaoRepository.update(id, converterEmLocacao(locacao)), LocacaoDTO.class);
+            //emailService.sendEmail(locacaoEntity, "locacao-template-update.ftl", funcionario.getEmail());
+            return converterEmDTO(locacaoRepository.update(id, locacaoEntity));
         } catch (BancoDeDadosException e) {
             e.printStackTrace();
         }
@@ -87,21 +81,33 @@ public class LocacaoService {
         return null;
     }
 
-    public Locacao converterEmLocacao(LocacaoCreateDTO locacaoCreateDTO) {
-        Funcionario funcionario = null;
-        //buscando na base para montar o objeto locacao, se existe funcionario, cliente, veiculo e cartao de credito monta o objeto locacao e retorna para ser salvo na base
+    public LocacaoDTO converterEmLocacao(LocacaoCreateDTO locacaoCreateDTO) {
+
         try {
-            funcionario = funcionarioService.findById(locacaoCreateDTO.getIdFuncionario());
-            Cliente cliente = clienteService.findById(locacaoCreateDTO.getIdCliente());
-            Veiculo veiculo = veiculoService.findById(locacaoCreateDTO.getIdveiculo());
-            CartaoCredito cartaoCredito = cartaoCreditoService.findById(locacaoCreateDTO.getIdCartaoCredito());
-            return new Locacao(null, locacaoCreateDTO.getDataLocacao(), locacaoCreateDTO.getDataDevolucao(), locacaoCreateDTO.getValorLocacao(), cliente, veiculo, cartaoCredito, funcionario);
-        } catch (RegraDeNegocioException | BancoDeDadosException e) {
+            Funcionario funcionario = funcionarioRepository.findById(locacaoCreateDTO.getIdFuncionario());
+            Cliente cliente = clienteRepository.findById(locacaoCreateDTO.getIdCliente());
+            Veiculo veiculo = veiculoRepository.findById(locacaoCreateDTO.getIdVeiculo());
+            CartaoCredito cartaoCredito = cartaoCreditoRepository.findById(locacaoCreateDTO.getIdCartaoCredito());
+            Locacao locacao = new Locacao(null,
+                    locacaoCreateDTO.getDataLocacao(),
+                    locacaoCreateDTO.getDataDevolucao(),
+                    locacaoCreateDTO.getValorLocacao(),
+                    cliente,
+                    veiculo,
+                    cartaoCredito,
+                    funcionario);
+            return converterEmDTO(locacao);
+        } catch (BancoDeDadosException e) {
             throw new RuntimeException(e);
         }
     }
-
     public LocacaoDTO converterEmDTO(Locacao locacao) {
         return objectMapper.convertValue(locacao, LocacaoDTO.class);
     }
+
+    public Locacao converterDTOEmLocacao(LocacaoDTO locacaodto) {
+        return objectMapper.convertValue(locacaodto, Locacao.class);
+    }
+
 }
+

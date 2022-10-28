@@ -1,9 +1,11 @@
-package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
+package br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces;
 
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.CartaoCreditoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ClienteCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ClienteDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
+import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -14,6 +16,16 @@ import javax.validation.Valid;
 import java.util.List;
 
 public interface ClienteControllerInterface {
+    @Operation(summary = "Retornar cliente com id específico.", description = "Retorna cliente com id especificado.")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Retorna cliente com id especificado."),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/{idCliente}")
+    ClienteDTO listByIdCliente(Integer id) throws RegraDeNegocioException;
 
     @Operation(summary = "Listar clientes", description = "Lista todos clientes do banco de dados.")
     @ApiResponses(
@@ -24,7 +36,7 @@ public interface ClienteControllerInterface {
             }
     )
     @GetMapping // localhost:8080/cliente OK
-    List<ClienteDTO> list() throws BancoDeDadosException;
+    List<ClienteDTO> list() throws RegraDeNegocioException;
 
     @Operation(summary = "Criar o registro de um cliente.", description = "Cria um cadastro de cliente no banco de dados.")
     @ApiResponses(
@@ -35,7 +47,7 @@ public interface ClienteControllerInterface {
             }
     )
     @PostMapping // localhost:8080/cliente/4 OK
-    ResponseEntity<ClienteDTO> create(@Valid @RequestBody ClienteCreateDTO clienteCreateDTO) throws Exception;
+    ResponseEntity<ClienteDTO> create(@Valid @RequestBody ClienteCreateDTO clienteCreateDTO) throws RegraDeNegocioException;
 
     @Operation(summary = "Atualizar o registro de um cliente.", description = "Atualiza um cadastro de cliente no banco de dados.")
     @ApiResponses(
@@ -47,7 +59,7 @@ public interface ClienteControllerInterface {
     )
     @PutMapping("/{idCliente}") // localhost:8080/cliente/1000 OK
     ResponseEntity<ClienteDTO> update(@PathVariable("idCliente") Integer id,
-                                             @Valid @RequestBody ClienteCreateDTO clienteAtualizar) throws Exception;
+                                             @Valid @RequestBody ClienteCreateDTO clienteAtualizar) throws RegraDeNegocioException;
 
     @Operation(summary = "Excluir o registro de um cliente.", description = "Exclui um cadastro de cliente no banco de dados.")
     @ApiResponses(
@@ -58,5 +70,5 @@ public interface ClienteControllerInterface {
             }
     )
     @DeleteMapping("/{idCliente}") // localhost:8080/cliente/10 OK
-    ResponseEntity<ClienteDTO> delete(@PathVariable("idCliente") Integer id) throws Exception;
+    ResponseEntity<ClienteDTO> delete(@PathVariable("idCliente") Integer id) throws RegraDeNegocioException;
 }

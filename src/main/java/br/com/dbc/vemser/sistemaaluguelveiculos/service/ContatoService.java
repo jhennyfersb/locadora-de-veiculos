@@ -4,6 +4,7 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ContatoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ContatoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Contato;
+import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.ContatoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -18,46 +19,43 @@ public class ContatoService {
     private final ContatoRepository contatoRepository;
     private final ObjectMapper objectMapper;
 
-    public ContatoDTO create(ContatoCreateDTO contato) {
+    public ContatoDTO create(ContatoCreateDTO contato) throws RegraDeNegocioException {
         try {
-        Contato contatoAdicionado = contatoRepository.create(converterEmContato(contato));
+        Contato contatoAdicionado = contatoRepository.create(converterEntity(contato));
         return converterEmDTO(contatoAdicionado);
         } catch (BancoDeDadosException e) {
-            e.printStackTrace();
+            throw new RegraDeNegocioException("Erro ao criar no banco de dados.");
         }
-        return null;
     }
 
-    public void delete(Integer id) {
+    public void delete(Integer id) throws RegraDeNegocioException {
         try {
         contatoRepository.delete(id);
         } catch (BancoDeDadosException e) {
-            e.printStackTrace();
+            throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
         }
     }
 
-    public ContatoDTO update(Integer id, ContatoCreateDTO contato) {
+    public ContatoDTO update(Integer id, ContatoCreateDTO contato) throws RegraDeNegocioException {
         try {
-        return objectMapper.convertValue(contatoRepository.update(id, converterEmContato(contato)), ContatoDTO.class);
+        return objectMapper.convertValue(contatoRepository.update(id, converterEntity(contato)), ContatoDTO.class);
         } catch (BancoDeDadosException e) {
-            e.printStackTrace();
+            throw new RegraDeNegocioException("Erro ao editar no banco de dados.");
         }
-        return null;
     }
 
-    public List<ContatoDTO> list() {
+    public List<ContatoDTO> list() throws RegraDeNegocioException {
         try {
         List<Contato> listar = contatoRepository.list();
         return listar.stream()
                 .map(this::converterEmDTO)
                 .collect(Collectors.toList());
         } catch (BancoDeDadosException e) {
-            e.printStackTrace();
+            throw new RegraDeNegocioException("Erro ao listar no banco de dados.");
         }
-        return null;
     }
 
-    public Contato converterEmContato(ContatoCreateDTO contatoCreateDTO){
+    public Contato converterEntity(ContatoCreateDTO contatoCreateDTO){
         return objectMapper.convertValue(contatoCreateDTO, Contato.class);
     }
 
@@ -65,13 +63,21 @@ public class ContatoService {
         return objectMapper.convertValue(contato, ContatoDTO.class);
     }
 
-    public void removerContatosOciosos() {
-        try{
-        contatoRepository.listarContatoSemVinculo()
-            .stream()
-            .forEach(contato -> delete(contato.getIdContato()));
+//    public void removerContatosOciosos() throws RegraDeNegocioException {
+//        try{
+//        contatoRepository.listarContatoSemVinculo()
+//            .stream()
+//            .forEach(contato -> delete(contato.getIdContato()));
+//        }catch (BancoDeDadosException e) {
+//            throw new RegraDeNegocioException("Erro ao remover no banco de dados.");
+//        }
+//    }
+
+    public ContatoDTO findById(Integer id) throws RegraDeNegocioException {
+        try {
+            return converterEmDTO(contatoRepository.findById(id));
         }catch (BancoDeDadosException e) {
-            e.printStackTrace();
+            throw new RegraDeNegocioException("Erro ao encontrar no banco de dados.");
         }
     }
 }

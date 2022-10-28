@@ -19,37 +19,34 @@ public class ClienteService {
     private final ClienteRepository clienteRepository;
     private final ObjectMapper objectMapper;
 
-    public ClienteDTO create(ClienteCreateDTO cliente) {
+    public ClienteDTO create(ClienteCreateDTO cliente) throws RegraDeNegocioException {
         try {
-            Cliente clienteEntity = objectMapper.convertValue(cliente, Cliente.class);
-            ClienteDTO clienteDTO = objectMapper.convertValue(clienteRepository.create(clienteEntity), ClienteDTO.class);
-            return clienteDTO;
+            Cliente clienteEntity = converterEntity(cliente);
+            return converterEmDTO(clienteRepository.create(clienteEntity));
         } catch (BancoDeDadosException e) {
-            e.printStackTrace();
+            throw new RegraDeNegocioException("Erro ao criar no banco de dados.");
+
         }
-        return null;
     }
 
     public ClienteDTO update(Integer idCliente, ClienteCreateDTO cliente) throws RegraDeNegocioException {
         try {
-            Cliente clienteRecuperado = clienteRepository.getPorId(idCliente);
+            Cliente clienteRecuperado = clienteRepository.findById(idCliente);
 
             if(clienteRecuperado.getIdCliente() != null) {
-                Cliente clienteEntity = objectMapper.convertValue(cliente, Cliente.class);
-                ClienteDTO clienteDTO = objectMapper.convertValue(clienteRepository.update(idCliente, clienteEntity), ClienteDTO.class);
-                return clienteDTO;
+                Cliente clienteEntity = converterEntity(cliente);
+                return converterEmDTO(clienteRepository.update(idCliente, clienteEntity));
             }else {
                 throw new RegraDeNegocioException("Cliente não encontrado!");
             }
         } catch (BancoDeDadosException e) {
-            e.printStackTrace();
+            throw new RegraDeNegocioException("Erro ao atualizar no banco de dados.");
         }
-        return null;
     }
 
     public void delete(Integer idCliente) throws RegraDeNegocioException {
         try {
-            Cliente clienteRecuperado = clienteRepository.getPorId(idCliente);
+            Cliente clienteRecuperado = clienteRepository.findById(idCliente);
 
             if(clienteRecuperado.getIdCliente() != null) {
                 clienteRepository.delete(idCliente);
@@ -57,22 +54,34 @@ public class ClienteService {
                 throw new RegraDeNegocioException("Cliente não encontrado!");
             }
         } catch (BancoDeDadosException e) {
-            e.printStackTrace();
+            throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
+
         }
     }
 
-    public List<ClienteDTO> list() {
+    public List<ClienteDTO> list() throws RegraDeNegocioException {
         try {
             return clienteRepository.list().stream()
                     .map(cliente -> objectMapper.convertValue(cliente, ClienteDTO.class))
                     .collect(Collectors.toList());
         } catch (BancoDeDadosException e) {
-            e.printStackTrace();
+            throw new RegraDeNegocioException("Erro ao recuperar os dados no banco de dados.");
         }
-        return null;
     }
 
-    public Cliente findById(Integer idCliente) throws BancoDeDadosException {
-        return clienteRepository.getPorId(idCliente);
+    public Cliente converterEntity(ClienteCreateDTO clienteCreateDTO){
+        return objectMapper.convertValue(clienteCreateDTO, Cliente.class);
+    }
+
+    public ClienteDTO converterEmDTO(Cliente cliente){
+        return objectMapper.convertValue(cliente, ClienteDTO.class);
+    }
+
+    public ClienteDTO findById(Integer id) throws RegraDeNegocioException{
+        try {
+            return converterEmDTO(clienteRepository.findById(id));
+        }catch (BancoDeDadosException e) {
+            throw new RegraDeNegocioException("Erro ao procurar no banco de dados.");
+        }
     }
 }

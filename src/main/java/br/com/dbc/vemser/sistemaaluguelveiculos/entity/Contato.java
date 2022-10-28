@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 public class Contato {
     private Integer idContato;
+    private Integer idCliente;
     private String telefone;
     private String email;
 }

@@ -1,5 +1,4 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.repository;
-
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Funcionario;
 import lombok.RequiredArgsConstructor;
@@ -166,7 +165,7 @@ public class FuncionarioRepository implements Repositorio<Integer, Funcionario> 
         return funcionarios;
     }
 
-    public Funcionario getPorId(Integer chave) throws BancoDeDadosException {
+    public Funcionario findById(Integer chave) throws BancoDeDadosException {
         Funcionario funcionario = new Funcionario();
         Connection con = null;
         try {

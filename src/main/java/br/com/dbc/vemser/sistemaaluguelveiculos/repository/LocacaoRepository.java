@@ -292,4 +292,44 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
         veiculo.setPlaca(res.getString("placa"));
         return veiculo;
     }
+
+    public Locacao findById(Integer chave) throws BancoDeDadosException {
+        Locacao locacao = new Locacao();
+        Connection con = null;
+        try {
+            con = conexaoBancoDeDados.getConnection();
+
+            String sql = "SELECT * FROM Locacao\n" +
+                    "WHERE id_locacao = ?";
+
+            PreparedStatement stmt = con.prepareStatement(sql);
+
+            stmt.setInt(1,chave);
+
+            ResultSet res = stmt.executeQuery();
+
+            while (res.next()){
+                locacao.setIdLocacao(res.getInt("id_locacao"));
+                locacao.setDataLocacao(res.getDate("data_locacao").toLocalDate());
+                locacao.setDataDevolucao(res.getDate("data_devolucao").toLocalDate());
+                locacao.setValorLocacao(res.getDouble("valor_locacao_total"));
+                locacao.setCliente(getClientFromResultSet(res));
+                locacao.setVeiculo(getVeiculoFromResultSet(res));
+                locacao.setFuncionario(getFuncionarioResultSet(res));
+                locacao.setCartaoCredito(getFromResultSetCartaoCredito(res));
+            }
+
+            return locacao;
+        }catch (SQLException e){
+            throw new BancoDeDadosException(e.getCause());
+        }finally {
+            try {
+                if(con != null){
+                    con.close();
+                }
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+    }
 }

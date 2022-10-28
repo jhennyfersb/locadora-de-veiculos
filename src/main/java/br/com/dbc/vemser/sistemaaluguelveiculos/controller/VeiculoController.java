@@ -1,5 +1,7 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces.VeiculoControllerInterface;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
@@ -19,16 +21,21 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/veiculo")
-public class VeiculoController implements VeiculoControllerInterface{
+public class VeiculoController implements VeiculoControllerInterface {
     private final VeiculoService veiculoService;
 
     @GetMapping
-    public List<VeiculoDTO> list() {
+    public List<VeiculoDTO> list() throws RegraDeNegocioException {
         return veiculoService.list();
     }
 
+    @GetMapping("/{idVeiculo}") // localhost:8080/endereco/2 OK
+    public VeiculoDTO listByIdVeiculo(@PathVariable("idVeiculo") Integer id) throws RegraDeNegocioException {
+        return veiculoService.findById(id);
+    }
+
     @PostMapping
-    public ResponseEntity<VeiculoDTO> create(@Valid @RequestBody VeiculoCreateDTO veiculoCreateDTO) {
+    public ResponseEntity<VeiculoDTO> create(@Valid @RequestBody VeiculoCreateDTO veiculoCreateDTO) throws RegraDeNegocioException {
         log.info("Criando veículo...");
         VeiculoDTO veiculoDTO = veiculoService.create(veiculoCreateDTO);
         log.info("Veículo criado!");

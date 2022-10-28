@@ -1,7 +1,9 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces.ClienteControllerInterface;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ClienteCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ClienteDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ContatoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.service.ClienteService;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +26,17 @@ public class ClienteController implements ClienteControllerInterface {
     private final ClienteService clienteService;
 
     @GetMapping // localhost:8080/cliente OK
-    public List<ClienteDTO> list() {
+    public List<ClienteDTO> list() throws RegraDeNegocioException {
         return clienteService.list();
     }
 
+    @GetMapping("/{idCliente}") // localhost:8080/endereco/2 OK
+    public ClienteDTO listByIdCliente(@PathVariable("idCliente") Integer id) throws RegraDeNegocioException {
+        return clienteService.findById(id);
+    }
+
     @PostMapping // localhost:8080/cliente/4 OK
-    public ResponseEntity<ClienteDTO> create(@Valid @RequestBody ClienteCreateDTO clienteCreateDTO) {
+    public ResponseEntity<ClienteDTO> create(@Valid @RequestBody ClienteCreateDTO clienteCreateDTO) throws RegraDeNegocioException {
         log.info("Criando cliente...");
         ClienteDTO clienteDTO = clienteService.create(clienteCreateDTO);
         log.info("Cliente criado");

@@ -36,21 +36,22 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
             endereco.setIdEndereco(proximoId);
 
             String sql = "INSERT INTO ENDERECO_CLIENTE\n" +
-                    "(id_endereco, rua, numero, bairro, cidade, estado, cep, complemento)\n" +
-                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?)\n";
+                    "(id_endereco, id_cliente,  rua, numero, bairro, cidade, estado, cep, complemento)\n" +
+                    "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)\n";
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
             stmt.setInt(1, endereco.getIdEndereco());
-            stmt.setString(2, endereco.getRua());
-            stmt.setString(3, endereco.getNumero());
-            stmt.setString(4, endereco.getBairro());
-            stmt.setString(5, endereco.getCidade());
-            stmt.setString(6, endereco.getEstado());
-            stmt.setString(7, endereco.getCep());
-            stmt.setString(8, endereco.getComplemento());
+            stmt.setInt(2, endereco.getIdCliente());
+            stmt.setString(3, endereco.getRua());
+            stmt.setString(4, endereco.getNumero());
+            stmt.setString(5, endereco.getBairro());
+            stmt.setString(6, endereco.getCidade());
+            stmt.setString(7, endereco.getEstado());
+            stmt.setString(8, endereco.getCep());
+            stmt.setString(9, endereco.getComplemento());
 
-            int res = stmt.executeUpdate();
+            stmt.executeUpdate();
 
             return endereco;
         } catch (SQLException e) {
@@ -102,6 +103,7 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE ENDERECO_CLIENTE SET ");
+            sql.append(" id_cliente = ?,");
             sql.append(" rua = ?,");
             sql.append(" numero = ?,");
             sql.append(" bairro = ?,");
@@ -114,14 +116,15 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
             endereco.setIdEndereco(id);
-            stmt.setString(1, endereco.getRua());
-            stmt.setString(2, endereco.getNumero());
-            stmt.setString(3, endereco.getBairro());
-            stmt.setString(4, endereco.getCidade());
-            stmt.setString(5, endereco.getEstado());
-            stmt.setString(6, endereco.getCep());
-            stmt.setString(7, endereco.getComplemento());
-            stmt.setInt(8, id);
+            stmt.setInt(1, endereco.getIdCliente());
+            stmt.setString(2, endereco.getRua());
+            stmt.setString(3, endereco.getNumero());
+            stmt.setString(4, endereco.getBairro());
+            stmt.setString(5, endereco.getCidade());
+            stmt.setString(6, endereco.getEstado());
+            stmt.setString(7, endereco.getCep());
+            stmt.setString(8, endereco.getComplemento());
+            stmt.setInt(9, id);
 
             stmt.executeUpdate();
 
@@ -154,6 +157,7 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
             while (res.next()) {
                 Endereco endereco = new Endereco();
                 endereco.setIdEndereco(res.getInt("id_endereco"));
+                endereco.setIdCliente(res.getInt("id_cliente"));
                 endereco.setRua(res.getString("rua"));
                 endereco.setNumero(res.getString("numero"));
                 endereco.setBairro(res.getString("bairro"));
@@ -247,7 +251,7 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
         return enderecos;
     }
 
-  public Endereco getPorId(Integer chave) throws BancoDeDadosException {
+  public Endereco findById(Integer chave) throws BancoDeDadosException {
         Endereco endereco = new Endereco();
         Connection con = null;
 
@@ -263,6 +267,7 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
 
             while (res.next()){
                 endereco.setIdEndereco(res.getInt("id_endereco"));
+                endereco.setIdCliente(res.getInt("id_cliente"));
                 endereco.setRua(res.getString("rua"));
                 endereco.setNumero(res.getString("numero"));
                 endereco.setBairro(res.getString("bairro"));

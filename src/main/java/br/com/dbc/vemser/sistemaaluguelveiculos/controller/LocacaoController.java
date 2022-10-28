@@ -1,4 +1,5 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
+import br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces.LocacaoControllerInterface;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
@@ -18,7 +19,7 @@ import java.util.List;
 @Validated
 @RequiredArgsConstructor
 @RequestMapping("/locacao") // localhost:8080/locacao
-public class LocacaoController implements LocacaoControllerInterface{
+public class LocacaoController implements LocacaoControllerInterface {
 
     private final LocacaoService locacaoService;
 

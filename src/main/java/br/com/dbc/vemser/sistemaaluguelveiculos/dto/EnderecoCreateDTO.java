@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -14,6 +15,10 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EnderecoCreateDTO {
+
+    @NotNull
+    @Min(1)
+    private Integer idCliente;
 
     @NotBlank(message = "Nome da rua não pode ser vazio ou nulo.")
     @Schema(description = "Rua do endereço", example="Rua Verde")

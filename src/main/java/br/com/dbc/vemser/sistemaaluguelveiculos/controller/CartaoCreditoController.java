@@ -1,7 +1,9 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces.CartaoCreditoControllerInterface;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.CartaoCreditoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.CartaoCreditoDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ClienteDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.service.CartaoCreditoService;
 import lombok.RequiredArgsConstructor;
@@ -19,17 +21,22 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/cartao")
-public class CartaoCreditoController implements CartaoCreditoControllerInterface{
+public class CartaoCreditoController implements CartaoCreditoControllerInterface {
 
     private final CartaoCreditoService cartaoCreditoService;
 
     @GetMapping
-    public List<CartaoCreditoDTO> list() {
+    public List<CartaoCreditoDTO> list() throws RegraDeNegocioException {
         return cartaoCreditoService.list();
     }
 
+    @GetMapping("/{idCartaoCredito}") // localhost:8080/endereco/2 OK
+    public CartaoCreditoDTO listByIdCartaoCredito(@PathVariable("idCartaoCredito") Integer id) throws RegraDeNegocioException {
+        return cartaoCreditoService.findById(id);
+    }
+
     @PostMapping
-    public ResponseEntity<CartaoCreditoDTO> create(@Valid @RequestBody CartaoCreditoCreateDTO cartaoCredito) {
+    public ResponseEntity<CartaoCreditoDTO> create(@Valid @RequestBody CartaoCreditoCreateDTO cartaoCredito) throws RegraDeNegocioException {
         log.info("Criando Cartão de Crédito...");
         CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.create(cartaoCredito);
         log.info("Cartão de Crédto criado!");

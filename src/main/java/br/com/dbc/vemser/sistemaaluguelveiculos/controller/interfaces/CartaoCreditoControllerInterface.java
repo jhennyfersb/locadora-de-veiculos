@@ -1,4 +1,4 @@
-package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
+package br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.CartaoCreditoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.CartaoCreditoDTO;
@@ -14,6 +14,17 @@ import javax.validation.Valid;
 import java.util.List;
 
 public interface CartaoCreditoControllerInterface {
+    @Operation(summary = "Retornar cartão de crédito com id específico.", description = "Retorna cartão de crédito com id específico.")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Retorna cartão de crédito com id específico."),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/{idCartaoCredito}")
+    CartaoCreditoDTO listByIdCartaoCredito(Integer id) throws RegraDeNegocioException;
+
     @Operation(summary = "Listar cartões de crédito.", description = "Lista todos os cartões de crédito do banco de dados.")
     @ApiResponses(
             value = {
@@ -23,7 +34,7 @@ public interface CartaoCreditoControllerInterface {
             }
     )
     @GetMapping
-    List<CartaoCreditoDTO> list();
+    List<CartaoCreditoDTO> list() throws RegraDeNegocioException;
 
     @Operation(summary = "Criar o registro de um cartão de crédito.", description = "Cria um cadastro de cartão de crédito no banco de dados.")
     @ApiResponses(
@@ -34,7 +45,7 @@ public interface CartaoCreditoControllerInterface {
             }
     )
     @PostMapping
-    ResponseEntity<CartaoCreditoDTO> create(@Valid @RequestBody CartaoCreditoCreateDTO cartaoCredito);
+    ResponseEntity<CartaoCreditoDTO> create(@Valid @RequestBody CartaoCreditoCreateDTO cartaoCredito) throws RegraDeNegocioException;
 
     @Operation(summary = "Atualizar o registro de um cartão de crédito.", description = "Atualiza um cadastro de cartão de crédito no banco de dados.")
     @ApiResponses(

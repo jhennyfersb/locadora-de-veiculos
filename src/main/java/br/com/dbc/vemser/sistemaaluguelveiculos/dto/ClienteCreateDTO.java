@@ -1,7 +1,5 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.dto;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Contato;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Endereco;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @AllArgsConstructor

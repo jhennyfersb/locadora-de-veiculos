@@ -1,5 +1,6 @@
-package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
+package br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
@@ -13,6 +14,17 @@ import javax.validation.Valid;
 import java.util.List;
 
 public interface VeiculoControllerInterface {
+    @Operation(summary = "Retornar veículo com id específico.", description = "Retorna veículo com id especificado.")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Retorna veículo com id especificado."),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/{idVeiculo}")
+    VeiculoDTO listByIdVeiculo(Integer id) throws RegraDeNegocioException;
+
     @Operation(summary = "Listar veículos", description = "Lista todas as veículos do banco de dados.")
     @ApiResponses(
             value = {
@@ -22,7 +34,7 @@ public interface VeiculoControllerInterface {
             }
     )
     @GetMapping
-    public List<VeiculoDTO> list();
+    public List<VeiculoDTO> list() throws RegraDeNegocioException;
 
     @Operation(summary = "Criar um registro de veículo.", description = "Cria um cadastro de veículo no banco de dados.")
     @ApiResponses(
@@ -33,7 +45,7 @@ public interface VeiculoControllerInterface {
             }
     )
     @PostMapping
-    public ResponseEntity<VeiculoDTO> create(@Valid @RequestBody VeiculoCreateDTO veiculoCreateDTO);
+    public ResponseEntity<VeiculoDTO> create(@Valid @RequestBody VeiculoCreateDTO veiculoCreateDTO) throws RegraDeNegocioException;
 
     @Operation(summary = "Atualizar um registro de veículo.", description = "Atualiza um cadastro de veículo no banco de dados.")
     @ApiResponses(
