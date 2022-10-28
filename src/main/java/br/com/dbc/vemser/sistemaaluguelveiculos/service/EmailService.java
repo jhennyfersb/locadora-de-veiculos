@@ -67,7 +67,7 @@ public class EmailService {
         Map<String,Object> dados = new HashMap<>();
         dados.put("nome", locacao.getCliente().getNome());
         dados.put("id", locacao.getCliente().getIdCliente());
-        dados.put("email",locacao.getCliente().getContato().getEmail());
+//        dados.put("email",locacao.getCliente().getContato().getEmail());
         dados.put("idLocacao",locacao.getIdLocacao());
         dados.put("valorLocacao",locacao.getValorLocacao());
         dados.put("modeloVeiculo",locacao.getVeiculo().getModelo());

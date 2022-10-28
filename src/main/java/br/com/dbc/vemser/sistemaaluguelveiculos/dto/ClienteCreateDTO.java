@@ -18,12 +18,6 @@ import javax.validation.constraints.Size;
 @Setter
 public class ClienteCreateDTO {
 
-    @NotNull
-    private Contato contato;
-
-    @NotNull
-    private Endereco endereco;
-
     @NotBlank
     @Schema(description = "Nome do cliente.", example="Carlinhos da viola")
     private String nome;

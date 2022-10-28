@@ -2,7 +2,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ClienteCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ClienteDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
+import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.service.ClienteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,11 +28,6 @@ public class ClienteController implements ClienteControllerInterface {
         return clienteService.list();
     }
 
-//    @GetMapping("/{idFuncionario}") // localhost:8080/endereco/2 OK
-//    public List<FuncionarioDTO> listByIdFuncionario(@PathVariable("idFuncionario") Integer id) {
-//        return funcionarioService.listByIdEndereco(id);
-//    }
-
     @PostMapping // localhost:8080/cliente/4 OK
     public ResponseEntity<ClienteDTO> create(@Valid @RequestBody ClienteCreateDTO clienteCreateDTO) {
         log.info("Criando cliente...");
@@ -43,7 +38,7 @@ public class ClienteController implements ClienteControllerInterface {
 
     @PutMapping("/{idCliente}") // localhost:8080/cliente/1000 OK
     public ResponseEntity<ClienteDTO> update(@PathVariable("idCliente") Integer id,
-                                             @Valid @RequestBody ClienteCreateDTO clienteAtualizar) {
+                                             @Valid @RequestBody ClienteCreateDTO clienteAtualizar) throws RegraDeNegocioException {
         log.info("Atualizando cliente...");
         ClienteDTO clienteDTO = clienteService.update(id, clienteAtualizar);
         log.info("Cliente atualizado");
@@ -51,7 +46,7 @@ public class ClienteController implements ClienteControllerInterface {
     }
 
     @DeleteMapping("/{idCliente}") // localhost:8080/cliente/10 OK
-    public ResponseEntity<ClienteDTO> delete(@PathVariable("idCliente") Integer id) {
+    public ResponseEntity<ClienteDTO> delete(@PathVariable("idCliente") Integer id) throws RegraDeNegocioException {
         log.info("Deletando cliente...");
         clienteService.delete(id);
         log.info("Cliente deletado");

@@ -255,8 +255,6 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
         cliente.setIdCliente(res.getInt("id_cliente"));
         cliente.setNome(res.getString("nome_cliente"));
         cliente.setCpf(res.getString("cpf_cliente"));
-        cliente.setContato(getContatoFromResultSet(res));
-        cliente.setEndereco(getEnderecoResultSet(res));
         return cliente;
     }
 

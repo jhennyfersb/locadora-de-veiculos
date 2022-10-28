@@ -11,8 +11,6 @@ import lombok.Setter;
 @Setter
 public class Cliente {
     private Integer idCliente;
-    private Contato contato;
-    private Endereco endereco;
     private String nome;
     private String cpf;
 }
