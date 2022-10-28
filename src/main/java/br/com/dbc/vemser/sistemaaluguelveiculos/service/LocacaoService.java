@@ -31,9 +31,8 @@ public class LocacaoService {
            // emailService.sendEmail(locacaoAdicionada, "locacao-template.ftl", funcionario.getEmail());
             return converterEmDTO(locacaoAdicionada);
         } catch (BancoDeDadosException e) {
-            e.printStackTrace();
+            throw new RegraDeNegocioException("Erro ao criar no banco de dados.");
         }
-        return null;
     }
 
     public void delete(Integer id) throws RegraDeNegocioException {
@@ -44,7 +43,7 @@ public class LocacaoService {
 
             emailService.sendEmail(locacaoDeletada, "locacao-template-delete.ftl", funcionario.getEmail());
         } catch (BancoDeDadosException e) {
-            e.printStackTrace();
+            throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
         }
     }
 
@@ -52,9 +51,8 @@ public class LocacaoService {
         try {
             return locacaoRepository.findById(idLocacao);
         } catch (BancoDeDadosException e) {
-            e.printStackTrace();
+            throw new RegraDeNegocioException("Erro ao encontrar no banco de dados.");
         }
-        return null;
     }
 
     public LocacaoDTO update(Integer id, LocacaoCreateDTO locacao) throws RegraDeNegocioException {
@@ -64,21 +62,19 @@ public class LocacaoService {
             //emailService.sendEmail(locacaoEntity, "locacao-template-update.ftl", funcionario.getEmail());
             return converterEmDTO(locacaoRepository.update(id, locacaoEntity));
         } catch (BancoDeDadosException e) {
-            e.printStackTrace();
+            throw new RegraDeNegocioException("Erro ao editar no banco de dados.");
         }
-        return null;
     }
 
-    public List<LocacaoDTO> list() {
+    public List<LocacaoDTO> list() throws RegraDeNegocioException {
         try {
             List<Locacao> listar = locacaoRepository.list();
             return listar.stream()
                     .map(this::converterEmDTO)
                     .collect(Collectors.toList());
         } catch (BancoDeDadosException e) {
-            e.printStackTrace();
+            throw new RegraDeNegocioException("Erro ao listar no banco de dados.");
         }
-        return null;
     }
 
     public LocacaoDTO converterEmLocacao(LocacaoCreateDTO locacaoCreateDTO) {
