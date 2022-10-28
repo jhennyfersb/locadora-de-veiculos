@@ -70,4 +70,8 @@ public class CartaoCreditoService {
         }
         return null;
     }
+
+    public CartaoCredito findById(Integer idCartaoCredito) throws BancoDeDadosException {
+        return cartaoCreditoRepository.getPorId(idCartaoCredito);
+    }
 }

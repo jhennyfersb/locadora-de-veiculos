@@ -28,16 +28,16 @@ public class EmailService {
     private final freemarker.template.Configuration fmConfiguration;
 
     @Value("${spring.mail.username}")
-    private String from;
+    private String destinatario;
 
-    private static final String TO = "jhennyfer.sobrinho@dbccompany.com.br";
+    private static final String remetente = "jhennyfer.sobrinho@dbccompany.com.br";
 
     private final JavaMailSender emailSender;
 
     public void sendSimpleMessage() {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(from);
-        message.setTo(TO);
+        message.setFrom(destinatario);
+        message.setTo(remetente);
         message.setSubject("Assunto");
         message.setText("Teste \n minha mensagem \n\nAtt,\nSistema.");
         emailSender.send(message);
@@ -49,8 +49,8 @@ public class EmailService {
         MimeMessageHelper helper = new MimeMessageHelper(message,
                 true);
 
-        helper.setFrom(from);
-        helper.setTo(TO);
+        helper.setFrom(destinatario);
+        helper.setTo(remetente);
         helper.setSubject("Subject");
         helper.setText("Teste\n minha mensagem \n\nAtt,\nSistema.");
         File file1 = ResourceUtils.getFile("classpath:imagem.jpg");
@@ -67,7 +67,7 @@ public class EmailService {
         Map<String,Object> dados = new HashMap<>();
         dados.put("nome", locacao.getCliente().getNome());
         dados.put("id", locacao.getCliente().getIdCliente());
-//        dados.put("email",locacao.getCliente().getContato().getEmail());
+        dados.put("email", remetente);
         dados.put("idLocacao",locacao.getIdLocacao());
         dados.put("valorLocacao",locacao.getValorLocacao());
         dados.put("modeloVeiculo",locacao.getVeiculo().getModelo());
@@ -77,7 +77,7 @@ public class EmailService {
         dados.put("dataDevolucao",locacao.getDataDevolucao());
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-            mimeMessageHelper.setFrom(from);
+            mimeMessageHelper.setFrom(remetente);
             mimeMessageHelper.setTo(destinatario);
             mimeMessageHelper.setSubject("subject");
             mimeMessageHelper.setText(geContentFromTemplate(dados,templateName), true);

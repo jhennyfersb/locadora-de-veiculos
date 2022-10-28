@@ -73,4 +73,8 @@ public class VeiculoService {
         }
         return null;
     }
+
+    public Veiculo findById(Integer idveiculo) throws BancoDeDadosException {
+        return veiculoRepository.getPorId(idveiculo);
+    }
 }

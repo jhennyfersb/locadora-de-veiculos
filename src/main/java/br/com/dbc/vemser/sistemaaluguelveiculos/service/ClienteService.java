@@ -71,4 +71,8 @@ public class ClienteService {
         }
         return null;
     }
+
+    public Cliente findById(Integer idCliente) throws BancoDeDadosException {
+        return clienteRepository.getPorId(idCliente);
+    }
 }

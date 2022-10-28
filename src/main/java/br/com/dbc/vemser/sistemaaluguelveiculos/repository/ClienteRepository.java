@@ -194,6 +194,10 @@ public class ClienteRepository implements Repositorio<Integer, Cliente> {
         }
     }
 
+    public Cliente findById(Integer idCliente) {
+        return null;
+    }
+
 //    private Contato getContatoFromResultSet(ResultSet res) throws SQLException {
 //        Contato contato = new Contato();
 //        contato.setIdContato(res.getInt("id_contato"));
