@@ -195,9 +195,9 @@ public class ContatoRepository implements Repositorio<Integer, Contato> {
             Statement stmt = con.createStatement();
 
             String sql = "SELECT * FROM CONTATO C\n" +
-                    "LEFT JOIN CLIENTE L\n" +
-                    "ON L.ID_CONTATO = C.ID_CONTATO\n" +
-                    "WHERE L.ID_CONTATO  IS NULL ";
+                    "LEFT JOIN CLIENTE CL\n" +
+                    "ON C.ID_CLIENTE = CL.ID_CLIENTE\n" +
+                    "WHERE C.ID_CONTATO  IS NULL ";
 
             ResultSet res = stmt.executeQuery(sql);
 

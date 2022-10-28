@@ -42,7 +42,7 @@ public class ClienteController implements ClienteControllerInterface {
         log.info("Atualizando cliente...");
         ClienteDTO clienteDTO = clienteService.update(id, clienteAtualizar);
         log.info("Cliente atualizado");
-        return new ResponseEntity<>(clienteDTO,HttpStatus.OK);
+        return new ResponseEntity<>(clienteDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{idCliente}") // localhost:8080/cliente/10 OK

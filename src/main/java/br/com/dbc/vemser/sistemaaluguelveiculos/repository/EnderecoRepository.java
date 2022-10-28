@@ -215,9 +215,9 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
             Statement stmt = con.createStatement();
 
             String sql = "SELECT * FROM ENDERECO_CLIENTE E\n" +
-                    "LEFT JOIN CLIENTE L\n" +
-                    "ON L.ID_ENDERECO = E.ID_ENDERECO\n" +
-                    "WHERE L.ID_ENDERECO IS NULL ";
+                    "LEFT JOIN CLIENTE CL\n" +
+                    "ON E.ID_CLIENTE = CL.ID_CLIENTE \n" +
+                    "WHERE E.ID_ENDERECO IS NULL ";
 
             ResultSet res = stmt.executeQuery(sql);
 

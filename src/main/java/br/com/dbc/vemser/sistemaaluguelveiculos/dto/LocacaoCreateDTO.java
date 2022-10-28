@@ -1,13 +1,16 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.dto;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.CartaoCredito;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Cliente;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Funcionario;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Veiculo;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @AllArgsConstructor
@@ -30,18 +33,19 @@ public class LocacaoCreateDTO {
     private Double valorLocacao;
 
     @NotNull
-    @Schema(description = "Cliente da locação.")
-    private Cliente cliente;
+    @Schema(description = "Id Cliente da locação.")
+    private Integer idCliente;
 
     @NotNull
-    @Schema(description = "Veículo da locação.")
-    private Veiculo veiculo;
+    @Schema(description = "Id Veículo da locação.")
+    private Integer idveiculo;
 
     @NotNull
-    @Schema(description = "Cartão de crédito da locação.")
-    private CartaoCredito cartaoCredito;
+    @Schema(description = "Id Cartão de crédito da locação.")
+    private Integer idCartaoCredito;
 
     @NotNull
-    @Schema(description = "Funcionário da locação.")
-    private Funcionario funcionario;
+    @Schema(description = "Id Cartão da locação.")
+    private Integer idFuncionario;
+
 }

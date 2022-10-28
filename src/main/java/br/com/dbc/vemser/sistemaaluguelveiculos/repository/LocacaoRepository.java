@@ -193,9 +193,9 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
             String sql = "select * from LOCACAO L\n" +
                     "left join CLIENTE C2 on C2.ID_CLIENTE = L.ID_CLIENTE\n" +
                     "left join VEICULO V on V.ID_VEICULO = L.ID_VEICULO\n" +
-                    "left join CONTATO C3 on C3.ID_CONTATO = C2.ID_CONTATO\n" +
+                    "left join CONTATO C3 on C3.ID_CLIENTE = C2.ID_CLIENTE\n" +
                     "left join FUNCIONARIO F on F.ID_FUNCIONARIO = L.ID_FUNCIONARIO\n" +
-                    "left join ENDERECO_CLIENTE EC on EC.ID_ENDERECO = C2.ID_ENDERECO\n" +
+                    "left join ENDERECO_CLIENTE EC on EC.ID_CLIENTE = C2.ID_CLIENTE\n" +
                     "left join CARTAO_CREDITO CC on L.ID_CARTAO = CC.ID_CARTAO";
 
             ResultSet res = stmt.executeQuery(sql);
