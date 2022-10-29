@@ -62,7 +62,16 @@ public class VeiculoService {
             throw new RegraDeNegocioException("Erro ao listar no banco de dados.");
         }
     }
+    public List<VeiculoDTO> listVeiculosDisponiveis() throws RegraDeNegocioException {
+        try {
+            return veiculoRepository.listarVeiculosDisponiveis().stream()
+                    .map(this::converterEmDTO)
+                    .collect(Collectors.toList());
 
+        } catch (BancoDeDadosException e) {
+            throw new RegraDeNegocioException("Erro ao listar no banco de dados.");
+        }
+    }
     public Veiculo converterEntity(VeiculoCreateDTO veiculoCreateDTO){
         return objectMapper.convertValue(veiculoCreateDTO, Veiculo.class);
     }

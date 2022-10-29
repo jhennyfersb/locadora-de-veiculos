@@ -1,6 +1,5 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
@@ -24,6 +23,18 @@ public interface VeiculoControllerInterface {
     )
     @GetMapping("/{idVeiculo}")
     VeiculoDTO listByIdVeiculo(Integer id) throws RegraDeNegocioException;
+
+    @Operation(summary = "Retornar veículos disponíveis.", description = "Retorna veículos disponíveis.")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Retorna veículos disponíveis."),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/disponiveis")
+    public List<VeiculoDTO> listVeiculosDisponives() throws RegraDeNegocioException;
+
 
     @Operation(summary = "Listar veículos", description = "Lista todas as veículos do banco de dados.")
     @ApiResponses(
