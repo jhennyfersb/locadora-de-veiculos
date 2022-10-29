@@ -27,8 +27,8 @@ public class LocacaoService {
     public LocacaoDTO create(LocacaoCreateDTO locacaoDTO) throws RegraDeNegocioException {
         try {
             Locacao locacaoAdicionada = locacaoRepository.create(converterDTOEmLocacao(converterEmLocacao(locacaoDTO)));
-            //Funcionario funcionario = funcionarioRepository.findById(locacaoAdicionada.getFuncionario().getIdFuncionario());
-            // emailService.sendEmail(locacaoAdicionada, "locacao-template.ftl", funcionario.getEmail());
+            Funcionario funcionario = funcionarioRepository.findById(locacaoAdicionada.getFuncionario().getIdFuncionario());
+            emailService.sendEmail(locacaoAdicionada, "locacao-template.ftl", funcionario.getEmail());
             return converterEmDTO(locacaoAdicionada);
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao criar no banco de dados.");
@@ -39,9 +39,9 @@ public class LocacaoService {
         try {
             boolean conseguiuRemover = locacaoRepository.delete(id);
             Locacao locacaoDeletada = converterDTOEmLocacao(findById(id));
-            Funcionario funcionario = funcionarioRepository.findById(locacaoDeletada.getFuncionario().getIdFuncionario());
+           // Funcionario funcionario = funcionarioRepository.findById(locacaoDeletada.getFuncionario().getIdFuncionario());
 
-            emailService.sendEmail(locacaoDeletada, "locacao-template-delete.ftl", funcionario.getEmail());
+           // emailService.sendEmail(locacaoDeletada, "locacao-template-delete.ftl", funcionario.getEmail());
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
         }

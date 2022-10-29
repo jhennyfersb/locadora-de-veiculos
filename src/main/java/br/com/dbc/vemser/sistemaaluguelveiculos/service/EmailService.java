@@ -43,30 +43,13 @@ public class EmailService {
         emailSender.send(message);
     }
 
-    public void sendWithAttachment() throws MessagingException, FileNotFoundException {
-        MimeMessage message = emailSender.createMimeMessage();
-
-        MimeMessageHelper helper = new MimeMessageHelper(message,
-                true);
-
-        helper.setFrom(destinatario);
-        helper.setTo(remetente);
-        helper.setSubject("Subject");
-        helper.setText("Teste\n minha mensagem \n\nAtt,\nSistema.");
-        File file1 = ResourceUtils.getFile("classpath:imagem.jpg");
-        //File file1 = new File("imagem.jpg");
-        FileSystemResource file
-                = new FileSystemResource(file1);
-        helper.addAttachment(file1.getName(), file);
-
-        emailSender.send(message);
-    }
 
     public void sendEmail(Locacao locacao, String templateName, String destinatario) {
+
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         Map<String,Object> dados = new HashMap<>();
-        dados.put("nome", locacao.getCliente().getNome());
-        dados.put("id", locacao.getCliente().getIdCliente());
+        dados.put("nome", locacao.getFuncionario().getNome());
+        dados.put("id", locacao.getFuncionario().getIdFuncionario());
         dados.put("email", remetente);
         dados.put("idLocacao",locacao.getIdLocacao());
         dados.put("valorLocacao",locacao.getValorLocacao());
@@ -79,9 +62,14 @@ public class EmailService {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
             mimeMessageHelper.setFrom(remetente);
             mimeMessageHelper.setTo(destinatario);
-            mimeMessageHelper.setSubject("subject");
+            mimeMessageHelper.setSubject("Locação");
             mimeMessageHelper.setText(geContentFromTemplate(dados,templateName), true);
+            File file1 = ResourceUtils.getFile("classpath:imagem.jpg");
+            FileSystemResource file
+                    = new FileSystemResource(file1);
+            mimeMessageHelper.addAttachment(file1.getName(), file);
             emailSender.send(mimeMessageHelper.getMimeMessage());
+
         } catch (MessagingException | IOException | TemplateException e) {
             e.printStackTrace();
         }

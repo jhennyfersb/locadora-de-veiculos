@@ -236,7 +236,7 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
         funcionario.setIdFuncionario(res.getInt("id_funcionario"));
         funcionario.setNome(res.getString("nome_funcionario"));
         funcionario.setCpf(res.getString("cpf_funcionario"));
-        funcionario.setEmail(res.getString("email"));
+        funcionario.setEmail(res.getString("email_funcionario"));
         funcionario.setMatricula(res.getInt("matricula"));
         return funcionario;
     }
