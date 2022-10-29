@@ -8,6 +8,7 @@ import java.time.LocalDate;
 public class LocacaoDTO  {
     private Integer idLocacao;
     private LocalDate dataLocacao;
+    private LocalDate dataDevolucao;
     private Double valorLocacao;
     private Cliente cliente;
     private Veiculo veiculo;
