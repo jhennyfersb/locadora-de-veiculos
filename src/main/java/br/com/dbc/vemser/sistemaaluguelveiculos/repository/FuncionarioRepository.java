@@ -1,6 +1,7 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.repository;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Funcionario;
+import br.com.dbc.vemser.sistemaaluguelveiculos.repository.interfaces.Repositorio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

@@ -18,4 +18,5 @@ public class Locacao {
     private Veiculo veiculo;
     private CartaoCredito cartaoCredito;
     private Funcionario funcionario;
+
 }

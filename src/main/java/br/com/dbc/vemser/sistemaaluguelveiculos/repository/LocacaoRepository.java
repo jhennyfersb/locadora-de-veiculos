@@ -1,7 +1,10 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.repository;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.BandeiraCartao;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.DisponibilidadeVeiculo;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.*;
+import br.com.dbc.vemser.sistemaaluguelveiculos.repository.interfaces.Repositorio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -69,17 +72,8 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
     @Override
     public boolean delete(Integer id) throws BancoDeDadosException {
         Connection con = null;
-        int idCartao = 0;
         try {
             con = conexaoBancoDeDados.getConnection();
-
-            String sql2 = "SELECT L.ID_CARTAO FROM LOCACAO L WHERE L.ID_LOCACAO = ?";
-            PreparedStatement stmt2 = con.prepareStatement(sql2);
-            stmt2.setInt(1, id);
-            ResultSet res = stmt2.executeQuery();
-            while (res.next()) {
-                idCartao = res.getInt("id_cartao");
-            }
 
             String sql = "DELETE FROM LOCACAO WHERE id_locacao = ?";
 

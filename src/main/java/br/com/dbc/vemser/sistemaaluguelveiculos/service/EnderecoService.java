@@ -2,13 +2,8 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioCreateDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Contato;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Funcionario;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Veiculo;
-import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Endereco;
+import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.EnderecoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;

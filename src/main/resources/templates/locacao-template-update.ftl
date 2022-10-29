@@ -6,7 +6,7 @@
 
 <body>
 Olá ${nome},
-Seus dados foram atualizados em nosso sistema.
+Os dados foram atualizados em nosso sistema.
 
 Dados da locacação:<br>
 O identicador da  locação é ${idLocacao}.<br>

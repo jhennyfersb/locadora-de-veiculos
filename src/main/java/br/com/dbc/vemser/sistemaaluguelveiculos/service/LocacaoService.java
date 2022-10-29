@@ -20,6 +20,10 @@ public class LocacaoService {
     private final ClienteRepository clienteRepository;
     private final CartaoCreditoRepository cartaoCreditoRepository;
     private final VeiculoRepository veiculoRepository;
+    private final FuncionarioService funcionarioService;
+    private final ClienteService clienteService;
+    private final VeiculoService veiculoService;
+    private final CartaoCreditoService cartaoCreditoService;
 
     private final ObjectMapper objectMapper;
     private final EmailService emailService;
@@ -39,9 +43,9 @@ public class LocacaoService {
         try {
             boolean conseguiuRemover = locacaoRepository.delete(id);
             Locacao locacaoDeletada = converterDTOEmLocacao(findById(id));
-           // Funcionario funcionario = funcionarioRepository.findById(locacaoDeletada.getFuncionario().getIdFuncionario());
+           Funcionario funcionario = funcionarioRepository.findById(locacaoDeletada.getFuncionario().getIdFuncionario());
 
-           // emailService.sendEmail(locacaoDeletada, "locacao-template-delete.ftl", funcionario.getEmail());
+           emailService.sendEmail(locacaoDeletada, "locacao-template-delete.ftl", funcionario.getEmail());
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
         }
@@ -49,26 +53,35 @@ public class LocacaoService {
 
     public LocacaoDTO findById(Integer idLocacao) throws RegraDeNegocioException {
         try {
-            return converterEmDTO(locacaoRepository.findById(idLocacao));
-        } catch (BancoDeDadosException e) {
-            throw new RegraDeNegocioException("Erro ao encontrar no banco de dados.");
-        }
+            Locacao locacaoRecuperada = locacaoRepository.findById(idLocacao);
+
+            if(locacaoRecuperada.getIdLocacao() != null) {
+                return converterEmDTO(locacaoRecuperada);
+            }else {
+                throw new RegraDeNegocioException("Locação não encontrada");
+            }
+        }catch (BancoDeDadosException e) {
+            throw new RegraDeNegocioException("Erro ao encontrar no banco de dados.");        }
     }
 
     public LocacaoDTO update(Integer id, LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
         try {
-            Funcionario funcionario = funcionarioRepository.findById(locacaoCreateDTO.getIdFuncionario());
-            Cliente cliente = clienteRepository.findById(locacaoCreateDTO.getIdCliente());
-            Veiculo veiculo = veiculoRepository.findById(locacaoCreateDTO.getIdVeiculo());
-            Locacao locacaoRepository = this.locacaoRepository.findById(id);
-            locacaoRepository.setVeiculo(veiculo);
-            locacaoRepository.setCliente(cliente);
-            locacaoRepository.setFuncionario(funcionario);
-            locacaoRepository.setValorLocacao(locacaoCreateDTO.getValorLocacao());
-            locacaoRepository.setDataLocacao(locacaoCreateDTO.getDataLocacao());
-            locacaoRepository.setDataDevolucao(locacaoCreateDTO.getDataDevolucao());
-            Locacao locacaoAdicionada = this.locacaoRepository.update(locacaoRepository.getIdLocacao(), locacaoRepository);
-            //emailService.sendEmail(locacaoEntity, "locacaoCreateDTO-template-update.ftl", funcionario.getEmail());
+            FuncionarioDTO funcionarioDTO = funcionarioService.findById(locacaoCreateDTO.getIdFuncionario());
+            ClienteDTO clienteDTO = clienteService.findById(locacaoCreateDTO.getIdCliente());
+            VeiculoDTO veiculoDTO = veiculoService.findById(locacaoCreateDTO.getIdVeiculo());
+            CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.findById(locacaoCreateDTO.getIdCartaoCredito());
+            Locacao locacaoEntity = objectMapper.convertValue(this.findById(id), Locacao.class);
+
+            locacaoEntity.setVeiculo(objectMapper.convertValue(veiculoDTO, Veiculo.class));
+            locacaoEntity.setCliente(objectMapper.convertValue(clienteDTO, Cliente.class));
+            locacaoEntity.setFuncionario(objectMapper.convertValue(funcionarioDTO, Funcionario.class));
+            locacaoEntity.setCartaoCredito(objectMapper.convertValue(cartaoCreditoDTO, CartaoCredito.class));
+            locacaoEntity.setValorLocacao(locacaoCreateDTO.getValorLocacao());
+            locacaoEntity.setDataLocacao(locacaoCreateDTO.getDataLocacao());
+            locacaoEntity.setDataDevolucao(locacaoCreateDTO.getDataDevolucao());
+
+            Locacao locacaoAdicionada = this.locacaoRepository.update(locacaoEntity.getIdLocacao(), locacaoEntity);
+            emailService.sendEmail(locacaoEntity, "locacaoCreateDTO-template-update.ftl", funcionarioDTO.getEmail());
             return converterEmDTO(locacaoAdicionada);
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao editar no banco de dados.");
@@ -86,13 +99,25 @@ public class LocacaoService {
         }
     }
 
-    public LocacaoDTO converterEmLocacao(LocacaoCreateDTO locacaoCreateDTO) {
+    public LocacaoDTO converterEmLocacao(LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException{
 
         try {
             Funcionario funcionario = funcionarioRepository.findById(locacaoCreateDTO.getIdFuncionario());
+            if(funcionario.getIdFuncionario() == null){
+                throw new RegraDeNegocioException("Funcionário não encontrado.");
+            }
             Cliente cliente = clienteRepository.findById(locacaoCreateDTO.getIdCliente());
+            if(cliente.getIdCliente() == null){
+                throw new RegraDeNegocioException("Cliente não encontrado.");
+            }
             Veiculo veiculo = veiculoRepository.findById(locacaoCreateDTO.getIdVeiculo());
+            if(veiculo.getIdVeiculo() == null){
+                throw new RegraDeNegocioException("Endereço não encontrado.");
+            }
             CartaoCredito cartaoCredito = cartaoCreditoRepository.findById(locacaoCreateDTO.getIdCartaoCredito());
+            if(cartaoCredito.getIdCartaoCredito() == null){
+                throw new RegraDeNegocioException("Cartão de crédito não encontrado.");
+            }
             Locacao locacao = new Locacao(null,
                     locacaoCreateDTO.getDataLocacao(),
                     locacaoCreateDTO.getDataDevolucao(),
@@ -103,7 +128,7 @@ public class LocacaoService {
                     funcionario);
             return converterEmDTO(locacao);
         } catch (BancoDeDadosException e) {
-            throw new RuntimeException(e);
+            throw new RegraDeNegocioException("Erro ao instanciar locação.");
         }
     }
 
@@ -115,5 +140,23 @@ public class LocacaoService {
         return objectMapper.convertValue(locacaodto, Locacao.class);
     }
 
+//    try {
+//        FuncionarioDTO funcionario = funcionarioRepository.findById(locacaoCreateDTO.getIdFuncionario());
+//        Cliente cliente = clienteRepository.findById(locacaoCreateDTO.getIdCliente());
+//        Veiculo veiculo = veiculoRepository.findById(locacaoCreateDTO.getIdVeiculo());
+//        Locacao locacaoRepository = this.locacaoRepository.findById(id);
+//        locacaoRepository.setVeiculo(veiculo);
+//        locacaoRepository.setCliente(cliente);
+//        locacaoRepository.setFuncionario(funcionario);
+//        locacaoRepository.setValorLocacao(locacaoCreateDTO.getValorLocacao());
+//        locacaoRepository.setDataLocacao(locacaoCreateDTO.getDataLocacao());
+//        locacaoRepository.setDataDevolucao(locacaoCreateDTO.getDataDevolucao());
+//        Locacao locacaoAdicionada = this.locacaoRepository.update(locacaoRepository.getIdLocacao(), locacaoRepository);
+//        //emailService.sendEmail(locacaoEntity, "locacaoCreateDTO-template-update.ftl", funcionario.getEmail());
+//        return converterEmDTO(locacaoAdicionada);
+//    } catch (BancoDeDadosException e) {
+//        throw new RegraDeNegocioException("Erro ao editar no banco de dados.");
+//    }
+//}
 }
 

@@ -1,7 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces.VeiculoControllerInterface;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;

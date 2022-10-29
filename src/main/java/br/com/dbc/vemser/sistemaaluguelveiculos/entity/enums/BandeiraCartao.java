@@ -1,4 +1,4 @@
-package br.com.dbc.vemser.sistemaaluguelveiculos.entity;
+package br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums;
 
 public enum BandeiraCartao {
     VISA(1),

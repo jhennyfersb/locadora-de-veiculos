@@ -16,7 +16,6 @@ import org.springframework.util.ResourceUtils;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +48,6 @@ public class EmailService {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         Map<String,Object> dados = new HashMap<>();
         dados.put("nome", locacao.getFuncionario().getNome());
-        dados.put("id", locacao.getFuncionario().getIdFuncionario());
         dados.put("email", remetente);
         dados.put("idLocacao",locacao.getIdLocacao());
         dados.put("valorLocacao",locacao.getValorLocacao());

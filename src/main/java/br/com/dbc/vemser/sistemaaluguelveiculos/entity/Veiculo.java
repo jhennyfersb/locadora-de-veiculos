@@ -1,5 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.entity;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.DisponibilidadeVeiculo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

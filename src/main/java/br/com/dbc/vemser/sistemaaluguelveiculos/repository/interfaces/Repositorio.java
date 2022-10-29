@@ -1,4 +1,4 @@
-package br.com.dbc.vemser.sistemaaluguelveiculos.repository;
+package br.com.dbc.vemser.sistemaaluguelveiculos.repository.interfaces;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 

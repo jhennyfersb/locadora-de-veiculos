@@ -1,6 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.dto;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.DisponibilidadeVeiculo;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.DisponibilidadeVeiculo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

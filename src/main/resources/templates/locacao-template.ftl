@@ -6,18 +6,15 @@
 
 <body>
 Olá ${nome},<br>
-Estamos felizes em ter você em nosso sistema :)<br>
-A locação foi realizado com sucesso,seu identificador é ${id}.<br>
-
+Você acaba de realizar uma locação :)<br>
 Dados da locacação:<br>
 O identicador da locação é ${idLocacao}.<br>
-Valor locacao ${valorLocacao}.<br>
+No valor de $ ${valorLocacao}.<br>
 O veiculo é um ${modeloVeiculo}
 da marca ${marcaVeiculo}
 de placa  ${placaVeiculo}.<br>
 data da locação é ${dataLocacao}.<br>
 data de devolução ${dataDevolucao}.<br>
-
 
 Qualquer dúvida é só contatar o suporte pelo e-mail ${email}
 

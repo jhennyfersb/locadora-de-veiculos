@@ -3,8 +3,6 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
 import br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces.EnderecoControllerInterface;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.service.EnderecoService;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +38,7 @@ public class EnderecoController implements EnderecoControllerInterface {
     public ResponseEntity<EnderecoDTO> create(@Valid @RequestBody EnderecoCreateDTO enderecoCreateDTO) throws RegraDeNegocioException {
         log.info("Criando endereco...");
         EnderecoDTO enderecoDTO = enderecoService.create(enderecoCreateDTO);
-        log.info("endereco criado");
+        log.info("Endereço criado");
         return new ResponseEntity<>(enderecoDTO, HttpStatus.OK);
     }
 
@@ -49,7 +47,7 @@ public class EnderecoController implements EnderecoControllerInterface {
                                              @Valid @RequestBody EnderecoCreateDTO enderecoAtualizar) throws RegraDeNegocioException {
         log.info("Atualizando endereco...");
         EnderecoDTO enderecoDTO = enderecoService.update(id, enderecoAtualizar);
-        log.info("endereco atualizado");
+        log.info("Endereço atualizado");
         return new ResponseEntity<>(enderecoDTO,HttpStatus.OK);
     }
 
