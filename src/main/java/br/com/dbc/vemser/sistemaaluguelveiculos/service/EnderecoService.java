@@ -66,19 +66,6 @@ public class EnderecoService {
         return objectMapper.convertValue(endereco, EnderecoDTO.class);
     }
 
-//    public void removerEnderecosOciosos() throws RegraDeNegocioException {
-//        try {
-//            enderecoRepository.listarEnderecoSemVinculo()
-//                .stream()
-//                .forEach(enderecos -> {
-//                    delete(enderecos.getIdEndereco());
-//                });
-//        }
-//        catch (BancoDeDadosException e){
-//            throw new RegraDeNegocioException("Erro ao remover no banco de dados.");
-//        }
-//    }
-
     public EnderecoDTO findById(Integer id) throws RegraDeNegocioException {
         try {
             Endereco enderecoRecuperado = enderecoRepository.findById(id);

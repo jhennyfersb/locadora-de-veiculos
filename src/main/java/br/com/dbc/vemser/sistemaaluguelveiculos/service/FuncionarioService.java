@@ -50,11 +50,6 @@ public class FuncionarioService {
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao editar no banco de dados.");
         }
-//        try {
-//            return objectMapper.convertValue(funcionarioRepository.update(id, converterEntity(funcionario)), FuncionarioDTO.class);
-//        }catch (BancoDeDadosException e) {
-//            throw new RegraDeNegocioException("Erro ao editar no banco de dados.");
-//        }
     }
 
     public List<FuncionarioDTO> list() throws RegraDeNegocioException {

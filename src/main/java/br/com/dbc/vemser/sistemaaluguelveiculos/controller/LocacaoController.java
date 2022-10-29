@@ -24,17 +24,17 @@ public class LocacaoController implements LocacaoControllerInterface {
 
     private final LocacaoService locacaoService;
 
-    @GetMapping // localhost:8080/locacao OK
+    @GetMapping
     public List<LocacaoDTO> list() throws RegraDeNegocioException {
         return locacaoService.list();
     }
 
-    @GetMapping("/{idLocacao}") // localhost:8080/endereco/2 OK
+    @GetMapping("/{idLocacao}")
     public LocacaoDTO listByIdLocacao(@PathVariable("idLocacao") Integer id) throws RegraDeNegocioException {
         return locacaoService.findById(id);
     }
 
-    @PostMapping // localhost:8080/locacao/4 OK
+    @PostMapping
     public ResponseEntity<LocacaoDTO> create(@Valid @RequestBody LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
         log.info("Criando locação...");
         LocacaoDTO locacaoDTO = locacaoService.create(locacaoCreateDTO);
@@ -42,7 +42,7 @@ public class LocacaoController implements LocacaoControllerInterface {
         return new ResponseEntity<>(locacaoDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/{idLocacao}") // localhost:8080/locacao/1000 OK
+    @PutMapping("/{idLocacao}")
     public ResponseEntity<LocacaoDTO> update(@PathVariable("idLocacao") Integer id,
                                              @Valid @RequestBody LocacaoCreateDTO locacaoAtualizar) throws RegraDeNegocioException {
         log.info("Atualizando locação...");
@@ -50,7 +50,7 @@ public class LocacaoController implements LocacaoControllerInterface {
         log.info("Locação atualizado");
         return new ResponseEntity<>(locacaoDTO,HttpStatus.OK);
     }
-    @DeleteMapping("/{idLocacao}") // localhost:8080/locacao/10 OK
+    @DeleteMapping("/{idLocacao}")
     public ResponseEntity<LocacaoDTO> delete(@PathVariable("idLocacao") Integer id) throws RegraDeNegocioException {
         log.info("Deletando locação...");
         locacaoService.delete(id);

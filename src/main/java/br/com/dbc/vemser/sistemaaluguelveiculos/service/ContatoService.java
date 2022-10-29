@@ -66,15 +66,7 @@ public class ContatoService {
         return objectMapper.convertValue(contato, ContatoDTO.class);
     }
 
-//    public void removerContatosOciosos() throws RegraDeNegocioException {
-//        try{
-//        contatoRepository.listarContatoSemVinculo()
-//            .stream()
-//            .forEach(contato -> delete(contato.getIdContato()));
-//        }catch (BancoDeDadosException e) {
-//            throw new RegraDeNegocioException("Erro ao remover no banco de dados.");
-//        }
-//    }
+
 
     public ContatoDTO findById(Integer id) throws RegraDeNegocioException {
         try {

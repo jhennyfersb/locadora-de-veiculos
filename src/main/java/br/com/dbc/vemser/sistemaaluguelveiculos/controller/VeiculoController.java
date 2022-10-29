@@ -28,7 +28,7 @@ public class VeiculoController implements VeiculoControllerInterface {
         return veiculoService.list();
     }
 
-    @GetMapping("/{idVeiculo}") // localhost:8080/endereco/2 OK
+    @GetMapping("/{idVeiculo}")
     public VeiculoDTO listByIdVeiculo(@PathVariable("idVeiculo") Integer id) throws RegraDeNegocioException {
         return veiculoService.findById(id);
     }

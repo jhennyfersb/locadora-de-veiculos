@@ -42,7 +42,6 @@ public class EmailService {
         emailSender.send(message);
     }
 
-
     public void sendEmail(Locacao locacao, String templateName, String destinatario) {
 
         MimeMessage mimeMessage = emailSender.createMimeMessage();
@@ -50,6 +49,7 @@ public class EmailService {
         dados.put("nome", locacao.getFuncionario().getNome());
         dados.put("id", locacao.getFuncionario().getIdFuncionario());
         dados.put("email", remetente);
+        dados.put("id", locacao.getFuncionario().getIdFuncionario());
         dados.put("idLocacao",locacao.getIdLocacao());
         dados.put("valorLocacao",locacao.getValorLocacao());
         dados.put("modeloVeiculo",locacao.getVeiculo().getModelo());

@@ -19,22 +19,22 @@ import java.util.List;
 @RestController
 @Validated
 @RequiredArgsConstructor
-@RequestMapping("/contato") // localhost:8080/contato
+@RequestMapping("/contato")
 public class ContatoController implements ContatoControllerInterface {
 
     private final ContatoService contatoService;
 
-    @GetMapping // localhost:8080/contato OK
+    @GetMapping
     public List<ContatoDTO> list() throws RegraDeNegocioException {
         return contatoService.list();
     }
 
-    @GetMapping("/{idContato}") // localhost:8080/endereco/2 OK
+    @GetMapping("/{idContato}")
     public ContatoDTO listByIdContato(@PathVariable("idContato") Integer id) throws RegraDeNegocioException {
         return contatoService.findById(id);
     }
 
-    @PostMapping // localhost:8080/contato/4 OK
+    @PostMapping
     public ResponseEntity<ContatoDTO> create(@Valid @RequestBody ContatoCreateDTO contatoCreateDTO) throws RegraDeNegocioException {
         log.info("Criando contato...");
         ContatoDTO contatoDTO = contatoService.create(contatoCreateDTO);
@@ -42,7 +42,7 @@ public class ContatoController implements ContatoControllerInterface {
         return new ResponseEntity<>(contatoDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/{idContato}") // localhost:8080/contato/1000 OK
+    @PutMapping("/{idContato}")
     public ResponseEntity<ContatoDTO> update(@PathVariable("idContato") Integer id,
                                                  @Valid @RequestBody ContatoCreateDTO contatoAtualizar) throws RegraDeNegocioException {
         log.info("Atualizando contato...");
@@ -51,7 +51,7 @@ public class ContatoController implements ContatoControllerInterface {
         return new ResponseEntity<>(contatoDTO,HttpStatus.OK);
     }
 
-    @DeleteMapping("/{idContato}") // localhost:8080/contato/10 OK
+    @DeleteMapping("/{idContato}")
     public ResponseEntity<ContatoDTO> delete(@PathVariable("idContato") Integer id) throws RegraDeNegocioException {
         log.info("Deletando contato...");
         contatoService.delete(id);

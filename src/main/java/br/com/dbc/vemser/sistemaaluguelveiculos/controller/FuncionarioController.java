@@ -18,22 +18,22 @@ import java.util.List;
 @RestController
 @Validated
 @RequiredArgsConstructor
-@RequestMapping("/funcionario") // localhost:8080/funcionario
+@RequestMapping("/funcionario")
 public class FuncionarioController implements FuncionarioControllerInterface {
 
     private final FuncionarioService funcionarioService;
 
-    @GetMapping // localhost:8080/funcionario OK
+    @GetMapping
     public List<FuncionarioDTO> list() throws RegraDeNegocioException {
         return funcionarioService.list();
     }
 
-    @GetMapping("/{idFuncionario}") // localhost:8080/endereco/2 OK
+    @GetMapping("/{idFuncionario}")
     public FuncionarioDTO listByIdFuncionario(@PathVariable("idFuncionario") Integer id) throws RegraDeNegocioException {
         return funcionarioService.findById(id);
     }
 
-    @PostMapping // localhost:8080/funcionario/4 OK
+    @PostMapping
     public ResponseEntity<FuncionarioDTO> create(@Valid @RequestBody FuncionarioCreateDTO funcionarioCreateDTO) throws RegraDeNegocioException {
         log.info("Criando funcionário...");
         FuncionarioDTO funcionarioDTO = funcionarioService.create(funcionarioCreateDTO);
@@ -41,7 +41,7 @@ public class FuncionarioController implements FuncionarioControllerInterface {
         return new ResponseEntity<>(funcionarioDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/{idFuncionario}") // localhost:8080/funcionario/1000 OK
+    @PutMapping("/{idFuncionario}")
     public ResponseEntity<FuncionarioDTO> update(@PathVariable("idFuncionario") Integer id,
                                               @Valid @RequestBody FuncionarioDTO funcionarioAtualizar) throws RegraDeNegocioException {
         log.info("Atualizando funcionário...");
@@ -50,7 +50,7 @@ public class FuncionarioController implements FuncionarioControllerInterface {
         return new ResponseEntity<>(funcionarioDTO,HttpStatus.OK);
     }
 
-    @DeleteMapping("/{idFuncionario}") // localhost:8080/funcionario/10 OK
+    @DeleteMapping("/{idFuncionario}")
     public ResponseEntity<FuncionarioDTO> delete(@PathVariable("idFuncionario") Integer id) throws RegraDeNegocioException {
         log.info("Deletando funcionário...");
         funcionarioService.delete(id);

@@ -253,27 +253,6 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
         return cliente;
     }
 
-    private Contato getContatoFromResultSet(ResultSet res) throws SQLException {
-        Contato contato = new Contato();
-        contato.setIdContato(res.getInt("id_contato"));
-        contato.setTelefone(res.getString("telefone"));
-        contato.setEmail(res.getString("email"));
-        return contato;
-    }
-
-    private Endereco getEnderecoResultSet(ResultSet res) throws SQLException {
-        Endereco endereco = new Endereco();
-        endereco.setIdEndereco(res.getInt("id_endereco"));
-        endereco.setRua(res.getString("rua"));
-        endereco.setNumero(res.getString("numero"));
-        endereco.setBairro(res.getString("bairro"));
-        endereco.setCidade(res.getString("cidade"));
-        endereco.setEstado(res.getString("estado"));
-        endereco.setCep(res.getString("cep"));
-        endereco.setComplemento(res.getString("complemento"));
-        return endereco;
-    }
-
     private Veiculo getVeiculoFromResultSet(ResultSet res) throws SQLException {
         Veiculo veiculo = new Veiculo();
         veiculo.setIdVeiculo(res.getInt("id_veiculo"));

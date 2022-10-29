@@ -26,8 +26,6 @@ public class VeiculoService {
 
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao criar no banco de dados.");
-//        } catch (Exception e) {
-//            System.out.println("ERRO: " + e.getMessage());
         }
     }
 

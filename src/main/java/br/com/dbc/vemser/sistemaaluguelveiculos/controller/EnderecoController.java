@@ -19,22 +19,22 @@ import java.util.List;
 @RestController
 @Validated
 @RequiredArgsConstructor
-@RequestMapping("/endereco") // localhost:8080/endereco
+@RequestMapping("/endereco")
 public class EnderecoController implements EnderecoControllerInterface {
 
     private final EnderecoService enderecoService;
 
-    @GetMapping // localhost:8080/enderecp OK
+    @GetMapping
     public List<EnderecoDTO> list() throws RegraDeNegocioException {
         return enderecoService.list();
     }
 
-    @GetMapping("/{idEndereco}") // localhost:8080/endereco/2 OK
+    @GetMapping("/{idEndereco}")
     public EnderecoDTO listByIdEndereco(@PathVariable("idEndereco") Integer id) throws RegraDeNegocioException {
         return enderecoService.findById(id);
     }
 
-    @PostMapping // localhost:8080/endereco/4 OK
+    @PostMapping
     public ResponseEntity<EnderecoDTO> create(@Valid @RequestBody EnderecoCreateDTO enderecoCreateDTO) throws RegraDeNegocioException {
         log.info("Criando endereco...");
         EnderecoDTO enderecoDTO = enderecoService.create(enderecoCreateDTO);
@@ -42,7 +42,7 @@ public class EnderecoController implements EnderecoControllerInterface {
         return new ResponseEntity<>(enderecoDTO, HttpStatus.OK);
     }
 
-    @PutMapping("/{idEndereco}") // localhost:8080/endereco/1000 OK
+    @PutMapping("/{idEndereco}")
     public ResponseEntity<EnderecoDTO> update(@PathVariable("idEndereco") Integer id,
                                              @Valid @RequestBody EnderecoCreateDTO enderecoAtualizar) throws RegraDeNegocioException {
         log.info("Atualizando endereco...");
@@ -51,7 +51,7 @@ public class EnderecoController implements EnderecoControllerInterface {
         return new ResponseEntity<>(enderecoDTO,HttpStatus.OK);
     }
 
-    @DeleteMapping("/{idEndereco}") // localhost:8080/endereco/10 OK
+    @DeleteMapping("/{idEndereco}")
     public ResponseEntity<EnderecoDTO> delete(@PathVariable("idEndereco") Integer id) throws RegraDeNegocioException {
         log.info("Deletando endereço...");
         enderecoService.delete(id);
