@@ -38,7 +38,7 @@ public class LocacaoService {
     public void delete(Integer id) throws RegraDeNegocioException {
         try {
             boolean conseguiuRemover = locacaoRepository.delete(id);
-            Locacao locacaoDeletada = findById(id);
+            Locacao locacaoDeletada = converterDTOEmLocacao(findById(id));
             Funcionario funcionario = funcionarioRepository.findById(locacaoDeletada.getFuncionario().getIdFuncionario());
 
             emailService.sendEmail(locacaoDeletada, "locacao-template-delete.ftl", funcionario.getEmail());
@@ -47,9 +47,9 @@ public class LocacaoService {
         }
     }
 
-    public Locacao findById(Integer idLocacao) throws RegraDeNegocioException {
+    public LocacaoDTO findById(Integer idLocacao) throws RegraDeNegocioException {
         try {
-            return locacaoRepository.findById(idLocacao);
+            return converterEmDTO(locacaoRepository.findById(idLocacao));
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao encontrar no banco de dados.");
         }
