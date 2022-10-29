@@ -1,9 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoCreateDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoCreateDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +13,17 @@ import javax.validation.Valid;
 import java.util.List;
 
 public interface LocacaoControllerInterface {
+    @Operation(summary = "Retornar locação com id específico.", description = "Retorna locação com id especificado.")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Retorna locação com id especificado."),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/{idLocacao}")
+    LocacaoDTO listByIdLocacao(Integer id) throws RegraDeNegocioException;
+
     @Operation(summary = "Listar locações", description = "Lista todas as locações do banco de dados.")
     @ApiResponses(
             value = {
