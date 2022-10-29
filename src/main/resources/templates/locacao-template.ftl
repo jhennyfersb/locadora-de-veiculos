@@ -9,12 +9,13 @@ Olá ${nome},<br>
 Você acaba de realizar uma locação :)<br>
 Dados da locacação:<br>
 O identicador da locação é ${idLocacao}.<br>
-No valor de $ ${valorLocacao}.<br>
+Valor locacao ${valorLocacao}.<br>
 O veiculo é um ${modeloVeiculo}
 da marca ${marcaVeiculo}
 de placa  ${placaVeiculo}.<br>
 data da locação é ${dataLocacao}.<br>
 data de devolução ${dataDevolucao}.<br>
+
 
 Qualquer dúvida é só contatar o suporte pelo e-mail ${email}
 

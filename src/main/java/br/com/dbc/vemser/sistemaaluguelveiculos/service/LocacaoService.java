@@ -41,11 +41,16 @@ public class LocacaoService {
 
     public void delete(Integer id) throws RegraDeNegocioException {
         try {
-            boolean conseguiuRemover = locacaoRepository.delete(id);
             Locacao locacaoDeletada = converterDTOEmLocacao(findById(id));
-           Funcionario funcionario = funcionarioRepository.findById(locacaoDeletada.getFuncionario().getIdFuncionario());
+            Funcionario funcionario = funcionarioRepository.findById(locacaoDeletada.getFuncionario().getIdFuncionario());
+            locacaoRepository.delete(id);
 
-           emailService.sendEmail(locacaoDeletada, "locacao-template-delete.ftl", funcionario.getEmail());
+            emailService.sendEmail(locacaoDeletada, "locacao-template-delete.ftl", funcionario.getEmail());
+//            boolean conseguiuRemover = locacaoRepository.delete(id);
+//            Locacao locacaoDeletada = converterDTOEmLocacao(findById(id));
+//           Funcionario funcionario = funcionarioRepository.findById(locacaoDeletada.getFuncionario().getIdFuncionario());
+//
+//           emailService.sendEmail(locacaoDeletada, "locacao-template-delete.ftl", funcionario.getEmail());
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
         }

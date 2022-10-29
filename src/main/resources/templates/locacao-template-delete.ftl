@@ -6,7 +6,7 @@
 
 <body>
 Olá ${nome},
-Você deletou a locaçao ${id} com sucesso.
+Você deletou a locaçao ${idLocacao} com sucesso.
 
 Qualquer dúvida é só contatar o suporte pelo e-mail ${email}
 
