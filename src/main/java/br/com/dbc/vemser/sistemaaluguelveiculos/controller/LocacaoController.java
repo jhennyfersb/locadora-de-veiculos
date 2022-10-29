@@ -24,7 +24,7 @@ public class LocacaoController implements LocacaoControllerInterface {
     private final LocacaoService locacaoService;
 
     @GetMapping // localhost:8080/locacao OK
-    public List<LocacaoDTO> list() {
+    public List<LocacaoDTO> list() throws RegraDeNegocioException {
         return locacaoService.list();
     }
 
@@ -49,7 +49,6 @@ public class LocacaoController implements LocacaoControllerInterface {
         log.info("Locação atualizado");
         return new ResponseEntity<>(locacaoDTO,HttpStatus.OK);
     }
-
     @DeleteMapping("/{idLocacao}") // localhost:8080/locacao/10 OK
     public ResponseEntity<LocacaoDTO> delete(@PathVariable("idLocacao") Integer id) throws RegraDeNegocioException {
         log.info("Deletando locação...");
