@@ -116,10 +116,10 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
                 sql.append(" data_locacao = ?,");
             }
             if (locacao.getDataDevolucao() != null) {
-                sql.append(" dataDevolucao = ?,");
+                sql.append(" data_devolucao = ?,");
             }
             if (locacao.getValorLocacao() != null) {
-                sql.append(" valorlocacao_total = ?,");
+                sql.append(" valor_locacao_total = ?,");
             }
             Cliente cliente = locacao.getCliente();
             if (cliente != null) {
@@ -300,7 +300,11 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
         try {
             con = conexaoBancoDeDados.getConnection();
 
-            String sql = "SELECT * FROM Locacao\n" +
+            String sql = "SELECT * FROM Locacao L " +
+                    "JOIN CLIENTE C2 on C2.ID_CLIENTE = L.ID_CLIENTE\n" +
+                    "JOIN VEICULO V2 on V2.ID_VEICULO = L.ID_VEICULO "+
+                    "JOIN FUNCIONARIO F2 ON F2.ID_FUNCIONARIO = L.ID_FUNCIONARIO " +
+                    "JOIN CARTAO_CREDITO CC on CC.ID_CARTAO = L.ID_CARTAO " +
                     "WHERE id_locacao = ?";
 
             PreparedStatement stmt = con.prepareStatement(sql);
