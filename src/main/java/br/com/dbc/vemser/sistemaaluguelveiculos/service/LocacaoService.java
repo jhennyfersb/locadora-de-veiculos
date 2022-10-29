@@ -57,10 +57,11 @@ public class LocacaoService {
 
     public LocacaoDTO update(Integer id, LocacaoCreateDTO locacao) throws RegraDeNegocioException {
         try {
-            Funcionario funcionario = funcionarioRepository.findById(id);
-            Locacao locacaoEntity = objectMapper.convertValue(locacao, Locacao.class);
+            //Funcionario funcionario = funcionarioRepository.findById(id);
+
+            Locacao locacaoAdicionada = locacaoRepository.create(converterDTOEmLocacao(converterEmLocacao(locacao)));
             //emailService.sendEmail(locacaoEntity, "locacao-template-update.ftl", funcionario.getEmail());
-            return converterEmDTO(locacaoRepository.update(id, locacaoEntity));
+            return converterEmDTO(locacaoAdicionada);
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao editar no banco de dados.");
         }
