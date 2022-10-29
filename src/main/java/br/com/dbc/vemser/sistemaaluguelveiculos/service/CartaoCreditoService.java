@@ -31,7 +31,7 @@ public class CartaoCreditoService {
 
     public CartaoCreditoDTO update(Integer idCartao, CartaoCreditoCreateDTO cartaoCreditoAtualizar) throws RegraDeNegocioException {
         try {
-            cartaoCreditoRepository.findById(idCartao);
+            this.findById(idCartao);
             CartaoCredito ccEntity = converterEntity(cartaoCreditoAtualizar);
             return converterEmDTO(cartaoCreditoRepository.update(idCartao, ccEntity));
         } catch (BancoDeDadosException e) {
@@ -41,7 +41,7 @@ public class CartaoCreditoService {
 
     public void delete(Integer idCartao) throws RegraDeNegocioException {
         try {
-            cartaoCreditoRepository.findById(idCartao);
+            this.findById(idCartao);
             cartaoCreditoRepository.delete(idCartao);
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");

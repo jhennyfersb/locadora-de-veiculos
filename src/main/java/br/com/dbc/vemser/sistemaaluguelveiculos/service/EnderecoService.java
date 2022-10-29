@@ -35,7 +35,7 @@ public class EnderecoService {
 
     public void delete(Integer id) throws RegraDeNegocioException {
         try {
-            enderecoRepository.findById(id);
+            this.findById(id);
             enderecoRepository.delete(id);
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
@@ -44,7 +44,7 @@ public class EnderecoService {
 
     public EnderecoDTO update(Integer id, EnderecoCreateDTO enderecoCreateDTO) throws RegraDeNegocioException {
         try {
-            enderecoRepository.findById(id);
+            this.findById(id);
             Endereco enderecoEntity = converterEntity(enderecoCreateDTO);
             return converterEmDTO(enderecoRepository.update(id, enderecoEntity));
         } catch (BancoDeDadosException e) {

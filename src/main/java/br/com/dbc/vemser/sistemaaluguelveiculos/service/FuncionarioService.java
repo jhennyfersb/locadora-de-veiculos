@@ -31,7 +31,7 @@ public class FuncionarioService {
 
     public void delete(Integer id) throws RegraDeNegocioException {
         try {
-            funcionarioRepository.findById(id);
+            this.findById(id);
 
             funcionarioRepository.delete(id);
 
@@ -42,7 +42,7 @@ public class FuncionarioService {
 
     public FuncionarioDTO update(Integer id, FuncionarioCreateDTO funcionario) throws RegraDeNegocioException {
         try {
-            funcionarioRepository.findById(id);
+            this.findById(id);
 
             Funcionario funcionarioEntity = converterEntity(funcionario);
             return converterEmDTO(funcionarioRepository.update(id, funcionarioEntity));

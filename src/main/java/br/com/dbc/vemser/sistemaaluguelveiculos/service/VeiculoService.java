@@ -33,7 +33,7 @@ public class VeiculoService {
 
     public VeiculoDTO update(Integer idVeiculo, VeiculoCreateDTO veiculo) throws RegraDeNegocioException {
         try {
-            veiculoRepository.findById(idVeiculo);
+            this.findById(idVeiculo);
 
             Veiculo veiculoEntity = converterEntity(veiculo);
             return converterEmDTO(veiculoRepository.update(idVeiculo, veiculoEntity));
@@ -45,7 +45,7 @@ public class VeiculoService {
 
     public void delete(Integer idVeiculo) throws RegraDeNegocioException {
         try {
-            veiculoRepository.findById(idVeiculo);
+            this.findById(idVeiculo);
 
             veiculoRepository.delete(idVeiculo);
 
