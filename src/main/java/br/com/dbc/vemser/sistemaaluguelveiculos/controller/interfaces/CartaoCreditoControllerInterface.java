@@ -40,6 +40,7 @@ public interface CartaoCreditoControllerInterface {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Cria um registro de cartão de crédito."),
+                    @ApiResponse(responseCode = "201", description = "Cria um registro de cartão de crédito."),
                     @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
@@ -63,6 +64,7 @@ public interface CartaoCreditoControllerInterface {
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Exclui um registro de cartão de crédito."),
+                    @ApiResponse(responseCode = "204", description = "Exclui um registro de cartão de crédito."),
                     @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
