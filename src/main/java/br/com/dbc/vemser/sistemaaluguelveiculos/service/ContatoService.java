@@ -30,7 +30,7 @@ public class ContatoService {
 
     public void delete(Integer id) throws RegraDeNegocioException {
         try {
-            contatoRepository.findById(id);
+            this.findById(id);
             contatoRepository.delete(id);
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
@@ -39,7 +39,7 @@ public class ContatoService {
 
     public ContatoDTO update(Integer id, ContatoCreateDTO contato) throws RegraDeNegocioException {
         try {
-            contatoRepository.findById(id);
+            this.findById(id);
             Contato contatoEntity = converterEntity(contato);
             return converterEmDTO(contatoRepository.update(id, contatoEntity));
         } catch (BancoDeDadosException e) {

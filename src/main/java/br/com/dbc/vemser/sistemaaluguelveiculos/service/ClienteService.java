@@ -31,7 +31,7 @@ public class ClienteService {
 
     public ClienteDTO update(Integer idCliente, ClienteCreateDTO cliente) throws RegraDeNegocioException {
         try {
-            clienteRepository.findById(idCliente);
+            this.findById(idCliente);
 
             Cliente clienteEntity = converterEntity(cliente);
             return converterEmDTO(clienteRepository.update(idCliente, clienteEntity));
@@ -43,7 +43,7 @@ public class ClienteService {
 
     public void delete(Integer idCliente) throws RegraDeNegocioException {
         try {
-            clienteRepository.findById(idCliente);
+            this.findById(idCliente);
 
             clienteRepository.delete(idCliente);
 
