@@ -2,6 +2,8 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ContatoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ContatoDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.CartaoCredito;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Endereco;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Contato;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
@@ -30,7 +32,8 @@ public class ContatoService {
 
     public void delete(Integer id) throws RegraDeNegocioException {
         try {
-        contatoRepository.delete(id);
+            contatoRepository.findById(id);
+            contatoRepository.delete(id);
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
         }
@@ -38,9 +41,11 @@ public class ContatoService {
 
     public ContatoDTO update(Integer id, ContatoCreateDTO contato) throws RegraDeNegocioException {
         try {
-        return objectMapper.convertValue(contatoRepository.update(id, converterEntity(contato)), ContatoDTO.class);
+            contatoRepository.findById(id);
+            Contato contatoEntity = converterEntity(contato);
+            return converterEmDTO(contatoRepository.update(id, contatoEntity));
         } catch (BancoDeDadosException e) {
-            throw new RegraDeNegocioException("Erro ao editar no banco de dados.");
+            throw new RegraDeNegocioException("Erro ao atualizar no banco de dados.");
         }
     }
 
@@ -75,9 +80,15 @@ public class ContatoService {
 
     public ContatoDTO findById(Integer id) throws RegraDeNegocioException {
         try {
-            return converterEmDTO(contatoRepository.findById(id));
+            Contato contatoRecuperado = contatoRepository.findById(id);
+
+            if(contatoRecuperado.getIdContato() != null) {
+                return converterEmDTO(contatoRecuperado);
+            }else {
+                throw new RegraDeNegocioException("Contato não encontrado");
+            }
         }catch (BancoDeDadosException e) {
-            throw new RegraDeNegocioException("Erro ao encontrar no banco de dados.");
+            throw new RegraDeNegocioException("Erro ao procurar no banco de dados.");
         }
     }
 }

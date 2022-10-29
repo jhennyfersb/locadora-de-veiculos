@@ -23,6 +23,7 @@ public class VeiculoService {
         try {
             Veiculo veiculoEntity = converterEntity(veiculo);
             return converterEmDTO(veiculoRepository.create(veiculoEntity));
+
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao criar no banco de dados.");
 //        } catch (Exception e) {
@@ -32,14 +33,11 @@ public class VeiculoService {
 
     public VeiculoDTO update(Integer idVeiculo, VeiculoCreateDTO veiculo) throws RegraDeNegocioException {
         try {
-            Veiculo veiculoRecuperado = veiculoRepository.findById(idVeiculo);
+            veiculoRepository.findById(idVeiculo);
 
-            if(veiculoRecuperado.getIdVeiculo() != null) {
-                Veiculo veiculoEntity = converterEntity(veiculo);
-                return converterEmDTO(veiculoRepository.update(idVeiculo, veiculoEntity));
-            }else {
-                throw new RegraDeNegocioException("Veículo não encontrado!");
-            }
+            Veiculo veiculoEntity = converterEntity(veiculo);
+            return converterEmDTO(veiculoRepository.update(idVeiculo, veiculoEntity));
+
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao editar no banco de dados.");
         }
@@ -47,13 +45,10 @@ public class VeiculoService {
 
     public void delete(Integer idVeiculo) throws RegraDeNegocioException {
         try {
-            Veiculo veiculoRecuperado = veiculoRepository.findById(idVeiculo);
+            veiculoRepository.findById(idVeiculo);
 
-            if(veiculoRecuperado.getIdVeiculo() != null) {
-                veiculoRepository.delete(idVeiculo);
-            }else {
-                throw new RegraDeNegocioException("Veículo não encontrado!");
-            }
+            veiculoRepository.delete(idVeiculo);
+
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
         }
@@ -64,6 +59,7 @@ public class VeiculoService {
             return veiculoRepository.list().stream()
                     .map(this::converterEmDTO)
                     .collect(Collectors.toList());
+
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao listar no banco de dados.");
         }
@@ -79,7 +75,13 @@ public class VeiculoService {
 
     public VeiculoDTO findById(Integer id) throws RegraDeNegocioException{
         try {
-            return converterEmDTO(veiculoRepository.findById(id));
+            Veiculo veiculoRecuperado = veiculoRepository.findById(id);
+
+            if(veiculoRecuperado.getIdVeiculo() != null) {
+                return converterEmDTO(veiculoRecuperado);
+            }else {
+                throw new RegraDeNegocioException("Veículo não encontrado");
+            }
         }catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao encontrar no banco de dados.");        }
     }

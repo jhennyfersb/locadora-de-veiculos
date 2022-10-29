@@ -3,6 +3,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.CartaoCreditoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.CartaoCreditoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.CartaoCredito;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Cliente;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.CartaoCreditoRepository;
@@ -30,27 +31,18 @@ public class CartaoCreditoService {
 
     public CartaoCreditoDTO update(Integer idCartao, CartaoCreditoCreateDTO cartaoCreditoAtualizar) throws RegraDeNegocioException {
         try {
-            CartaoCredito cartaoRecuperado = cartaoCreditoRepository.findById(idCartao);
-
-            if(cartaoRecuperado.getIdCartaoCredito() != null) {
-                CartaoCredito cartaoCreditoEntity = converterEntity(cartaoCreditoAtualizar);
-                return converterEmDTO(cartaoCreditoRepository.update(idCartao, cartaoCreditoEntity));
-            }else {
-                throw new RegraDeNegocioException("Cartão de Crédito não encontrado!");
-            }
+            cartaoCreditoRepository.findById(idCartao);
+            CartaoCredito ccEntity = converterEntity(cartaoCreditoAtualizar);
+            return converterEmDTO(cartaoCreditoRepository.update(idCartao, ccEntity));
         } catch (BancoDeDadosException e) {
-            throw new RegraDeNegocioException("Erro ao editar no banco de dados.");
+            throw new RegraDeNegocioException("Erro ao atualizar no banco de dados.");
         }
     }
 
     public void delete(Integer idCartao) throws RegraDeNegocioException {
         try {
-            CartaoCredito cartaoRecuperado = cartaoCreditoRepository.findById(idCartao);
-            if(cartaoRecuperado.getIdCartaoCredito() != null) {
-                cartaoCreditoRepository.delete(idCartao);
-            }else {
-                throw new RegraDeNegocioException("Cartão de Crédito não encontrado!");
-            }
+            cartaoCreditoRepository.findById(idCartao);
+            cartaoCreditoRepository.delete(idCartao);
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
         }
@@ -76,7 +68,13 @@ public class CartaoCreditoService {
 
     public CartaoCreditoDTO findById(Integer id) throws RegraDeNegocioException{
         try {
-            return converterEmDTO(cartaoCreditoRepository.findById(id));
+            CartaoCredito ccRecuperado = cartaoCreditoRepository.findById(id);
+
+            if(ccRecuperado.getIdCartaoCredito() != null) {
+                return converterEmDTO(ccRecuperado);
+            }else {
+                throw new RegraDeNegocioException("Cartão de Crédito não encontrado");
+            }
         }catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao procurar no banco de dados.");
         }

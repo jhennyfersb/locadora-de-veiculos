@@ -1,4 +1,5 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.service;
+
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
@@ -22,6 +23,7 @@ public class FuncionarioService {
         try {
             Funcionario funcionarioAdicionado = funcionarioRepository.create(converterEntity(funcionario));
             return converterEmDTO(funcionarioAdicionado);
+
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao criar no banco de dados.");
         }
@@ -29,7 +31,10 @@ public class FuncionarioService {
 
     public void delete(Integer id) throws RegraDeNegocioException {
         try {
+            funcionarioRepository.findById(id);
+
             funcionarioRepository.delete(id);
+
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
         }
@@ -37,10 +42,19 @@ public class FuncionarioService {
 
     public FuncionarioDTO update(Integer id, FuncionarioCreateDTO funcionario) throws RegraDeNegocioException {
         try {
-            return objectMapper.convertValue(funcionarioRepository.update(id, converterEntity(funcionario)), FuncionarioDTO.class);
-        }catch (BancoDeDadosException e) {
+            funcionarioRepository.findById(id);
+
+            Funcionario funcionarioEntity = converterEntity(funcionario);
+            return converterEmDTO(funcionarioRepository.update(id, funcionarioEntity));
+
+        } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao editar no banco de dados.");
         }
+//        try {
+//            return objectMapper.convertValue(funcionarioRepository.update(id, converterEntity(funcionario)), FuncionarioDTO.class);
+//        }catch (BancoDeDadosException e) {
+//            throw new RegraDeNegocioException("Erro ao editar no banco de dados.");
+//        }
     }
 
     public List<FuncionarioDTO> list() throws RegraDeNegocioException {
@@ -64,8 +78,14 @@ public class FuncionarioService {
     }
 
      public FuncionarioDTO findById(Integer id) throws RegraDeNegocioException{
-        try {
-            return converterEmDTO(funcionarioRepository.findById(id));
+         try {
+             Funcionario funcionarioRecuperado = funcionarioRepository.findById(id);
+
+             if(funcionarioRecuperado.getIdFuncionario() != null) {
+                 return converterEmDTO(funcionarioRecuperado);
+             }else {
+                 throw new RegraDeNegocioException("Funcionario não encontrado");
+             }
         }catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao encontrar no banco de dados.");
         }

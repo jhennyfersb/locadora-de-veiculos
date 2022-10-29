@@ -4,7 +4,9 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Contato;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Funcionario;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Veiculo;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Endereco;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
@@ -33,6 +35,7 @@ public class EnderecoService {
 
     public void delete(Integer id) throws RegraDeNegocioException {
         try {
+            enderecoRepository.findById(id);
             enderecoRepository.delete(id);
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
@@ -41,9 +44,11 @@ public class EnderecoService {
 
     public EnderecoDTO update(Integer id, EnderecoCreateDTO enderecoCreateDTO) throws RegraDeNegocioException {
         try {
-            return objectMapper.convertValue(enderecoRepository.update(id, converterEntity(enderecoCreateDTO)), EnderecoDTO.class);
-        }catch (BancoDeDadosException e) {
-            throw new RegraDeNegocioException("Erro ao editar no banco de dados.");
+            enderecoRepository.findById(id);
+            Endereco enderecoEntity = converterEntity(enderecoCreateDTO);
+            return converterEmDTO(enderecoRepository.update(id, enderecoEntity));
+        } catch (BancoDeDadosException e) {
+            throw new RegraDeNegocioException("Erro ao atualizar no banco de dados.");
         }
     }
 
@@ -81,9 +86,15 @@ public class EnderecoService {
 
     public EnderecoDTO findById(Integer id) throws RegraDeNegocioException {
         try {
-            return converterEmDTO(enderecoRepository.findById(id));
+            Endereco enderecoRecuperado = enderecoRepository.findById(id);
+
+            if(enderecoRecuperado.getIdEndereco() != null) {
+                return converterEmDTO(enderecoRecuperado);
+            }else {
+                throw new RegraDeNegocioException("Endereço não encontrado");
+            }
         }catch (BancoDeDadosException e) {
-            throw new RegraDeNegocioException("Erro ao encontrar no banco de dados.");
+            throw new RegraDeNegocioException("Erro ao procurar no banco de dados.");
         }
     }
 }
