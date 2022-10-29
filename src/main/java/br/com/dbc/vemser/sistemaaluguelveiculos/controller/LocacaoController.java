@@ -1,5 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
 import br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces.LocacaoControllerInterface;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ContatoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
@@ -28,10 +29,10 @@ public class LocacaoController implements LocacaoControllerInterface {
         return locacaoService.list();
     }
 
-//    @GetMapping("/{idFuncionario}") // localhost:8080/endereco/2 OK
-//    public List<FuncionarioDTO> listByIdFuncionario(@PathVariable("idFuncionario") Integer id) {
-//        return funcionarioService.listByIdEndereco(id);
-//    }
+    @GetMapping("/{idLocacao}") // localhost:8080/endereco/2 OK
+    public LocacaoDTO listByIdLocacao(@PathVariable("idLocacao") Integer id) throws RegraDeNegocioException {
+        return locacaoService.findById(id);
+    }
 
     @PostMapping // localhost:8080/locacao/4 OK
     public ResponseEntity<LocacaoDTO> create(@Valid @RequestBody LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
