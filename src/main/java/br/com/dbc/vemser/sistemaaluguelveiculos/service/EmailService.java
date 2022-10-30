@@ -33,14 +33,6 @@ public class EmailService {
 
     private final JavaMailSender emailSender;
 
-    public void sendSimpleMessage() {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(destinatario);
-        message.setTo(remetente);
-        message.setSubject("Assunto");
-        message.setText("Teste \n minha mensagem \n\nAtt,\nSistema.");
-        emailSender.send(message);
-    }
 
     public void sendEmail(Locacao locacao, String templateName, String destinatario) {
 

@@ -18,12 +18,13 @@ import java.util.stream.Collectors;
 public class EnderecoService {
     private final EnderecoRepository enderecoRepository;
     private final ObjectMapper objectMapper;
+    private final ClienteService clienteService;
 
     public EnderecoDTO create(EnderecoCreateDTO enderecoCreateDTO) throws RegraDeNegocioException {
         try {
             Endereco enderecoAdicionado = enderecoRepository.create(converterEntity(enderecoCreateDTO));
             return converterEmDTO(enderecoAdicionado);
-        }catch (BancoDeDadosException e) {
+        } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao criar no banco de dados.");
         }
     }
@@ -50,19 +51,19 @@ public class EnderecoService {
     public List<EnderecoDTO> list() throws RegraDeNegocioException {
         try {
             List<Endereco> listar = enderecoRepository.list();
-        return listar.stream()
-            .map(this::converterEmDTO)
-            .collect(Collectors.toList());
+            return listar.stream()
+                    .map(this::converterEmDTO)
+                    .collect(Collectors.toList());
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao listar no banco de dados.");
         }
     }
 
-    public Endereco converterEntity(EnderecoCreateDTO enderecoCreateDTO){
+    public Endereco converterEntity(EnderecoCreateDTO enderecoCreateDTO) {
         return objectMapper.convertValue(enderecoCreateDTO, Endereco.class);
     }
 
-    public EnderecoDTO converterEmDTO(Endereco endereco){
+    public EnderecoDTO converterEmDTO(Endereco endereco) {
         return objectMapper.convertValue(endereco, EnderecoDTO.class);
     }
 
@@ -70,12 +71,24 @@ public class EnderecoService {
         try {
             Endereco enderecoRecuperado = enderecoRepository.findById(id);
 
-            if(enderecoRecuperado.getIdEndereco() != null) {
+            if (enderecoRecuperado.getIdEndereco() != null) {
                 return converterEmDTO(enderecoRecuperado);
-            }else {
+            } else {
                 throw new RegraDeNegocioException("Endereço não encontrado");
             }
-        }catch (BancoDeDadosException e) {
+        } catch (BancoDeDadosException e) {
+            throw new RegraDeNegocioException("Erro ao procurar no banco de dados.");
+        }
+    }
+
+    public List<EnderecoDTO> findEnderecoByIdCliente(Integer idCliente) throws RegraDeNegocioException {
+        try {
+            clienteService.findById(idCliente);
+            List<Endereco> clienteEndereco = enderecoRepository.findEnderecoByIdCliente(idCliente);
+            return clienteEndereco.stream()
+                    .map(this::converterEmDTO)
+                    .collect(Collectors.toList());
+        } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao procurar no banco de dados.");
         }
     }

@@ -59,7 +59,7 @@ public interface FuncionarioControllerInterface {
     )
     @PutMapping("/{idFuncionario}")
     ResponseEntity<FuncionarioDTO> update(@PathVariable("idFuncionario") Integer id,
-                                                 @Valid @RequestBody FuncionarioDTO funcionarioAtualizar) throws RegraDeNegocioException;
+                                                 @Valid @RequestBody FuncionarioCreateDTO funcionarioAtualizar) throws RegraDeNegocioException;
 
 
     @Operation(summary = "Excluir um registro de funcionário.", description = "Exclui um cadastro de funcionários no banco de dados.")

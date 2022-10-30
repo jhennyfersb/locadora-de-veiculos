@@ -20,4 +20,12 @@ public class Veiculo {
     private Double valorLocacao;
     private DisponibilidadeVeiculo disponibilidadeVeiculo;
     private String placa;
+
+    public void alterarDisponibilidadeVeiculo() {
+        if (this.disponibilidadeVeiculo.getDisponibilidade() == 1) {
+            this.disponibilidadeVeiculo = DisponibilidadeVeiculo.DISPONIVEL;
+        } else if (this.disponibilidadeVeiculo.getDisponibilidade() == 2) {
+            this.disponibilidadeVeiculo = DisponibilidadeVeiculo.ALUGADO;
+        }
+    }
 }

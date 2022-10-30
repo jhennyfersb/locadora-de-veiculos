@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -275,18 +276,18 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
 
             String sql = "SELECT * FROM Locacao L " +
                     "JOIN CLIENTE C2 on C2.ID_CLIENTE = L.ID_CLIENTE\n" +
-                    "JOIN VEICULO V2 on V2.ID_VEICULO = L.ID_VEICULO "+
+                    "JOIN VEICULO V2 on V2.ID_VEICULO = L.ID_VEICULO " +
                     "JOIN FUNCIONARIO F2 ON F2.ID_FUNCIONARIO = L.ID_FUNCIONARIO " +
                     "JOIN CARTAO_CREDITO CC on CC.ID_CARTAO = L.ID_CARTAO " +
                     "WHERE id_locacao = ?";
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
-            stmt.setInt(1,chave);
+            stmt.setInt(1, chave);
 
             ResultSet res = stmt.executeQuery();
 
-            while (res.next()){
+            while (res.next()) {
                 locacao.setIdLocacao(res.getInt("id_locacao"));
                 locacao.setDataLocacao(res.getDate("data_locacao").toLocalDate());
                 locacao.setDataDevolucao(res.getDate("data_devolucao").toLocalDate());
@@ -298,14 +299,14 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
             }
 
             return locacao;
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
-        }finally {
+        } finally {
             try {
-                if(con != null){
+                if (con != null) {
                     con.close();
                 }
-            }catch (SQLException e){
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }

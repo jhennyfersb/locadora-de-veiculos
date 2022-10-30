@@ -33,6 +33,10 @@ public class EnderecoController implements EnderecoControllerInterface {
     public EnderecoDTO listByIdEndereco(@PathVariable("idEndereco") Integer id) throws RegraDeNegocioException {
         return enderecoService.findById(id);
     }
+    @GetMapping("/{idCliente}/cliente")
+    public List<EnderecoDTO> findEnderecoByIdCliente(@PathVariable("idCliente") Integer idCliente) throws RegraDeNegocioException {
+        return enderecoService.findEnderecoByIdCliente(idCliente);
+    }
 
     @PostMapping
     public ResponseEntity<EnderecoDTO> create(@Valid @RequestBody EnderecoCreateDTO enderecoCreateDTO) throws RegraDeNegocioException {

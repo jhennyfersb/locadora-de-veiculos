@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Repository;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.FutureOrPresent;
@@ -25,10 +26,6 @@ public class LocacaoCreateDTO {
     @Future
     @Schema(description = "Data de devolução.", example = "2022-12-26")
     private LocalDate dataDevolucao;
-
-    @Min(1)
-    @Schema(description = "Valor da locação", example = "1200")
-    private Double valorLocacao;
 
     @NotNull
     @Schema(description = "Id Cliente da locação.")

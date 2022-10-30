@@ -41,10 +41,6 @@ public class VeiculoCreateDTO {
     @Schema(description = "Valor de locação do veículo.", example="110")
     private Double valorLocacao;
 
-    @NotNull
-    @Schema(description = "Disponibilidade do veículo (ALUGADO ou DISPONIVEL)", example = "DISPONIVEL")
-    private DisponibilidadeVeiculo disponibilidadeVeiculo;
-
     @NotBlank
     @NotEmpty
     @NotNull

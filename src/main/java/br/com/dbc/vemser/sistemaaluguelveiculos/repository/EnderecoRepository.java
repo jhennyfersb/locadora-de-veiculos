@@ -221,4 +221,45 @@ public class EnderecoRepository implements Repositorio<Integer, Endereco> {
             }
         }
     }
+    public List<Endereco> findEnderecoByIdCliente(Integer chave) throws BancoDeDadosException {
+        List<Endereco> enderecos = new ArrayList<>();
+        Connection con = null;
+
+        try {
+            con = conexaoBancoDeDados.getConnection();
+
+            String sql = "SELECT * FROM ENDERECO_CLIENTE\n" +
+                    "WHERE id_cliente = ?";
+            PreparedStatement stmt = con.prepareStatement(sql.toString());
+
+            stmt.setInt(1,chave);
+            ResultSet res = stmt.executeQuery();
+
+            while (res.next()){
+                Endereco endereco = new Endereco();
+                endereco.setIdEndereco(res.getInt("id_endereco"));
+                endereco.setIdCliente(res.getInt("id_cliente"));
+                endereco.setRua(res.getString("rua"));
+                endereco.setNumero(res.getString("numero"));
+                endereco.setBairro(res.getString("bairro"));
+                endereco.setCidade(res.getString("cidade"));
+                endereco.setEstado(res.getString("estado"));
+                endereco.setCep(res.getString("cep"));
+                endereco.setComplemento(res.getString("complemento"));
+                enderecos.add(endereco);
+            }
+
+            return enderecos;
+        }catch (SQLException e){
+            throw new BancoDeDadosException(e.getCause());
+        }finally {
+            try {
+                if(con != null){
+                    con.close();
+                }
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+    }
 }

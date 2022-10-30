@@ -26,6 +26,17 @@ public interface EnderecoControllerInterface {
     @GetMapping("/{idEndereco}")
     EnderecoDTO listByIdEndereco(Integer id) throws RegraDeNegocioException;
 
+    @Operation(summary = "Listar endereços por id cliente.", description = "Lista todos endereços do banco de dados por id cliente.")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Retorna a lista de endereços."),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping("/{idCliente}")
+     List<EnderecoDTO> findEnderecoByIdCliente(@PathVariable("idCliente") Integer idCliente) throws RegraDeNegocioException;
+
     @Operation(summary = "Listar endereços.", description = "Lista todos endereços do banco de dados.")
     @ApiResponses(
             value = {
