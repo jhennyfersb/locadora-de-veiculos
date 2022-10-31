@@ -54,10 +54,7 @@ public class EmailService {
             mimeMessageHelper.setTo(destinatario);
             mimeMessageHelper.setSubject("Locação");
             mimeMessageHelper.setText(geContentFromTemplate(dados,templateName), true);
-            File file1 = ResourceUtils.getFile("classpath:imagem.jpg");
-            FileSystemResource file
-                    = new FileSystemResource(file1);
-            mimeMessageHelper.addAttachment(file1.getName(), file);
+
             emailSender.send(mimeMessageHelper.getMimeMessage());
 
         } catch (MessagingException | IOException | TemplateException e) {
