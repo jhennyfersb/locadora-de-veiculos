@@ -27,12 +27,11 @@ public class EmailService {
     private final freemarker.template.Configuration fmConfiguration;
 
     @Value("${spring.mail.username}")
-    private String destinatario;
+    private String from;
 
-    private static final String remetente = "jhennyfer.sobrinho@dbccompany.com.br";
+    private static final String TO = "jhennyfer.sobrinho@dbccompany.com.br";
 
     private final JavaMailSender emailSender;
-
 
     public void sendEmail(Locacao locacao, String templateName, String destinatario) {
 
@@ -40,7 +39,7 @@ public class EmailService {
         Map<String,Object> dados = new HashMap<>();
         dados.put("nome", locacao.getFuncionario().getNome());
         dados.put("id", locacao.getFuncionario().getIdFuncionario());
-        dados.put("email", remetente);
+        dados.put("email", from);
         dados.put("id", locacao.getFuncionario().getIdFuncionario());
         dados.put("idLocacao",locacao.getIdLocacao());
         dados.put("valorLocacao",locacao.getValorLocacao());
@@ -51,7 +50,7 @@ public class EmailService {
         dados.put("dataDevolucao",locacao.getDataDevolucao());
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-            mimeMessageHelper.setFrom(remetente);
+            mimeMessageHelper.setFrom(from);
             mimeMessageHelper.setTo(destinatario);
             mimeMessageHelper.setSubject("Locação");
             mimeMessageHelper.setText(geContentFromTemplate(dados,templateName), true);
