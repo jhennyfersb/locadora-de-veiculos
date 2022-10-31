@@ -13,8 +13,8 @@ Valor locacao $ ${valorLocacao}.<br>
 O veiculo é um ${modeloVeiculo}
 da marca ${marcaVeiculo}
 de placa  ${placaVeiculo}.<br>
-data da locação é ${dataLocacao}.<br>
-data de devolução ${dataDevolucao}.<br>
+Data da locação é ${dataLocacao}.<br>
+Data de devolução ${dataDevolucao}.<br>
 
 
 Qualquer dúvida é só contatar o suporte pelo e-mail ${email}

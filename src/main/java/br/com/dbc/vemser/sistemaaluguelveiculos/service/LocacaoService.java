@@ -33,6 +33,9 @@ public class LocacaoService {
         try {
             Locacao locacaoAdicionada = locacaoRepository.create(converterDTOEmLocacao(converterEmLocacao(locacaoDTO)));
             Funcionario funcionario = funcionarioRepository.findById(locacaoAdicionada.getFuncionario().getIdFuncionario());
+            locacaoAdicionada.getVeiculo().alterarDisponibilidadeVeiculo();
+            veiculoRepository.update(locacaoAdicionada.getVeiculo().getIdVeiculo(), locacaoAdicionada.getVeiculo());
+
             emailService.sendEmail(locacaoAdicionada, "locacao-template.ftl", funcionario.getEmail());
             return converterEmDTO(locacaoAdicionada);
         } catch (BancoDeDadosException e) {
@@ -45,6 +48,7 @@ public class LocacaoService {
             Locacao locacaoDeletada = converterDTOEmLocacao(findById(id));
             locacaoRepository.delete(id);
             locacaoDeletada.getVeiculo().alterarDisponibilidadeVeiculo();
+            veiculoRepository.update(locacaoDeletada.getVeiculo().getIdVeiculo(), locacaoDeletada.getVeiculo());
             emailService.sendEmail(locacaoDeletada,
                     "locacao-template-delete.ftl",
                     locacaoDeletada.getFuncionario().getEmail());
@@ -97,6 +101,9 @@ public class LocacaoService {
             }
 
             Locacao locacaoAdicionada = this.locacaoRepository.update(locacaoEntity.getIdLocacao(), locacaoEntity);
+            locacaoAdicionada.getVeiculo().alterarDisponibilidadeVeiculo();
+            veiculoRepository.update(locacaoAdicionada.getVeiculo().getIdVeiculo(), locacaoAdicionada.getVeiculo());
+
             emailService.sendEmail(locacaoEntity, "locacao-template-update.ftl", funcionarioDTO.getEmail());
             return converterEmDTO(locacaoAdicionada);
         } catch (BancoDeDadosException e) {
@@ -127,13 +134,11 @@ public class LocacaoService {
                 throw new RegraDeNegocioException("Cliente não encontrado.");
             }
             Veiculo veiculo = veiculoRepository.findById(locacaoCreateDTO.getIdVeiculo());
-            if(veiculo.getDisponibilidadeVeiculo().getDisponibilidade() == 1){
-                throw new RegraDeNegocioException("Veiculo selecionado alugado.");
-            }
             if (veiculo.getIdVeiculo() == null) {
                 throw new RegraDeNegocioException("Veiculo não encontrado.");
-            }else {
-                veiculo.alterarDisponibilidadeVeiculo();
+            }
+            if(veiculo.getDisponibilidadeVeiculo().getDisponibilidade() == 1){
+                throw new RegraDeNegocioException("Veiculo selecionado alugado.");
             }
             CartaoCredito cartaoCredito = cartaoCreditoRepository.findById(locacaoCreateDTO.getIdCartaoCredito());
             if (cartaoCredito.getIdCartaoCredito() == null) {

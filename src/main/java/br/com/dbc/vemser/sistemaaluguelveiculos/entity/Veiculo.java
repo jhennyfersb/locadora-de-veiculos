@@ -27,5 +27,6 @@ public class Veiculo {
         } else if (this.disponibilidadeVeiculo.getDisponibilidade() == 2) {
             this.disponibilidadeVeiculo = DisponibilidadeVeiculo.ALUGADO;
         }
+
     }
 }
