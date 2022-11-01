@@ -2,7 +2,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.CartaoCreditoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.CartaoCreditoDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.CartaoCredito;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.CartaoCreditoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.CartaoCreditoRepository;
@@ -21,7 +21,7 @@ public class CartaoCreditoService {
 
     public CartaoCreditoDTO create(CartaoCreditoCreateDTO cartaoCredito) throws RegraDeNegocioException {
         try {
-            CartaoCredito cartaoCreditoEntity = converterEntity(cartaoCredito);
+            CartaoCreditoEntity cartaoCreditoEntity = converterEntity(cartaoCredito);
             return converterEmDTO(cartaoCreditoRepository.create(cartaoCreditoEntity));
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao criar no banco de dados.");
@@ -31,7 +31,7 @@ public class CartaoCreditoService {
     public CartaoCreditoDTO update(Integer idCartao, CartaoCreditoCreateDTO cartaoCreditoAtualizar) throws RegraDeNegocioException {
         try {
             this.findById(idCartao);
-            CartaoCredito ccEntity = converterEntity(cartaoCreditoAtualizar);
+            CartaoCreditoEntity ccEntity = converterEntity(cartaoCreditoAtualizar);
             return converterEmDTO(cartaoCreditoRepository.update(idCartao, ccEntity));
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao atualizar no banco de dados.");
@@ -57,17 +57,17 @@ public class CartaoCreditoService {
         }
     }
 
-    public CartaoCredito converterEntity(CartaoCreditoCreateDTO cartaoCreditoCreateDTO){
-        return objectMapper.convertValue(cartaoCreditoCreateDTO, CartaoCredito.class);
+    public CartaoCreditoEntity converterEntity(CartaoCreditoCreateDTO cartaoCreditoCreateDTO){
+        return objectMapper.convertValue(cartaoCreditoCreateDTO, CartaoCreditoEntity.class);
     }
 
-    public CartaoCreditoDTO converterEmDTO(CartaoCredito cartaoCredito){
-        return objectMapper.convertValue(cartaoCredito, CartaoCreditoDTO.class);
+    public CartaoCreditoDTO converterEmDTO(CartaoCreditoEntity cartaoCreditoEntity){
+        return objectMapper.convertValue(cartaoCreditoEntity, CartaoCreditoDTO.class);
     }
 
     public CartaoCreditoDTO findById(Integer id) throws RegraDeNegocioException{
         try {
-            CartaoCredito ccRecuperado = cartaoCreditoRepository.findById(id);
+            CartaoCreditoEntity ccRecuperado = cartaoCreditoRepository.findById(id);
 
             if(ccRecuperado.getIdCartaoCredito() != null) {
                 return converterEmDTO(ccRecuperado);

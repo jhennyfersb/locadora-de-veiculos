@@ -1,10 +1,14 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.dto;
 
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Data
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 public class LocacaoDTO  {
     private Integer idLocacao;
     private LocalDate dataLocacao;

@@ -1,6 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Locacao;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.LocacaoEntity;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
@@ -25,25 +25,25 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String from;
 
-    private static final String TO = "jhennyfer.sobrinho@dbccompany.com.br";
+    private static final String TO = "";
 
     private final JavaMailSender emailSender;
 
-    public void sendEmail(Locacao locacao, String templateName, String destinatario) {
+    public void sendEmail(LocacaoEntity locacaoEntity, String templateName, String destinatario) {
 
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         Map<String,Object> dados = new HashMap<>();
-        dados.put("nome", locacao.getFuncionario().getNome());
-        dados.put("id", locacao.getFuncionario().getIdFuncionario());
+        dados.put("nome", locacaoEntity.getFuncionario().getNome());
+        dados.put("id", locacaoEntity.getFuncionario().getIdFuncionario());
         dados.put("email", from);
-        dados.put("id", locacao.getFuncionario().getIdFuncionario());
-        dados.put("idLocacao",locacao.getIdLocacao());
-        dados.put("valorLocacao",locacao.getValorLocacao());
-        dados.put("modeloVeiculo",locacao.getVeiculo().getModelo());
-        dados.put("marcaVeiculo",locacao.getVeiculo().getMarca());
-        dados.put("placaVeiculo",locacao.getVeiculo().getPlaca());
-        dados.put("dataLocacao",locacao.getDataLocacao());
-        dados.put("dataDevolucao",locacao.getDataDevolucao());
+        dados.put("id", locacaoEntity.getFuncionario().getIdFuncionario());
+        dados.put("idLocacao", locacaoEntity.getIdLocacao());
+        dados.put("valorLocacao", locacaoEntity.getValorLocacao());
+        dados.put("modeloVeiculo", locacaoEntity.getVeiculo().getModelo());
+        dados.put("marcaVeiculo", locacaoEntity.getVeiculo().getMarca());
+        dados.put("placaVeiculo", locacaoEntity.getVeiculo().getPlaca());
+        dados.put("dataLocacao", locacaoEntity.getDataLocacao());
+        dados.put("dataDevolucao", locacaoEntity.getDataDevolucao());
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
             mimeMessageHelper.setFrom(from);

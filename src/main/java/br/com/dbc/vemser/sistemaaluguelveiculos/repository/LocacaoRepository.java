@@ -1,6 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.repository;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Locacao;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.BandeiraCartao;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.DisponibilidadeVeiculo;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class LocacaoRepository implements Repositorio<Integer, Locacao> {
+public class LocacaoRepository implements Repositorio<Integer, LocacaoEntity> {
     private final ConexaoBancoDeDados conexaoBancoDeDados;
 
     @Override
@@ -31,12 +31,12 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
     }
 
     @Override
-    public Locacao create(Locacao locacao) throws BancoDeDadosException {
+    public LocacaoEntity create(LocacaoEntity locacaoEntity) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = conexaoBancoDeDados.getConnection();
             Integer proximoId = this.getProximoId(con);
-            locacao.setIdLocacao(proximoId);
+            locacaoEntity.setIdLocacao(proximoId);
 
             String sql = "INSERT INTO LOCACAO\n" +
                     "(id_locacao, data_locacao, data_devolucao, valor_locacao_total, id_cliente, id_veiculo, id_funcionario, id_cartao)\n" +
@@ -44,18 +44,18 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
-            stmt.setInt(1, locacao.getIdLocacao());
-            stmt.setDate(2, Date.valueOf(locacao.getDataLocacao()));
-            stmt.setDate(3, Date.valueOf(locacao.getDataDevolucao()));
-            stmt.setDouble(4, locacao.getValorLocacao());
-            stmt.setInt(5, locacao.getCliente().getIdCliente());
-            stmt.setInt(6, locacao.getVeiculo().getIdVeiculo());
-            stmt.setInt(7, locacao.getFuncionario().getIdFuncionario());
-            stmt.setInt(8, locacao.getCartaoCredito().getIdCartaoCredito());
+            stmt.setInt(1, locacaoEntity.getIdLocacao());
+            stmt.setDate(2, Date.valueOf(locacaoEntity.getDataLocacao()));
+            stmt.setDate(3, Date.valueOf(locacaoEntity.getDataDevolucao()));
+            stmt.setDouble(4, locacaoEntity.getValorLocacao());
+            stmt.setInt(5, locacaoEntity.getCliente().getIdCliente());
+            stmt.setInt(6, locacaoEntity.getVeiculo().getIdVeiculo());
+            stmt.setInt(7, locacaoEntity.getFuncionario().getIdFuncionario());
+            stmt.setInt(8, locacaoEntity.getCartaoCreditoEntity().getIdCartaoCredito());
 
             int res = stmt.executeUpdate();
 
-            return locacao;
+            return locacaoEntity;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
@@ -98,7 +98,7 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
     }
 
     @Override
-    public Locacao update(Integer id, Locacao locacao) throws BancoDeDadosException {
+    public LocacaoEntity update(Integer id, LocacaoEntity locacaoEntity) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = conexaoBancoDeDados.getConnection();
@@ -106,29 +106,29 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE LOCACAO SET \n");
 
-            if (locacao.getDataLocacao() != null) {
+            if (locacaoEntity.getDataLocacao() != null) {
                 sql.append(" data_locacao = ?,");
             }
-            if (locacao.getDataDevolucao() != null) {
+            if (locacaoEntity.getDataDevolucao() != null) {
                 sql.append(" data_devolucao = ?,");
             }
-            if (locacao.getValorLocacao() != null) {
+            if (locacaoEntity.getValorLocacao() != null) {
                 sql.append(" valor_locacao_total = ?,");
             }
-            Cliente cliente = locacao.getCliente();
+            Cliente cliente = locacaoEntity.getCliente();
             if (cliente != null) {
                 sql.append("id_cliente = ?,");
             }
-            Veiculo veiculo = locacao.getVeiculo();
+            Veiculo veiculo = locacaoEntity.getVeiculo();
             if (veiculo.getIdVeiculo() != null) {
                 sql.append(" id_veiculo = ?,");
             }
-            Funcionario funcionario = locacao.getFuncionario();
+            Funcionario funcionario = locacaoEntity.getFuncionario();
             if (funcionario.getIdFuncionario() != null) {
                 sql.append(" id_funcionario = ?,");
             }
-            CartaoCredito cartaoCredito = locacao.getCartaoCredito();
-            if (cartaoCredito != null) {
+            CartaoCreditoEntity cartaoCreditoEntity = locacaoEntity.getCartaoCreditoEntity();
+            if (cartaoCreditoEntity != null) {
                 sql.append(" id_cartao = ?,");
             }
             sql.deleteCharAt(sql.length() - 1);
@@ -136,14 +136,14 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
             int index = 1;
-            if (locacao.getDataLocacao() != null) {
-                stmt.setDate(index++, Date.valueOf(locacao.getDataLocacao()));
+            if (locacaoEntity.getDataLocacao() != null) {
+                stmt.setDate(index++, Date.valueOf(locacaoEntity.getDataLocacao()));
             }
-            if (locacao.getDataDevolucao() != null) {
-                stmt.setDate(index++, Date.valueOf(locacao.getDataDevolucao()));
+            if (locacaoEntity.getDataDevolucao() != null) {
+                stmt.setDate(index++, Date.valueOf(locacaoEntity.getDataDevolucao()));
             }
-            if (locacao.getValorLocacao() != null) {
-                stmt.setDouble(index++, locacao.getValorLocacao());
+            if (locacaoEntity.getValorLocacao() != null) {
+                stmt.setDouble(index++, locacaoEntity.getValorLocacao());
             }
             if (cliente != null) {
                 stmt.setInt(index++, cliente.getIdCliente());
@@ -154,14 +154,14 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
             if (funcionario.getIdFuncionario() != null) {
                 stmt.setInt(index++, funcionario.getIdFuncionario());
             }
-            if (cartaoCredito != null) {
-                stmt.setInt(index++, cartaoCredito.getIdCartaoCredito());
+            if (cartaoCreditoEntity != null) {
+                stmt.setInt(index++, cartaoCreditoEntity.getIdCartaoCredito());
             }
             stmt.setInt(index++, id);
 
             stmt.executeUpdate();
 
-            return locacao;
+            return locacaoEntity;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
@@ -176,8 +176,8 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
     }
 
     @Override
-    public List<Locacao> list() throws BancoDeDadosException {
-        List<Locacao> locacoes = new ArrayList<>();
+    public List<LocacaoEntity> list() throws BancoDeDadosException {
+        List<LocacaoEntity> locacoes = new ArrayList<>();
         Connection con = null;
 
         try {
@@ -195,8 +195,8 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
             ResultSet res = stmt.executeQuery(sql);
 
             while (res.next()) {
-                Locacao locacao = getLocacaoFromResultset(res);
-                locacoes.add(locacao);
+                LocacaoEntity locacaoEntity = getLocacaoFromResultset(res);
+                locacoes.add(locacaoEntity);
             }
             return locacoes;
         } catch (SQLException e) {
@@ -212,17 +212,17 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
         }
     }
 
-    private Locacao getLocacaoFromResultset(ResultSet res) throws SQLException {
-        Locacao locacao = new Locacao();
-        locacao.setIdLocacao(res.getInt("id_locacao"));
-        locacao.setDataLocacao(res.getDate("data_locacao").toLocalDate());
-        locacao.setDataDevolucao(res.getDate("data_devolucao").toLocalDate());
-        locacao.setValorLocacao(res.getDouble("valor_locacao_total"));
-        locacao.setCliente(getClientFromResultSet(res));
-        locacao.setVeiculo(getVeiculoFromResultSet(res));
-        locacao.setFuncionario(getFuncionarioResultSet(res));
-        locacao.setCartaoCredito(getFromResultSetCartaoCredito(res));
-        return locacao;
+    private LocacaoEntity getLocacaoFromResultset(ResultSet res) throws SQLException {
+        LocacaoEntity locacaoEntity = new LocacaoEntity();
+        locacaoEntity.setIdLocacao(res.getInt("id_locacao"));
+        locacaoEntity.setDataLocacao(res.getDate("data_locacao").toLocalDate());
+        locacaoEntity.setDataDevolucao(res.getDate("data_devolucao").toLocalDate());
+        locacaoEntity.setValorLocacao(res.getDouble("valor_locacao_total"));
+        locacaoEntity.setCliente(getClientFromResultSet(res));
+        locacaoEntity.setVeiculo(getVeiculoFromResultSet(res));
+        locacaoEntity.setFuncionario(getFuncionarioResultSet(res));
+        locacaoEntity.setCartaoCreditoEntity(getFromResultSetCartaoCredito(res));
+        return locacaoEntity;
     }
 
     private Funcionario getFuncionarioResultSet(ResultSet res) throws SQLException {
@@ -235,14 +235,14 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
         return funcionario;
     }
 
-    private CartaoCredito getFromResultSetCartaoCredito(ResultSet res) throws SQLException {
-        CartaoCredito cartaoCredito = new CartaoCredito();
-        cartaoCredito.setIdCartaoCredito(res.getInt("id_cartao"));
-        cartaoCredito.setNumero(res.getString("numero_cartao"));
-        cartaoCredito.setBandeiraCartao(BandeiraCartao.valueOf(res.getString("bandeira_cartao")));
-        cartaoCredito.setValidade(res.getString("validade"));
-        cartaoCredito.setLimite(res.getDouble("limite"));
-        return cartaoCredito;
+    private CartaoCreditoEntity getFromResultSetCartaoCredito(ResultSet res) throws SQLException {
+        CartaoCreditoEntity cartaoCreditoEntity = new CartaoCreditoEntity();
+        cartaoCreditoEntity.setIdCartaoCredito(res.getInt("id_cartao"));
+        cartaoCreditoEntity.setNumero(res.getString("numero_cartao"));
+        cartaoCreditoEntity.setBandeiraCartao(BandeiraCartao.valueOf(res.getString("bandeira_cartao")));
+        cartaoCreditoEntity.setValidade(res.getString("validade"));
+        cartaoCreditoEntity.setLimite(res.getDouble("limite"));
+        return cartaoCreditoEntity;
     }
 
     private Cliente getClientFromResultSet(ResultSet res) throws SQLException {
@@ -267,8 +267,8 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
         return veiculo;
     }
 
-    public Locacao findById(Integer chave) throws BancoDeDadosException {
-        Locacao locacao = new Locacao();
+    public LocacaoEntity findById(Integer chave) throws BancoDeDadosException {
+        LocacaoEntity locacaoEntity = new LocacaoEntity();
         Connection con = null;
         try {
             con = conexaoBancoDeDados.getConnection();
@@ -287,17 +287,17 @@ public class LocacaoRepository implements Repositorio<Integer, Locacao> {
             ResultSet res = stmt.executeQuery();
 
             while (res.next()) {
-                locacao.setIdLocacao(res.getInt("id_locacao"));
-                locacao.setDataLocacao(res.getDate("data_locacao").toLocalDate());
-                locacao.setDataDevolucao(res.getDate("data_devolucao").toLocalDate());
-                locacao.setValorLocacao(res.getDouble("valor_locacao_total"));
-                locacao.setCliente(getClientFromResultSet(res));
-                locacao.setVeiculo(getVeiculoFromResultSet(res));
-                locacao.setFuncionario(getFuncionarioResultSet(res));
-                locacao.setCartaoCredito(getFromResultSetCartaoCredito(res));
+                locacaoEntity.setIdLocacao(res.getInt("id_locacao"));
+                locacaoEntity.setDataLocacao(res.getDate("data_locacao").toLocalDate());
+                locacaoEntity.setDataDevolucao(res.getDate("data_devolucao").toLocalDate());
+                locacaoEntity.setValorLocacao(res.getDouble("valor_locacao_total"));
+                locacaoEntity.setCliente(getClientFromResultSet(res));
+                locacaoEntity.setVeiculo(getVeiculoFromResultSet(res));
+                locacaoEntity.setFuncionario(getFuncionarioResultSet(res));
+                locacaoEntity.setCartaoCreditoEntity(getFromResultSetCartaoCredito(res));
             }
 
-            return locacao;
+            return locacaoEntity;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {

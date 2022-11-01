@@ -10,7 +10,7 @@ Os dados foram atualizados em nosso sistema.
 
 Dados da locacação:<br>
 O identicador da  locação é ${idLocacao}.<br>
-Valor locacao $ ${valorLocacao}.<br>
+Valor locacaoEntity $ ${valorLocacao}.<br>
 O veiculo é um ${modeloVeiculo}
 da marca ${marcaVeiculo}
 de placa  ${placaVeiculo}.<br>

@@ -1,10 +1,10 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoCreateDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Locacao;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.*;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
+import br.com.dbc.vemser.sistemaaluguelveiculos.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,13 +31,13 @@ public class LocacaoService {
 
     public LocacaoDTO create(LocacaoCreateDTO locacaoDTO) throws RegraDeNegocioException {
         try {
-            Locacao locacaoAdicionada = locacaoRepository.create(converterDTOEmLocacao(converterEmLocacao(locacaoDTO)));
-            Funcionario funcionario = funcionarioRepository.findById(locacaoAdicionada.getFuncionario().getIdFuncionario());
-            locacaoAdicionada.getVeiculo().alterarDisponibilidadeVeiculo();
-            veiculoRepository.update(locacaoAdicionada.getVeiculo().getIdVeiculo(), locacaoAdicionada.getVeiculo());
+            LocacaoEntity locacaoEntityAdicionada = locacaoRepository.create(converterEmLocacao(locacaoDTO));
+            Funcionario funcionario = funcionarioRepository.findById(locacaoEntityAdicionada.getFuncionario().getIdFuncionario());
+            locacaoEntityAdicionada.getVeiculo().alterarDisponibilidadeVeiculo();
+            veiculoRepository.update(locacaoEntityAdicionada.getVeiculo().getIdVeiculo(), locacaoEntityAdicionada.getVeiculo());
 
-            emailService.sendEmail(locacaoAdicionada, "locacao-template.ftl", funcionario.getEmail());
-            return converterEmDTO(locacaoAdicionada);
+            emailService.sendEmail(locacaoEntityAdicionada, "locacao-template.ftl", funcionario.getEmail());
+            return converterEmDTO(locacaoEntityAdicionada);
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao criar no banco de dados.");
         }
@@ -45,13 +45,13 @@ public class LocacaoService {
 
     public void delete(Integer id) throws RegraDeNegocioException {
         try {
-            Locacao locacaoDeletada = converterDTOEmLocacao(findById(id));
+            LocacaoEntity locacaoEntityDeletada = converterDTOEmLocacao(findById(id));
             locacaoRepository.delete(id);
-            locacaoDeletada.getVeiculo().alterarDisponibilidadeVeiculo();
-            veiculoRepository.update(locacaoDeletada.getVeiculo().getIdVeiculo(), locacaoDeletada.getVeiculo());
-            emailService.sendEmail(locacaoDeletada,
+            locacaoEntityDeletada.getVeiculo().alterarDisponibilidadeVeiculo();
+            veiculoRepository.update(locacaoEntityDeletada.getVeiculo().getIdVeiculo(), locacaoEntityDeletada.getVeiculo());
+            emailService.sendEmail(locacaoEntityDeletada,
                     "locacao-template-delete.ftl",
-                    locacaoDeletada.getFuncionario().getEmail());
+                    locacaoEntityDeletada.getFuncionario().getEmail());
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
         }
@@ -59,10 +59,10 @@ public class LocacaoService {
 
     public LocacaoDTO findById(Integer idLocacao) throws RegraDeNegocioException {
         try {
-            Locacao locacaoRecuperada = locacaoRepository.findById(idLocacao);
+            LocacaoEntity locacaoEntityRecuperada = locacaoRepository.findById(idLocacao);
 
-            if (locacaoRecuperada.getIdLocacao() != null) {
-                return converterEmDTO(locacaoRecuperada);
+            if (locacaoEntityRecuperada.getIdLocacao() != null) {
+                return converterEmDTO(locacaoEntityRecuperada);
             } else {
                 throw new RegraDeNegocioException("Locação não encontrada");
             }
@@ -82,12 +82,12 @@ public class LocacaoService {
                 throw new RegraDeNegocioException("Veiculo selecionado alugado.");
             }
             CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.findById(locacaoCreateDTO.getIdCartaoCredito());
-            Locacao locacaoEntity = objectMapper.convertValue(this.findById(id), Locacao.class);
+            LocacaoEntity locacaoEntity = objectMapper.convertValue(this.findById(id), LocacaoEntity.class);
 
             locacaoEntity.setVeiculo(objectMapper.convertValue(veiculoDTO, Veiculo.class));
             locacaoEntity.setCliente(objectMapper.convertValue(clienteDTO, Cliente.class));
             locacaoEntity.setFuncionario(objectMapper.convertValue(funcionarioDTO, Funcionario.class));
-            locacaoEntity.setCartaoCredito(objectMapper.convertValue(cartaoCreditoDTO, CartaoCredito.class));
+            locacaoEntity.setCartaoCreditoEntity(objectMapper.convertValue(cartaoCreditoDTO, CartaoCreditoEntity.class));
 
             Duration d2 = Duration.between(locacaoEntity.getDataLocacao().atStartOfDay(),
                     locacaoEntity.getDataDevolucao().atStartOfDay());
@@ -100,12 +100,12 @@ public class LocacaoService {
                 throw new RegraDeNegocioException("A data da devolução não pode ser inferior a data de locação. Tente novamente!");
             }
 
-            Locacao locacaoAdicionada = this.locacaoRepository.update(locacaoEntity.getIdLocacao(), locacaoEntity);
-            locacaoAdicionada.getVeiculo().alterarDisponibilidadeVeiculo();
-            veiculoRepository.update(locacaoAdicionada.getVeiculo().getIdVeiculo(), locacaoAdicionada.getVeiculo());
+            LocacaoEntity locacaoEntityAdicionada = this.locacaoRepository.update(locacaoEntity.getIdLocacao(), locacaoEntity);
+            locacaoEntityAdicionada.getVeiculo().alterarDisponibilidadeVeiculo();
+            veiculoRepository.update(locacaoEntityAdicionada.getVeiculo().getIdVeiculo(), locacaoEntityAdicionada.getVeiculo());
 
             emailService.sendEmail(locacaoEntity, "locacao-template-update.ftl", funcionarioDTO.getEmail());
-            return converterEmDTO(locacaoAdicionada);
+            return converterEmDTO(locacaoEntityAdicionada);
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao editar no banco de dados.");
         }
@@ -113,7 +113,7 @@ public class LocacaoService {
 
     public List<LocacaoDTO> list() throws RegraDeNegocioException {
         try {
-            List<Locacao> listar = locacaoRepository.list();
+            List<LocacaoEntity> listar = locacaoRepository.list();
             return listar.stream()
                     .map(this::converterEmDTO)
                     .collect(Collectors.toList());
@@ -122,7 +122,7 @@ public class LocacaoService {
         }
     }
 
-    public LocacaoDTO converterEmLocacao(LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
+    public LocacaoEntity converterEmLocacao(LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
 
         try {
             Funcionario funcionario = funcionarioRepository.findById(locacaoCreateDTO.getIdFuncionario());
@@ -140,36 +140,44 @@ public class LocacaoService {
             if(veiculo.getDisponibilidadeVeiculo().getDisponibilidade() == 1){
                 throw new RegraDeNegocioException("Veiculo selecionado alugado.");
             }
-            CartaoCredito cartaoCredito = cartaoCreditoRepository.findById(locacaoCreateDTO.getIdCartaoCredito());
-            if (cartaoCredito.getIdCartaoCredito() == null) {
+            CartaoCreditoEntity cartaoCreditoEntity = cartaoCreditoRepository.findById(locacaoCreateDTO.getIdCartaoCredito());
+            if (cartaoCreditoEntity.getIdCartaoCredito() == null) {
                 throw new RegraDeNegocioException("Cartão de crédito não encontrado.");
             }
             if(locacaoCreateDTO.getDataDevolucao().isBefore(locacaoCreateDTO.getDataLocacao())) {
                 throw new RegraDeNegocioException("A data da devolução não pode ser inferior a data de locação. Tente novamente!");
             }
 
-            Locacao locacao = new Locacao(null,
+            LocacaoEntity locacaoEntity = new LocacaoEntity(null,
                     locacaoCreateDTO.getDataLocacao(),
                     locacaoCreateDTO.getDataDevolucao(),
                     cliente,
-                    veiculo,
-                    cartaoCredito,
+                   veiculo,
+                    cartaoCreditoEntity,
                     funcionario);
-            Duration d2 = Duration.between(locacao.getDataLocacao().atStartOfDay(), locacao.getDataDevolucao().atStartOfDay());
-            locacao.setValorLocacao(d2.toDays() * locacao.getVeiculo().getValorLocacao());
 
-            return converterEmDTO(locacao);
+            Duration d2 = Duration.between(locacaoEntity.getDataLocacao().atStartOfDay(), locacaoEntity.getDataDevolucao().atStartOfDay());
+            locacaoEntity.setValorLocacao(d2.toDays() * locacaoEntity.getVeiculo().getValorLocacao());
+
+            return locacaoEntity;
         } catch (BancoDeDadosException e) {
             throw new RegraDeNegocioException("Erro ao instanciar locação.");
         }
     }
 
-    public LocacaoDTO converterEmDTO(Locacao locacao) {
-        return objectMapper.convertValue(locacao, LocacaoDTO.class);
+    public LocacaoDTO converterEmDTO(LocacaoEntity locacaoEntity) {
+        ClienteDTO clienteDTO = clienteService.converterEmDTO(locacaoEntity.getCliente());
+        VeiculoDTO veiculoDTO = veiculoService.converterEmDTO(locacaoEntity.getVeiculo());
+        CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.converterEmDTO(locacaoEntity.getCartaoCreditoEntity());
+        FuncionarioDTO funcionarioDTO = funcionarioService.converterEmDTO(locacaoEntity.getFuncionario());
+
+        new LocacaoDTO(locacaoEntity.getIdLocacao(), locacaoEntity.getDataLocacao(), locacaoEntity.getDataDevolucao(), locacaoEntity.getValorLocacao(),clienteDTO,
+                veiculoDTO,cartaoCreditoDTO,funcionarioDTO);
+        return objectMapper.convertValue(locacaoEntity, LocacaoDTO.class);
     }
 
-    public Locacao converterDTOEmLocacao(LocacaoDTO locacaodto) {
-        return objectMapper.convertValue(locacaodto, Locacao.class);
+    public LocacaoEntity converterDTOEmLocacao(LocacaoDTO locacaodto) {
+        return objectMapper.convertValue(locacaodto, LocacaoEntity.class);
     }
 
 }

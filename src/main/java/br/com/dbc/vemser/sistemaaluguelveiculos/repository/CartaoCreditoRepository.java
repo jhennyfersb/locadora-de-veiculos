@@ -1,6 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.repository;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.CartaoCredito;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.CartaoCreditoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.BandeiraCartao;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.interfaces.Repositorio;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredito> {
+public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCreditoEntity> {
     private final ConexaoBancoDeDados conexaoBancoDeDados;
 
     @Override
@@ -30,13 +30,13 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
     }
 
     @Override
-    public CartaoCredito create(CartaoCredito cartaoCredito) throws BancoDeDadosException {
+    public CartaoCreditoEntity create(CartaoCreditoEntity cartaoCreditoEntity) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = conexaoBancoDeDados.getConnection();
 
             Integer proximoId = this.getProximoId(con);
-            cartaoCredito.setIdCartaoCredito(proximoId);
+            cartaoCreditoEntity.setIdCartaoCredito(proximoId);
 
             String sql = "INSERT INTO CARTAO_CREDITO\n" +
                     "(id_cartao, numero_cartao, bandeira_cartao, validade, limite)\n" +
@@ -44,14 +44,14 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
 
             PreparedStatement stmt = con.prepareStatement(sql);
 
-            stmt.setInt(1, cartaoCredito.getIdCartaoCredito());
-            stmt.setString(2, cartaoCredito.getNumero());
-            stmt.setString(3, cartaoCredito.getBandeiraCartao().toString());
-            stmt.setString(4, cartaoCredito.getValidade());
-            stmt.setDouble(5, cartaoCredito.getLimite());
+            stmt.setInt(1, cartaoCreditoEntity.getIdCartaoCredito());
+            stmt.setString(2, cartaoCreditoEntity.getNumero());
+            stmt.setString(3, cartaoCreditoEntity.getBandeiraCartao().toString());
+            stmt.setString(4, cartaoCreditoEntity.getValidade());
+            stmt.setDouble(5, cartaoCreditoEntity.getLimite());
 
             stmt.executeUpdate();
-            return cartaoCredito;
+            return cartaoCreditoEntity;
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
         } finally {
@@ -66,7 +66,7 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
     }
 
     @Override
-    public CartaoCredito update(Integer id, CartaoCredito cartaoCredito) throws BancoDeDadosException {
+    public CartaoCreditoEntity update(Integer id, CartaoCreditoEntity cartaoCreditoEntity) throws BancoDeDadosException {
         Connection con = null;
         try {
             con = conexaoBancoDeDados.getConnection();
@@ -81,16 +81,16 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
 
             PreparedStatement stmt = con.prepareStatement(sql.toString());
 
-            cartaoCredito.setIdCartaoCredito(id);
-            stmt.setString(1, cartaoCredito.getNumero());
-            stmt.setString(2, cartaoCredito.getBandeiraCartao().toString());
-            stmt.setString(3, cartaoCredito.getValidade());
-            stmt.setDouble(4, cartaoCredito.getLimite());
+            cartaoCreditoEntity.setIdCartaoCredito(id);
+            stmt.setString(1, cartaoCreditoEntity.getNumero());
+            stmt.setString(2, cartaoCreditoEntity.getBandeiraCartao().toString());
+            stmt.setString(3, cartaoCreditoEntity.getValidade());
+            stmt.setDouble(4, cartaoCreditoEntity.getLimite());
             stmt.setInt(5, id);
 
             stmt.executeUpdate();
 
-            return cartaoCredito;
+            return cartaoCreditoEntity;
 
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
@@ -134,8 +134,8 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
     }
 
     @Override
-    public List<CartaoCredito> list() throws BancoDeDadosException {
-        List<CartaoCredito> cartoes = new ArrayList<>();
+    public List<CartaoCreditoEntity> list() throws BancoDeDadosException {
+        List<CartaoCreditoEntity> cartoes = new ArrayList<>();
         Connection con = null;
         try {
             con = conexaoBancoDeDados.getConnection();
@@ -147,13 +147,13 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
             ResultSet res = stmt.executeQuery(sql);
 
             while (res.next()) {
-                CartaoCredito cartaoCredito = new CartaoCredito();
-                cartaoCredito.setIdCartaoCredito(res.getInt("id_cartao"));
-                cartaoCredito.setNumero(res.getString("numero_cartao"));
-                cartaoCredito.setBandeiraCartao(BandeiraCartao.valueOf(res.getString("bandeira_cartao")));
-                cartaoCredito.setValidade(res.getString("validade"));
-                cartaoCredito.setLimite(res.getDouble("limite"));
-                cartoes.add(cartaoCredito);
+                CartaoCreditoEntity cartaoCreditoEntity = new CartaoCreditoEntity();
+                cartaoCreditoEntity.setIdCartaoCredito(res.getInt("id_cartao"));
+                cartaoCreditoEntity.setNumero(res.getString("numero_cartao"));
+                cartaoCreditoEntity.setBandeiraCartao(BandeiraCartao.valueOf(res.getString("bandeira_cartao")));
+                cartaoCreditoEntity.setValidade(res.getString("validade"));
+                cartaoCreditoEntity.setLimite(res.getDouble("limite"));
+                cartoes.add(cartaoCreditoEntity);
             }
         } catch (SQLException e) {
             throw new BancoDeDadosException(e.getCause());
@@ -169,8 +169,8 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
         return cartoes;
     }
 
-    public CartaoCredito findById(Integer idCartao) throws BancoDeDadosException {
-        CartaoCredito  cartaoCredito = new CartaoCredito();
+    public CartaoCreditoEntity findById(Integer idCartao) throws BancoDeDadosException {
+        CartaoCreditoEntity cartaoCreditoEntity = new CartaoCreditoEntity();
         Connection con = null;
         try {
             con = conexaoBancoDeDados.getConnection();
@@ -185,13 +185,13 @@ public class CartaoCreditoRepository implements Repositorio<Integer, CartaoCredi
             ResultSet res = stmt.executeQuery();
 
             while (res.next()){
-                cartaoCredito.setIdCartaoCredito(res.getInt("id_cartao"));
-                cartaoCredito.setNumero(res.getString("numero_cartao"));
-                cartaoCredito.setBandeiraCartao(BandeiraCartao.valueOf(res.getString("bandeira_cartao")));
-                cartaoCredito.setValidade(res.getString("validade"));
-                cartaoCredito.setLimite(res.getDouble("limite"));
+                cartaoCreditoEntity.setIdCartaoCredito(res.getInt("id_cartao"));
+                cartaoCreditoEntity.setNumero(res.getString("numero_cartao"));
+                cartaoCreditoEntity.setBandeiraCartao(BandeiraCartao.valueOf(res.getString("bandeira_cartao")));
+                cartaoCreditoEntity.setValidade(res.getString("validade"));
+                cartaoCreditoEntity.setLimite(res.getDouble("limite"));
             }
-            return cartaoCredito;
+            return cartaoCreditoEntity;
         }catch (SQLException e){
             throw new BancoDeDadosException(e.getCause());
         }finally {
