@@ -1,9 +1,7 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ClienteDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

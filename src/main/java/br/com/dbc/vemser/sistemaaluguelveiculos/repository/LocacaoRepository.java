@@ -1,15 +1,14 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.repository;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Locacao;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.BandeiraCartao;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.DisponibilidadeVeiculo;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.interfaces.Repositorio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
