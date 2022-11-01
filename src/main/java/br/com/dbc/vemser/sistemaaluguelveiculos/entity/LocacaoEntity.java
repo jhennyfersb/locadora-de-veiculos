@@ -25,24 +25,24 @@ public class LocacaoEntity {
     @Column(name = "valor_locacao_total")
     private Double valorLocacao;
 
-    private Cliente cliente;
-    private Veiculo veiculo;
-    private CartaoCreditoEntity cartaoCreditoEntity;
-    private Funcionario funcionario;
+//    private ClienteEntity clienteEntity;
+//    private VeiculoEntity veiculoEntity;
+//    private CartaoCreditoEntity cartaoCreditoEntity;
+//    private FuncionarioEntity funcionarioEntity;
 
-    public LocacaoEntity(Integer idLocacao,
-                         LocalDate dataLocacao,
-                         LocalDate dataDevolucao,
-                         Cliente cliente,
-                         Veiculo veiculo,
-                         CartaoCreditoEntity cartaoCreditoEntity,
-                         Funcionario funcionario) {
-        this.idLocacao = idLocacao;
-        this.dataLocacao = dataLocacao;
-        this.dataDevolucao = dataDevolucao;
-        this.cliente = cliente;
-        this.veiculo = veiculo;
-        this.cartaoCreditoEntity = cartaoCreditoEntity;
-        this.funcionario = funcionario;
-    }
+//    public LocacaoEntity(Integer idLocacao,
+//                         LocalDate dataLocacao,
+//                         LocalDate dataDevolucao,
+//                         ClienteEntity clienteEntity,
+//                         VeiculoEntity veiculo,
+//                         CartaoCreditoEntity cartaoCreditoEntity,
+//                         FuncionarioEntity funcionarioEntity) {
+//        this.idLocacao = idLocacao;
+//        this.dataLocacao = dataLocacao;
+//        this.dataDevolucao = dataDevolucao;
+//        this.clienteEntity = clienteEntity;
+//        this.veiculoEntity = veiculo;
+//        this.cartaoCreditoEntity = cartaoCreditoEntity;
+//        this.funcionarioEntity = funcionarioEntity;
+//    }
 }

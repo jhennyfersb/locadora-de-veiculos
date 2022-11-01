@@ -27,9 +27,11 @@ public class VeiculoController implements VeiculoControllerInterface {
     public List<VeiculoDTO> list() throws RegraDeNegocioException {
         return veiculoService.list();
     }
+
     @GetMapping("/disponiveis")
     public List<VeiculoDTO> listVeiculosDisponives() throws RegraDeNegocioException {
-        return veiculoService.listVeiculosDisponiveis();
+//        return veiculoService.listVeiculosDisponiveis();
+        return null;
     }
 
     @GetMapping("/{idVeiculo}")

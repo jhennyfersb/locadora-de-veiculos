@@ -1,4 +1,4 @@
-package br.com.dbc.vemser.sistemaaluguelveiculos.repository;
+package br.com.dbc.vemser.sistemaaluguelveiculos.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

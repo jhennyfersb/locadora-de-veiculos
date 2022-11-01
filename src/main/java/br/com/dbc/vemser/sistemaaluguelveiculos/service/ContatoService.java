@@ -2,7 +2,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ContatoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ContatoDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Contato;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.ContatoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.ContatoRepository;
@@ -10,7 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.PersistenceException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,9 +23,9 @@ public class ContatoService {
 
     public ContatoDTO create(ContatoCreateDTO contato) throws RegraDeNegocioException {
         try {
-        Contato contatoAdicionado = contatoRepository.create(converterEntity(contato));
-        return converterEmDTO(contatoAdicionado);
-        } catch (BancoDeDadosException e) {
+            ContatoEntity contatoEntityAdicionado = contatoRepository.save(converterEntity(contato));
+            return converterEmDTO(contatoEntityAdicionado);
+        } catch (PersistenceException e) {
             throw new RegraDeNegocioException("Erro ao criar no banco de dados.");
         }
     }
@@ -31,8 +33,8 @@ public class ContatoService {
     public void delete(Integer id) throws RegraDeNegocioException {
         try {
             this.findById(id);
-            contatoRepository.delete(id);
-        } catch (BancoDeDadosException e) {
+            contatoRepository.deleteById(id);
+        } catch (PersistenceException e) {
             throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
         }
     }
@@ -40,44 +42,44 @@ public class ContatoService {
     public ContatoDTO update(Integer id, ContatoCreateDTO contato) throws RegraDeNegocioException {
         try {
             this.findById(id);
-            Contato contatoEntity = converterEntity(contato);
-            return converterEmDTO(contatoRepository.update(id, contatoEntity));
-        } catch (BancoDeDadosException e) {
+            ContatoEntity contatoEntity = converterEntity(contato);
+            contatoEntity.setIdContato(id);
+            return converterEmDTO(contatoRepository.save(contatoEntity));
+        } catch (PersistenceException e) {
             throw new RegraDeNegocioException("Erro ao atualizar no banco de dados.");
         }
     }
 
     public List<ContatoDTO> list() throws RegraDeNegocioException {
         try {
-        List<Contato> listar = contatoRepository.list();
-        return listar.stream()
-                .map(this::converterEmDTO)
-                .collect(Collectors.toList());
-        } catch (BancoDeDadosException e) {
+            List<ContatoEntity> listar = contatoRepository.findAll();
+            return listar.stream()
+                    .map(this::converterEmDTO)
+                    .collect(Collectors.toList());
+        } catch (PersistenceException e) {
             throw new RegraDeNegocioException("Erro ao listar no banco de dados.");
         }
     }
 
-    public Contato converterEntity(ContatoCreateDTO contatoCreateDTO){
-        return objectMapper.convertValue(contatoCreateDTO, Contato.class);
+    public ContatoEntity converterEntity(ContatoCreateDTO contatoCreateDTO) {
+        return objectMapper.convertValue(contatoCreateDTO, ContatoEntity.class);
     }
 
-    public ContatoDTO converterEmDTO(Contato contato){
-        return objectMapper.convertValue(contato, ContatoDTO.class);
+    public ContatoDTO converterEmDTO(ContatoEntity contatoEntity) {
+        return objectMapper.convertValue(contatoEntity, ContatoDTO.class);
     }
-
 
 
     public ContatoDTO findById(Integer id) throws RegraDeNegocioException {
         try {
-            Contato contatoRecuperado = contatoRepository.findById(id);
+            Optional<ContatoEntity> contatoEntityRecuperado = contatoRepository.findById(id);
 
-            if(contatoRecuperado.getIdContato() != null) {
-                return converterEmDTO(contatoRecuperado);
-            }else {
+            if (contatoEntityRecuperado == null) {
                 throw new RegraDeNegocioException("Contato não encontrado");
             }
-        }catch (BancoDeDadosException e) {
+            return objectMapper.convertValue(contatoEntityRecuperado,ContatoDTO.class);
+
+        } catch (PersistenceException e) {
             throw new RegraDeNegocioException("Erro ao procurar no banco de dados.");
         }
     }

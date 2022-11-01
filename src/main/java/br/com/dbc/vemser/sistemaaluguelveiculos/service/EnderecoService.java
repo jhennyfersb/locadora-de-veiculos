@@ -2,7 +2,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.Endereco;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.EnderecoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.EnderecoRepository;
@@ -10,7 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.PersistenceException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,9 +24,9 @@ public class EnderecoService {
 
     public EnderecoDTO create(EnderecoCreateDTO enderecoCreateDTO) throws RegraDeNegocioException {
         try {
-            Endereco enderecoAdicionado = enderecoRepository.create(converterEntity(enderecoCreateDTO));
-            return converterEmDTO(enderecoAdicionado);
-        } catch (BancoDeDadosException e) {
+            EnderecoEntity enderecoEntityAdicionado = enderecoRepository.save(converterEntity(enderecoCreateDTO));
+            return converterEmDTO(enderecoEntityAdicionado);
+        } catch (PersistenceException e) {
             throw new RegraDeNegocioException("Erro ao criar no banco de dados.");
         }
     }
@@ -32,8 +34,8 @@ public class EnderecoService {
     public void delete(Integer id) throws RegraDeNegocioException {
         try {
             this.findById(id);
-            enderecoRepository.delete(id);
-        } catch (BancoDeDadosException e) {
+            enderecoRepository.deleteById(id);
+        } catch (PersistenceException e) {
             throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
         }
     }
@@ -41,55 +43,56 @@ public class EnderecoService {
     public EnderecoDTO update(Integer id, EnderecoCreateDTO enderecoCreateDTO) throws RegraDeNegocioException {
         try {
             this.findById(id);
-            Endereco enderecoEntity = converterEntity(enderecoCreateDTO);
-            return converterEmDTO(enderecoRepository.update(id, enderecoEntity));
-        } catch (BancoDeDadosException e) {
+            EnderecoEntity enderecoEntity = converterEntity(enderecoCreateDTO);
+            enderecoEntity.setIdEndereco(id);
+            return converterEmDTO(enderecoRepository.save(enderecoEntity));
+        } catch (PersistenceException e) {
             throw new RegraDeNegocioException("Erro ao atualizar no banco de dados.");
         }
     }
 
     public List<EnderecoDTO> list() throws RegraDeNegocioException {
         try {
-            List<Endereco> listar = enderecoRepository.list();
+            List<EnderecoEntity> listar = enderecoRepository.findAll();
             return listar.stream()
                     .map(this::converterEmDTO)
                     .collect(Collectors.toList());
-        } catch (BancoDeDadosException e) {
+        } catch (PersistenceException e) {
             throw new RegraDeNegocioException("Erro ao listar no banco de dados.");
         }
     }
 
-    public Endereco converterEntity(EnderecoCreateDTO enderecoCreateDTO) {
-        return objectMapper.convertValue(enderecoCreateDTO, Endereco.class);
+    public EnderecoEntity converterEntity(EnderecoCreateDTO enderecoCreateDTO) {
+        return objectMapper.convertValue(enderecoCreateDTO, EnderecoEntity.class);
     }
 
-    public EnderecoDTO converterEmDTO(Endereco endereco) {
-        return objectMapper.convertValue(endereco, EnderecoDTO.class);
+    public EnderecoDTO converterEmDTO(EnderecoEntity enderecoEntity) {
+        return objectMapper.convertValue(enderecoEntity, EnderecoDTO.class);
     }
 
     public EnderecoDTO findById(Integer id) throws RegraDeNegocioException {
         try {
-            Endereco enderecoRecuperado = enderecoRepository.findById(id);
+            Optional<EnderecoEntity> enderecoEntityRecuperado = enderecoRepository.findById(id);
 
-            if (enderecoRecuperado.getIdEndereco() != null) {
-                return converterEmDTO(enderecoRecuperado);
-            } else {
+            if (enderecoEntityRecuperado == null) {
                 throw new RegraDeNegocioException("Endereço não encontrado");
             }
-        } catch (BancoDeDadosException e) {
+            return objectMapper.convertValue(enderecoEntityRecuperado,EnderecoDTO.class);
+
+        } catch (PersistenceException e) {
             throw new RegraDeNegocioException("Erro ao procurar no banco de dados.");
         }
     }
 
-    public List<EnderecoDTO> findEnderecoByIdCliente(Integer idCliente) throws RegraDeNegocioException {
-        try {
-            clienteService.findById(idCliente);
-            List<Endereco> clienteEndereco = enderecoRepository.findEnderecoByIdCliente(idCliente);
-            return clienteEndereco.stream()
-                    .map(this::converterEmDTO)
-                    .collect(Collectors.toList());
-        } catch (BancoDeDadosException e) {
-            throw new RegraDeNegocioException("Erro ao procurar no banco de dados.");
-        }
-    }
+//    public List<EnderecoDTO> findEnderecoByIdCliente(Integer idCliente) throws RegraDeNegocioException {
+//        try {
+//            clienteService.findById(idCliente);
+//            List<EnderecoEntity> clienteEnderecoEntity = enderecoRepository.findEnderecoByIdCliente(idCliente);
+//            return clienteEnderecoEntity.stream()
+//                    .map(this::converterEmDTO)
+//                    .collect(Collectors.toList());
+//        } catch (BancoDeDadosException e) {
+//            throw new RegraDeNegocioException("Erro ao procurar no banco de dados.");
+//        }
+//    }
 }

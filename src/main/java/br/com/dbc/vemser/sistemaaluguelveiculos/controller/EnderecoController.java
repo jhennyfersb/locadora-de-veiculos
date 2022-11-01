@@ -35,7 +35,8 @@ public class EnderecoController implements EnderecoControllerInterface {
     }
     @GetMapping("/{idCliente}/cliente")
     public List<EnderecoDTO> findEnderecoByIdCliente(@PathVariable("idCliente") Integer idCliente) throws RegraDeNegocioException {
-        return enderecoService.findEnderecoByIdCliente(idCliente);
+//        return enderecoService.findEnderecoByIdCliente(idCliente);
+        return null;
     }
 
     @PostMapping
