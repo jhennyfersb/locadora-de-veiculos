@@ -1,8 +1,10 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @ToString
 @AllArgsConstructor
@@ -22,5 +24,11 @@ public class FuncionarioEntity {
     private String cpf;
     @Column(name = "email_funcionario")
     private String email;
+    @Column(name = "matricula")
     private Integer matricula;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "funcionarioEntity", cascade = CascadeType.ALL)
+    private Set<LocacaoEntity> locacaoEntities;
+
 }

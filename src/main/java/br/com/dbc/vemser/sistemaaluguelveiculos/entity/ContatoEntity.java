@@ -1,5 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,6 +19,13 @@ public class ContatoEntity {
     private Integer idContato;
     @Column(name = "id_cliente")
     private Integer idCliente;
+    @Column(name = "telefone")
     private String telefone;
+    @Column(name = "email")
     private String email;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="id_cliente", referencedColumnName = "id_cliente", insertable = false, updatable = false)
+    private ClienteEntity clienteEntity;
 }

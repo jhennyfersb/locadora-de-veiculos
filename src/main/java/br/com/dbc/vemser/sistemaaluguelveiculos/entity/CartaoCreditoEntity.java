@@ -1,8 +1,9 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.entity;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.BandeiraCartao;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-
+import java.util.Set;
 import javax.persistence.*;
 
 @ToString
@@ -25,7 +26,13 @@ public class CartaoCreditoEntity {
     @Enumerated(EnumType.ORDINAL)
     private BandeiraCartao bandeiraCartao;
 
-
+    @Column(name = "validade")
     private String validade;
+
+    @Column(name = "limite")
     private Double limite;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "cartaoCreditoEntity",cascade = CascadeType.ALL,orphanRemoval = true)
+    private Set<LocacaoEntity> locacao;
 }

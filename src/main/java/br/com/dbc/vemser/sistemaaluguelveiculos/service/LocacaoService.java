@@ -1,8 +1,8 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.*;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.*;
-import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.BancoDeDadosException;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoCreateDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.LocacaoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
-import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 
