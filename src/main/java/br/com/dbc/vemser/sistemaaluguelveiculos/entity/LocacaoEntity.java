@@ -10,7 +10,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @Entity(name = "locacao")
 public class LocacaoEntity {
     @Id

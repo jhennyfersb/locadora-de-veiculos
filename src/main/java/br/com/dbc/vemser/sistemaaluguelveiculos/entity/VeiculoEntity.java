@@ -7,7 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Set;
 
-@ToString
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -15,8 +15,8 @@ import java.util.Set;
 @Entity(name = "veiculo")
 public class VeiculoEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "SEQ_VEICULO")
-    @SequenceGenerator(name = "SEQ_VEICULO",sequenceName = "seq_veiculo",allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_VEICULO")
+    @SequenceGenerator(name = "SEQ_VEICULO", sequenceName = "seq_veiculo", allocationSize = 1)
     @Column(name = "id_veiculo")
     private Integer idVeiculo;
 
@@ -49,12 +49,12 @@ public class VeiculoEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "veiculoEntity", cascade = CascadeType.ALL)
     private Set<LocacaoEntity> locacaoEntities;
 
-//    public void alterarDisponibilidadeVeiculo() {
-//        if (this.disponibilidadeVeiculo.getDisponibilidade() == 1) {
-//            this.disponibilidadeVeiculo = DisponibilidadeVeiculo.DISPONIVEL;
-//        } else if (this.disponibilidadeVeiculo.getDisponibilidade() == 2) {
-//            this.disponibilidadeVeiculo = DisponibilidadeVeiculo.ALUGADO;
-//        }
-//
-//    }
+    public void alterarDisponibilidadeVeiculo() {
+        if (this.disponibilidadeVeiculo.getDisponibilidade() == 1) {
+            this.disponibilidadeVeiculo = DisponibilidadeVeiculo.DISPONIVEL;
+        } else if (this.disponibilidadeVeiculo.getDisponibilidade() == 2) {
+            this.disponibilidadeVeiculo = DisponibilidadeVeiculo.ALUGADO;
+        }
+
+    }
 }

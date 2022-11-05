@@ -1,7 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoCreateDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.*;
@@ -31,7 +30,7 @@ public class LocacaoService {
     private final ObjectMapper objectMapper;
     private final EmailService emailService;
 
-    public LocacaoDTO create(LocacaoCreateDTO locacaoDTO) throws RegraDeNegocioException {
+    public LocacaoDTO create(LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
 //        try {
 //            LocacaoEntity locacaoEntityAdicionada = locacaoRepository.create(converterEmLocacao(locacaoDTO));
 //            FuncionarioEntity funcionarioEntity = funcionarioRepository.findById(locacaoEntityAdicionada.getFuncionarioEntity().getIdFuncionario());
@@ -43,9 +42,11 @@ public class LocacaoService {
 //        } catch (BancoDeDadosException e) {
 //            throw new RegraDeNegocioException("Erro ao criar no banco de dados.");
 //        }
-        LocacaoEntity locacaoEntity = criarLocacaoAPartirDeIds(locacaoDTO);
+        LocacaoEntity locacaoEntity = criarLocacaoAPartirDeIds(locacaoCreateDTO);
+        LocacaoEntity locacaoSave = locacaoRepository.save(locacaoEntity);
+       // locacaoEntity.setIdLocacao(locacaoSave.getIdLocacao());
         veiculoService.alterarDisponibilidadeVeiculo(locacaoEntity.getVeiculoEntity());
-        return converterEmDTO(locacaoRepository.save(locacaoEntity));
+        return converterEmDTO(locacaoSave);
     }
 
     public void delete(Integer id) throws RegraDeNegocioException {
@@ -120,8 +121,8 @@ public class LocacaoService {
 
     public List<LocacaoDTO> list() throws RegraDeNegocioException {
         try {
-            List<LocacaoEntity> listar = locacaoRepository.findAll();
-            return listar.stream()
+           return locacaoRepository.findAll()
+                    .stream()
                     .map(this::converterEmDTO)
                     .collect(Collectors.toList());
         } catch (PersistenceException e) {
@@ -173,15 +174,14 @@ public class LocacaoService {
     }
 
     public LocacaoDTO converterEmDTO(LocacaoEntity locacaoEntity) {
-//        ClienteDTO clienteDTO = clienteService.converterEmDTO(locacaoEntity.getClienteEntity());
-//        VeiculoDTO veiculoDTO = veiculoService.converterEmDTO(locacaoEntity.getVeiculo());
-//        CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.converterEmDTO(locacaoEntity.getCartaoCreditoEntity());
-//        FuncionarioDTO funcionarioDTO = funcionarioService.converterEmDTO(locacaoEntity.getFuncionarioEntity());
-//
-//        new LocacaoDTO(locacaoEntity.getIdLocacao(), locacaoEntity.getDataLocacao(), locacaoEntity.getDataDevolucao(), locacaoEntity.getValorLocacao(),clienteDTO,
-//                veiculoDTO,cartaoCreditoDTO,funcionarioDTO);
-//        return objectMapper.convertValue(locacaoEntity, LocacaoDTO.class);
-        return null;
+        ClienteDTO clienteDTO = clienteService.converterEmDTO(locacaoEntity.getClienteEntity());
+        VeiculoDTO veiculoDTO = veiculoService.converterEmDTO(locacaoEntity.getVeiculoEntity());
+        CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.converterEmDTO(locacaoEntity.getCartaoCreditoEntity());
+        FuncionarioDTO funcionarioDTO = funcionarioService.converterEmDTO(locacaoEntity.getFuncionarioEntity());
+
+        return new LocacaoDTO(locacaoEntity.getIdLocacao(), locacaoEntity.getDataLocacao(), locacaoEntity.getDataDevolucao(), locacaoEntity.getValorLocacao(), clienteDTO,
+                veiculoDTO, cartaoCreditoDTO, funcionarioDTO);
+
     }
 
     public LocacaoEntity converterDTOEmLocacao(LocacaoDTO locacaodto) {
