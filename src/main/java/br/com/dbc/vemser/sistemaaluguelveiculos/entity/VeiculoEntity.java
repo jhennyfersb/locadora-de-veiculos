@@ -39,6 +39,7 @@ public class VeiculoEntity {
     private Double valorLocacao;
 
     @Column(name = "disponibilidade")
+    @Enumerated(EnumType.STRING)
     private DisponibilidadeVeiculo disponibilidadeVeiculo;
 
     @Column(name = "placa")

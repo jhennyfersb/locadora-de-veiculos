@@ -1,22 +1,18 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces.EnderecoControllerInterface;
+import br.com.dbc.vemser.pessoaapi.dto.PageDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.service.EnderecoService;
-import br.com.dbc.vemser.pessoaapi.dto.PageDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Slf4j
 @RestController

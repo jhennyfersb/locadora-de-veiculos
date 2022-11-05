@@ -97,4 +97,12 @@ public class VeiculoService {
             throw new RegraDeNegocioException("Erro ao encontrar no banco de dados.");
         }
     }
+
+        public void alterarDisponibilidadeVeiculo(VeiculoEntity veiculoEntity){
+        if (veiculoEntity.getDisponibilidadeVeiculo().getDisponibilidade() == 1) {
+            veiculoEntity.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.DISPONIVEL);
+        } else if (veiculoEntity.getDisponibilidadeVeiculo().getDisponibilidade() == 2) {
+            veiculoEntity.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.ALUGADO);
+        }
+    }
 }

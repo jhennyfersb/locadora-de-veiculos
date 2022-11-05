@@ -2,7 +2,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.LocacaoEntity;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
+import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,7 +43,9 @@ public class LocacaoService {
 //        } catch (BancoDeDadosException e) {
 //            throw new RegraDeNegocioException("Erro ao criar no banco de dados.");
 //        }
-        return null;
+        LocacaoEntity locacaoEntity = criarLocacaoAPartirDeIds(locacaoDTO);
+        veiculoService.alterarDisponibilidadeVeiculo(locacaoEntity.getVeiculoEntity());
+        return converterEmDTO(locacaoRepository.save(locacaoEntity));
     }
 
     public void delete(Integer id) throws RegraDeNegocioException {
@@ -73,7 +77,7 @@ public class LocacaoService {
         return null;
     }
 
-    public LocacaoDTO update(Integer id, LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
+//    public LocacaoDTO update(Integer id, LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
 //        try {
 //            FuncionarioDTO funcionarioDTO = funcionarioService.findById(locacaoCreateDTO.getIdFuncionario());
 //            ClienteDTO clienteDTO = clienteService.findById(locacaoCreateDTO.getIdCliente());
@@ -111,8 +115,8 @@ public class LocacaoService {
 //        } catch (BancoDeDadosException e) {
 //            throw new RegraDeNegocioException("Erro ao editar no banco de dados.");
 //        }
-        return null;
-    }
+//        return null;
+//    }
 
     public List<LocacaoDTO> list() throws RegraDeNegocioException {
         try {
@@ -125,48 +129,47 @@ public class LocacaoService {
         }
     }
 
-    public LocacaoEntity converterEmLocacao(LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
-//
-//        try {
-//            FuncionarioEntity funcionarioEntity = funcionarioRepository.findById(locacaoCreateDTO.getIdFuncionario());
-//            if (funcionarioEntity.getIdFuncionario() == null) {
-//                throw new RegraDeNegocioException("Funcionário não encontrado.");
-//            }
-//            ClienteEntity clienteEntity = clienteRepository.findById(locacaoCreateDTO.getIdCliente());
-//            if (clienteEntity.getIdCliente() == null) {
-//                throw new RegraDeNegocioException("Cliente não encontrado.");
-//            }
-//            Veiculo veiculo = veiculoRepository.findById(locacaoCreateDTO.getIdVeiculo());
-//            if (veiculo.getIdVeiculo() == null) {
-//                throw new RegraDeNegocioException("Veiculo não encontrado.");
-//            }
-//            if(veiculo.getDisponibilidadeVeiculo().getDisponibilidade() == 1){
-//                throw new RegraDeNegocioException("Veiculo selecionado alugado.");
-//            }
-//            CartaoCreditoEntity cartaoCreditoEntity = cartaoCreditoRepository.findById(locacaoCreateDTO.getIdCartaoCredito());
-//            if (cartaoCreditoEntity.getIdCartaoCredito() == null) {
-//                throw new RegraDeNegocioException("Cartão de crédito não encontrado.");
-//            }
-//            if(locacaoCreateDTO.getDataDevolucao().isBefore(locacaoCreateDTO.getDataLocacao())) {
-//                throw new RegraDeNegocioException("A data da devolução não pode ser inferior a data de locação. Tente novamente!");
-//            }
-//
-//            LocacaoEntity locacaoEntity = new LocacaoEntity(null,
-//                    locacaoCreateDTO.getDataLocacao(),
-//                    locacaoCreateDTO.getDataDevolucao(),
-//                    clienteEntity,
-//                   veiculo,
-//                    cartaoCreditoEntity,
-//                    funcionarioEntity);
-//
-//            Duration d2 = Duration.between(locacaoEntity.getDataLocacao().atStartOfDay(), locacaoEntity.getDataDevolucao().atStartOfDay());
-//            locacaoEntity.setValorLocacao(d2.toDays() * locacaoEntity.getVeiculo().getValorLocacao());
-//
-//            return locacaoEntity;
-//        } catch (BancoDeDadosException e) {
-//            throw new RegraDeNegocioException("Erro ao instanciar locação.");
-//        }
-        return null;
+    public LocacaoEntity criarLocacaoAPartirDeIds(LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
+
+        try {
+            Optional<FuncionarioEntity> funcionarioEntity = funcionarioRepository.findById(locacaoCreateDTO.getIdFuncionario());
+            if (funcionarioEntity.isEmpty()) {
+                throw new RegraDeNegocioException("Funcionário não encontrado.");
+            }
+            Optional<ClienteEntity> clienteEntity = clienteRepository.findById(locacaoCreateDTO.getIdCliente());
+            if (clienteEntity.isEmpty()) {
+                throw new RegraDeNegocioException("Cliente não encontrado.");
+            }
+            Optional<VeiculoEntity> veiculo = veiculoRepository.findById(locacaoCreateDTO.getIdVeiculo());
+            if (veiculo.isEmpty()) {
+                throw new RegraDeNegocioException("Veiculo não encontrado.");
+            }
+            if (veiculo.get().getDisponibilidadeVeiculo().getDisponibilidade() == 1) {
+                throw new RegraDeNegocioException("Veiculo selecionado alugado.");
+            }
+            Optional<CartaoCreditoEntity> cartaoCreditoEntity = cartaoCreditoRepository.findById(locacaoCreateDTO.getIdCartaoCredito());
+            if (cartaoCreditoEntity.isEmpty()) {
+                throw new RegraDeNegocioException("Cartão de crédito não encontrado.");
+            }
+            if (locacaoCreateDTO.getDataDevolucao().isBefore(locacaoCreateDTO.getDataLocacao())) {
+                throw new RegraDeNegocioException("A data da devolução não pode ser inferior a data de locação. Tente novamente!");
+            }
+
+            LocacaoEntity locacaoEntity = new LocacaoEntity(null,
+                    locacaoCreateDTO.getDataLocacao(),
+                    locacaoCreateDTO.getDataDevolucao(),
+                    clienteEntity.get(),
+                    veiculo.get(),
+                    cartaoCreditoEntity.get(),
+                    funcionarioEntity.get());
+
+            Duration d2 = Duration.between(locacaoEntity.getDataLocacao().atStartOfDay(), locacaoEntity.getDataDevolucao().atStartOfDay());
+            locacaoEntity.setValorLocacao(d2.toDays() * locacaoEntity.getVeiculoEntity().getValorLocacao());
+
+            return locacaoEntity;
+        } catch (PersistenceException e) {
+            throw new RegraDeNegocioException("Erro ao instanciar locação.");
+        }
     }
 
     public LocacaoDTO converterEmDTO(LocacaoEntity locacaoEntity) {

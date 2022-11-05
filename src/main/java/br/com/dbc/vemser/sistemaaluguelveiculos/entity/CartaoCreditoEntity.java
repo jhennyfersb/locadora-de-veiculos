@@ -3,8 +3,9 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.entity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.BandeiraCartao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import java.util.Set;
+
 import javax.persistence.*;
+import java.util.Set;
 
 @ToString
 @AllArgsConstructor
@@ -23,7 +24,7 @@ public class CartaoCreditoEntity {
     private String numero;
 
     @Column(name = "bandeira_cartao")
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private BandeiraCartao bandeiraCartao;
 
     @Column(name = "validade")

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-@Entity(name = "LocacaoEntity")
+@Entity(name = "locacao")
 public class LocacaoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_LOCACAO")
@@ -41,7 +41,7 @@ public class LocacaoEntity {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_cartao", referencedColumnName = "id_cartao", insertable = false, updatable = false)
+    @JoinColumn(name = "id_cartao", referencedColumnName = "id_cartao")
     private CartaoCreditoEntity cartaoCreditoEntity;
 
     @JsonIgnore
@@ -49,25 +49,20 @@ public class LocacaoEntity {
     @JoinColumn(name = "id_funcionario", referencedColumnName = "id_funcionario")
     private FuncionarioEntity funcionarioEntity;
 
-//    private ClienteEntity clienteEntity;
-//    private VeiculoEntity veiculoEntity;
-//    private CartaoCreditoEntity cartaoCreditoEntity;
-//    private FuncionarioEntity funcionarioEntity;
-
-//    public LocacaoEntity(Integer idLocacao,
-//                         LocalDate dataLocacao,
-//                         LocalDate dataDevolucao,
-//                         ClienteEntity clienteEntity,
-//                         VeiculoEntity veiculo,
-//                         CartaoCreditoEntity cartaoCreditoEntity,
-//                         FuncionarioEntity funcionarioEntity) {
-//        this.idLocacao = idLocacao;
-//        this.dataLocacao = dataLocacao;
-//        this.dataDevolucao = dataDevolucao;
-//        this.clienteEntity = clienteEntity;
-//        this.veiculoEntity = veiculo;
-//        this.cartaoCreditoEntity = cartaoCreditoEntity;
-//        this.funcionarioEntity = funcionarioEntity;
-//    }
+    public LocacaoEntity(Integer idLocacao,
+                         LocalDate dataLocacao,
+                         LocalDate dataDevolucao,
+                         ClienteEntity clienteEntity,
+                         VeiculoEntity veiculo,
+                         CartaoCreditoEntity cartaoCreditoEntity,
+                         FuncionarioEntity funcionarioEntity) {
+        this.idLocacao = idLocacao;
+        this.dataLocacao = dataLocacao;
+        this.dataDevolucao = dataDevolucao;
+        this.clienteEntity = clienteEntity;
+        this.veiculoEntity = veiculo;
+        this.cartaoCreditoEntity = cartaoCreditoEntity;
+        this.funcionarioEntity = funcionarioEntity;
+    }
 
 }

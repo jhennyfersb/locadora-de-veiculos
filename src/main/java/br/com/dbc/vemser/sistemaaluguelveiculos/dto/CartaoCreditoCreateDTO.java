@@ -2,13 +2,17 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.dto;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.BandeiraCartao;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CartaoCreditoCreateDTO {
 
     @NotEmpty

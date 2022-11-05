@@ -1,18 +1,12 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.dto;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.DisponibilidadeVeiculo;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-public class VeiculoDTO {
+@AllArgsConstructor
+@NoArgsConstructor
+public class VeiculoDTO extends VeiculoCreateDTO{
     private Integer idVeiculo;
-    private String marca;
-    private String modelo;
-    private String cor;
-    private Integer ano;
-    private Double quilometragem;
-    private Double valorLocacao;
-    private DisponibilidadeVeiculo disponibilidadeVeiculo;
-    private String placa;
-
 }
