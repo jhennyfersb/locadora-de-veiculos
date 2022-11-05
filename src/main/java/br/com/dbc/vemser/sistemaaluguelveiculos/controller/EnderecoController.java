@@ -5,8 +5,11 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.service.EnderecoService;
+import br.com.dbc.vemser.pessoaapi.dto.PageDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -20,23 +23,26 @@ import java.util.List;
 @Validated
 @RequiredArgsConstructor
 @RequestMapping("/endereco")
-public class EnderecoController implements EnderecoControllerInterface {
+public class EnderecoController /*implements EnderecoControllerInterface*/ {
 
     private final EnderecoService enderecoService;
 
     @GetMapping
-    public List<EnderecoDTO> list() throws RegraDeNegocioException {
-        return enderecoService.list();
+    public PageDTO<EnderecoDTO> list(@RequestParam(defaultValue = "0") Integer pagina,
+                                     @RequestParam(defaultValue = "20") Integer tamanho) throws RegraDeNegocioException {
+        return enderecoService.list(pagina, tamanho);
     }
 
     @GetMapping("/{idEndereco}")
     public EnderecoDTO listByIdEndereco(@PathVariable("idEndereco") Integer id) throws RegraDeNegocioException {
         return enderecoService.findById(id);
     }
+
     @GetMapping("/{idCliente}/cliente")
-    public List<EnderecoDTO> findEnderecoByIdCliente(@PathVariable("idCliente") Integer idCliente) throws RegraDeNegocioException {
-//        return enderecoService.findEnderecoByIdCliente(idCliente);
-        return null;
+    public PageDTO<EnderecoDTO> findEnderecoByIdCliente(@PathVariable("idCliente") Integer idCliente,
+                                                        @RequestParam(defaultValue = "0") Integer pagina,
+                                                        @RequestParam(defaultValue = "20") Integer tamanho) throws RegraDeNegocioException {
+        return enderecoService.findEnderecoByIdCliente(idCliente, pagina, tamanho);
     }
 
     @PostMapping

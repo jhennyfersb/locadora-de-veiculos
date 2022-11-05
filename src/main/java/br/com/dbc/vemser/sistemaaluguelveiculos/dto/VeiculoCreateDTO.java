@@ -1,5 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.dto;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.DisponibilidadeVeiculo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -45,4 +46,9 @@ public class VeiculoCreateDTO {
     @NotNull
     @Schema(description = "Placa do veículo.", example="PID2836")
     private String placa;
+
+    @NotNull
+    @Schema(description = "Valor de locação do veículo.", example="DISPONIVEL")
+    private DisponibilidadeVeiculo disponibilidadeVeiculo;
+
 }

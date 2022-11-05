@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity(name = "cartaoCredito")
+@Entity(name = "cartao_credito")
 public class CartaoCreditoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "SEQ_CARTAO_CREDITO")
@@ -33,6 +33,6 @@ public class CartaoCreditoEntity {
     private Double limite;
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "cartaoCreditoEntity",cascade = CascadeType.ALL,orphanRemoval = true)
-    private Set<LocacaoEntity> locacao;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cartaoCreditoEntity", cascade = CascadeType.ALL)
+    private Set<LocacaoEntity> locacaoEntities;
 }

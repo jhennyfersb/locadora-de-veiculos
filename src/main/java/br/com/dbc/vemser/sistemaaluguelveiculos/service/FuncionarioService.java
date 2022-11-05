@@ -33,9 +33,7 @@ public class FuncionarioService {
     public void delete(Integer id) throws RegraDeNegocioException {
         try {
             this.findById(id);
-
             funcionarioRepository.deleteById(id);
-
         } catch (PersistenceException e) {
             throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
         }

@@ -18,7 +18,7 @@ public class EnderecoEntity {
     @Column(name = "id_endereco")
     private Integer idEndereco;
 
-    @Column(name = "id_cliente", updatable = false, insertable = false)
+    @Column(name = "id_cliente")
     private Integer idCliente;
 
     @Column(name = "rua")

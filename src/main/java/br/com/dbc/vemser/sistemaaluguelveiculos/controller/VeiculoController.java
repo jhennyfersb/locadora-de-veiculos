@@ -3,6 +3,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
 import br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces.VeiculoControllerInterface;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.DisponibilidadeVeiculo;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.service.VeiculoService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/veiculo")
-public class VeiculoController implements VeiculoControllerInterface {
+public class VeiculoController /*implements VeiculoControllerInterface */{
     private final VeiculoService veiculoService;
 
     @GetMapping
@@ -28,10 +29,9 @@ public class VeiculoController implements VeiculoControllerInterface {
         return veiculoService.list();
     }
 
-    @GetMapping("/disponiveis")
-    public List<VeiculoDTO> listVeiculosDisponives() throws RegraDeNegocioException {
-//        return veiculoService.listVeiculosDisponiveis();
-        return null;
+    @GetMapping("/veiculos-por-disponibilidade")
+    public List<VeiculoDTO> listarVeiculosPorDisponibilidade(@RequestParam("disponibilidade")DisponibilidadeVeiculo disponibilidade) throws RegraDeNegocioException {
+        return veiculoService.listVeiculosDisponiveis(disponibilidade);
     }
 
     @GetMapping("/{idVeiculo}")

@@ -48,12 +48,12 @@ public class VeiculoEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "veiculoEntity", cascade = CascadeType.ALL)
     private Set<LocacaoEntity> locacaoEntities;
 
-    public void alterarDisponibilidadeVeiculo() {
-        if (this.disponibilidadeVeiculo.getDisponibilidade() == 1) {
-            this.disponibilidadeVeiculo = DisponibilidadeVeiculo.DISPONIVEL;
-        } else if (this.disponibilidadeVeiculo.getDisponibilidade() == 2) {
-            this.disponibilidadeVeiculo = DisponibilidadeVeiculo.ALUGADO;
-        }
-
-    }
+//    public void alterarDisponibilidadeVeiculo() {
+//        if (this.disponibilidadeVeiculo.getDisponibilidade() == 1) {
+//            this.disponibilidadeVeiculo = DisponibilidadeVeiculo.DISPONIVEL;
+//        } else if (this.disponibilidadeVeiculo.getDisponibilidade() == 2) {
+//            this.disponibilidadeVeiculo = DisponibilidadeVeiculo.ALUGADO;
+//        }
+//
+//    }
 }
