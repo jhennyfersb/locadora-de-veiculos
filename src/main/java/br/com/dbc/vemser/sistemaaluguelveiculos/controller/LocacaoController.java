@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @Validated
 @RequiredArgsConstructor
-@RequestMapping("/locacao") // localhost:8080/locacao
+@RequestMapping("/locacao")
 public class LocacaoController implements LocacaoControllerInterface {
 
     private final LocacaoService locacaoService;
@@ -42,22 +42,17 @@ public class LocacaoController implements LocacaoControllerInterface {
         return new ResponseEntity<>(locacaoDTO, HttpStatus.OK);
     }
 
-    @Override
-    public ResponseEntity<LocacaoDTO> update(Integer id, LocacaoCreateDTO locacaoAtualizar) throws RegraDeNegocioException {
-        return null;
+
+    @PutMapping("/{idLocacao}")
+    public ResponseEntity<LocacaoDTO> update(@PathVariable("idLocacao") Integer id,
+                                             @Valid @RequestBody LocacaoCreateDTO locacaoAtualizar) throws RegraDeNegocioException {
+        log.info("Atualizando locação...");
+        LocacaoDTO locacaoDTO = locacaoService.update(id, locacaoAtualizar);
+        log.info("Locação atualizado");
+        return new ResponseEntity<>(locacaoDTO, HttpStatus.OK);
     }
 
-    /*
-        @PutMapping("/{idLocacao}")
-        public ResponseEntity<LocacaoDTO> update(@PathVariable("idLocacao") Integer id,
-                                                 @Valid @RequestBody LocacaoCreateDTO locacaoAtualizar) throws RegraDeNegocioException {
-            log.info("Atualizando locação...");
-            LocacaoDTO locacaoDTO = locacaoService.update(id, locacaoAtualizar);
-            log.info("Locação atualizado");
-            return new ResponseEntity<>(locacaoDTO,HttpStatus.OK);
-        }
 
-     */
     @DeleteMapping("/{idLocacao}")
     public ResponseEntity<LocacaoDTO> delete(@PathVariable("idLocacao") Integer id) throws RegraDeNegocioException {
         log.info("Deletando locação...");
