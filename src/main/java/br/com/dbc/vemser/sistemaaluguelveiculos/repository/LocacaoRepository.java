@@ -1,19 +1,19 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.repository;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacao;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacaoPorCliente;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.LocacaoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Repository
 
 public interface LocacaoRepository extends JpaRepository<LocacaoEntity,Integer> {
 
-    @Query(" select new br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioDTO(" +
+    @Query(" select new br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacao(" +
             " c.nome," +
             " c.cpf," +
             " co.telefone," +
@@ -38,7 +38,16 @@ public interface LocacaoRepository extends JpaRepository<LocacaoEntity,Integer> 
             " where (:idCliente is null or c.idCliente = :idCliente)"+
             " and (:idVeiculo is null or v.idVeiculo = :idVeiculo)"+
             " and (:idFuncionario is null or f.idFuncionario = :idFuncionario)")
-    List<RelatorioDTO> listarRelatoriosLocacao(Integer idCliente, Integer idVeiculo,Integer idFuncionario);
+    List<RelatorioLocacao> listarRelatoriosLocacao(Integer idCliente, Integer idVeiculo, Integer idFuncionario);
 
+    @Query("select new br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacaoPorCliente(" +
+            "cl.idCliente," +
+            "cl.nome," +
+            "cl.cpf," +
+            "count(cl.idCliente)) " +
+            "from  locacao l " +
+            "inner join  cliente cl on cl.idCliente= l.clienteEntity.idCliente " +
+            "group by cl.idCliente,cl.nome,cl.cpf order by count(cl.idCliente) desc ")
+    List<RelatorioLocacaoPorCliente> locacaoPorClienteQuantidade();
 
 }

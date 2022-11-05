@@ -55,7 +55,7 @@ public class LocacaoService {
         locacaoRepository.deleteById(id);
         locacaoEntityDeletada.getVeiculoEntity().alterarDisponibilidadeVeiculo();
         veiculoRepository.save(locacaoEntityDeletada.getVeiculoEntity());
-        emailService.sendEmail(locacaoEntityDeletada,"locacao-template-delete.ftl",locacaoEntityDeletada.getFuncionarioEntity().getEmail());
+        emailService.sendEmail(locacaoEntityDeletada, "locacao-template-delete.ftl", locacaoEntityDeletada.getFuncionarioEntity().getEmail());
 
     }
 
@@ -176,5 +176,12 @@ public class LocacaoService {
         return objectMapper.convertValue(locacaodto, LocacaoEntity.class);
     }
 
+    public List<RelatorioLocacao> listarRelatoriosLocacao(Integer idCliente, Integer idVeiculo, Integer idFuncionario) {
+        return locacaoRepository.listarRelatoriosLocacao(idCliente, idVeiculo, idFuncionario);
+    }
+
+    public List<RelatorioLocacaoPorCliente> locacaoPorClienteQuantidade() {
+        return locacaoRepository.locacaoPorClienteQuantidade();
+    }
 }
 

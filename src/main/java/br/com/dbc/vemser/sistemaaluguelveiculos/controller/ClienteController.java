@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @Validated
 @RequiredArgsConstructor
-@RequestMapping("/cliente") // localhost:8080/cliente
+@RequestMapping("/cliente")
 public class ClienteController implements ClienteControllerInterface {
 
     private final ClienteService clienteService;
@@ -28,6 +28,7 @@ public class ClienteController implements ClienteControllerInterface {
     public List<ClienteDTO> list() throws RegraDeNegocioException {
         return clienteService.list();
     }
+
 
     @GetMapping("/{idCliente}")
     public ClienteDTO listByIdCliente(@PathVariable("idCliente") Integer id) throws RegraDeNegocioException {

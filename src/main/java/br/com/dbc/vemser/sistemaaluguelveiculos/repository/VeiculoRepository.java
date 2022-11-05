@@ -14,4 +14,5 @@ public interface VeiculoRepository extends JpaRepository<VeiculoEntity,Integer> 
     @Query("select v from veiculo v where v.disponibilidadeVeiculo = :disponibilidadeVeiculo ")
     List<VeiculoEntity> retornarVeiculosPorDisponibilidade(@Param("disponibilidadeVeiculo") DisponibilidadeVeiculo disponibilidadeVeiculo);
 
+
 }

@@ -7,9 +7,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
-public class RelatorioDTO {
+public class RelatorioLocacao {
     private String nomeCliente;
     private String cpfCliente;
     private String telefone;

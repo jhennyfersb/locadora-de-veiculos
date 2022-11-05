@@ -1,10 +1,8 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.PageDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.EnderecoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.VeiculoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.DisponibilidadeVeiculo;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
@@ -16,7 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,7 +47,7 @@ public class VeiculoService {
 
     public PageDTO<VeiculoDTO> list(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
 
-        Sort ordenacao = Sort.by("idCliente");
+        Sort ordenacao = Sort.by("idVeiculo");
         PageRequest pageRequest = PageRequest.of(pagina, tamanho, ordenacao);
         Page<VeiculoEntity> listar = veiculoRepository.findAll(pageRequest);
         List<VeiculoDTO> enderecoPagina = listar.stream()
