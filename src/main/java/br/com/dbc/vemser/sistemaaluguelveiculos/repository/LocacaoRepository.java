@@ -1,7 +1,8 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.repository;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacao;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacaoPorCliente;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacaoDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacaoPorCidadeDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacaoPorClienteDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.LocacaoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public interface LocacaoRepository extends JpaRepository<LocacaoEntity,Integer> {
 
-    @Query(" select new br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacao(" +
+    @Query(" select new br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacaoDTO(" +
             " c.nome," +
             " c.cpf," +
             " co.telefone," +
@@ -38,9 +39,9 @@ public interface LocacaoRepository extends JpaRepository<LocacaoEntity,Integer> 
             " where (:idCliente is null or c.idCliente = :idCliente)"+
             " and (:idVeiculo is null or v.idVeiculo = :idVeiculo)"+
             " and (:idFuncionario is null or f.idFuncionario = :idFuncionario)")
-    List<RelatorioLocacao> listarRelatoriosLocacao(Integer idCliente, Integer idVeiculo, Integer idFuncionario);
+    List<RelatorioLocacaoDTO> listarRelatoriosLocacao(Integer idCliente, Integer idVeiculo, Integer idFuncionario);
 
-    @Query("select new br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacaoPorCliente(" +
+    @Query("select new br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacaoPorClienteDTO(" +
             "cl.idCliente," +
             "cl.nome," +
             "cl.cpf," +
@@ -48,6 +49,15 @@ public interface LocacaoRepository extends JpaRepository<LocacaoEntity,Integer> 
             "from  locacao l " +
             "inner join  cliente cl on cl.idCliente= l.clienteEntity.idCliente " +
             "group by cl.idCliente,cl.nome,cl.cpf order by count(cl.idCliente) desc ")
-    List<RelatorioLocacaoPorCliente> locacaoPorClienteQuantidade();
+    List<RelatorioLocacaoPorClienteDTO> locacaoPorClienteQuantidade();
+
+    @Query("select new br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacaoPorCidadeDTO(" +
+            "ec.cidade," +
+            "count(ec.cidade)) " +
+            "from  locacao l " +
+            "inner join  cliente cl on cl.idCliente= l.clienteEntity.idCliente " +
+            "inner join endereco_cliente ec on ec.idCliente = cl.idCliente " +
+            "group by ec.cidade order by count(ec.cidade) desc ")
+    List<RelatorioLocacaoPorCidadeDTO> locacaoPorCidade();
 
 }

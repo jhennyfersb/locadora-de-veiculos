@@ -1,10 +1,7 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces.LocacaoControllerInterface;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoCreateDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacao;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacaoPorCliente;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.service.LocacaoService;
 import lombok.RequiredArgsConstructor;
@@ -31,12 +28,16 @@ public class LocacaoController implements LocacaoControllerInterface {
         return locacaoService.list();
     }
     @GetMapping("relatorio-locacao")
-    public List<RelatorioLocacao> listarRelatoriosLocacao(@RequestParam Integer idCliente,Integer idveiculo,Integer idFuncionario){
+    public List<RelatorioLocacaoDTO> listarRelatoriosLocacao(@RequestParam Integer idCliente, Integer idveiculo, Integer idFuncionario){
         return locacaoService.listarRelatoriosLocacao(idCliente,idveiculo,idFuncionario);
+    }
+    @GetMapping("relatorio-cidade")
+    public List<RelatorioLocacaoPorCidadeDTO> locacaoPorCidade(){
+        return locacaoService.locacaoPorCidade();
     }
 
     @GetMapping("relatorio")
-    public List<RelatorioLocacaoPorCliente> locacaoPorClienteQuantidade(){
+    public List<RelatorioLocacaoPorClienteDTO> locacaoPorClienteQuantidade(){
         return locacaoService.locacaoPorClienteQuantidade();
     }
 

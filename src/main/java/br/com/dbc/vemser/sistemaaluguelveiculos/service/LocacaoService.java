@@ -176,12 +176,15 @@ public class LocacaoService {
         return objectMapper.convertValue(locacaodto, LocacaoEntity.class);
     }
 
-    public List<RelatorioLocacao> listarRelatoriosLocacao(Integer idCliente, Integer idVeiculo, Integer idFuncionario) {
+    public List<RelatorioLocacaoDTO> listarRelatoriosLocacao(Integer idCliente, Integer idVeiculo, Integer idFuncionario) {
         return locacaoRepository.listarRelatoriosLocacao(idCliente, idVeiculo, idFuncionario);
     }
 
-    public List<RelatorioLocacaoPorCliente> locacaoPorClienteQuantidade() {
+    public List<RelatorioLocacaoPorClienteDTO> locacaoPorClienteQuantidade() {
         return locacaoRepository.locacaoPorClienteQuantidade();
+    }
+    public List<RelatorioLocacaoPorCidadeDTO> locacaoPorCidade(){
+        return locacaoRepository.locacaoPorCidade();
     }
 }
 

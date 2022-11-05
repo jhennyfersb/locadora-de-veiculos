@@ -1,9 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoCreateDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacao;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacaoPorCliente;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -36,6 +33,16 @@ public interface LocacaoControllerInterface {
     )
     @GetMapping
     List<LocacaoDTO> list() throws RegraDeNegocioException;
+    @Operation(summary = "Relatorio de locações por cidade", description = "Relatorio de todas as locações do banco de dados por cidade.")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Retorna relatorio de locações por cidade"),
+                    @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
+                    @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
+            }
+    )
+    @GetMapping
+    List<RelatorioLocacaoPorCidadeDTO> locacaoPorCidade();
     @Operation(summary = "Relatorio de locações por id", description = "Relatorio de todas as locações do banco de dados.")
     @ApiResponses(
             value = {
@@ -45,7 +52,7 @@ public interface LocacaoControllerInterface {
             }
     )
     @GetMapping
-    List<RelatorioLocacao> listarRelatoriosLocacao(@RequestParam Integer idCliente, Integer idveiculo, Integer idFuncionario);
+    List<RelatorioLocacaoDTO> listarRelatoriosLocacao(@RequestParam Integer idCliente, Integer idveiculo, Integer idFuncionario);
     @Operation(summary = "Relatario quantidade de locações por cliente", description = "Relatorio quantidade de locações por cliente no banco de dados.")
     @ApiResponses(
             value = {
@@ -56,7 +63,7 @@ public interface LocacaoControllerInterface {
     )
 
     @GetMapping
-    List<RelatorioLocacaoPorCliente> locacaoPorClienteQuantidade();
+    List<RelatorioLocacaoPorClienteDTO> locacaoPorClienteQuantidade();
 
     @Operation(summary = "Criar um registro de locação.", description = "Cria um cadastro de locação no banco de dados.")
     @ApiResponses(

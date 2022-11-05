@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class RelatorioLocacaoPorCliente {
+public class RelatorioLocacaoPorClienteDTO {
     private Integer idCliente;
     private String nome;
     private String cpf;
