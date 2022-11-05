@@ -44,84 +44,72 @@ public class LocacaoService {
 //        }
         LocacaoEntity locacaoEntity = criarLocacaoAPartirDeIds(locacaoCreateDTO);
         LocacaoEntity locacaoSave = locacaoRepository.save(locacaoEntity);
-       // locacaoEntity.setIdLocacao(locacaoSave.getIdLocacao());
+        // locacaoEntity.setIdLocacao(locacaoSave.getIdLocacao());
         veiculoService.alterarDisponibilidadeVeiculo(locacaoEntity.getVeiculoEntity());
         return converterEmDTO(locacaoSave);
     }
 
     public void delete(Integer id) throws RegraDeNegocioException {
-//        try {
-//            LocacaoEntity locacaoEntityDeletada = converterDTOEmLocacao(findById(id));
-//            locacaoRepository.deleteById(id);
-//            locacaoEntityDeletada.getVeiculo().alterarDisponibilidadeVeiculo();
-//            veiculoRepository.update(locacaoEntityDeletada.getVeiculo().getIdVeiculo(), locacaoEntityDeletada.getVeiculo());
-//            emailService.sendEmail(locacaoEntityDeletada,
-//                    "locacao-template-delete.ftl",
-//                    locacaoEntityDeletada.getFuncionarioEntity().getEmail());
-//        } catch (BancoDeDadosException e) {
-//            throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
-//        }
+
+        LocacaoEntity locacaoEntityDeletada = converterDTOEmLocacao(findById(id));
+        locacaoRepository.deleteById(id);
+        locacaoEntityDeletada.getVeiculoEntity().alterarDisponibilidadeVeiculo();
+        veiculoRepository.save(locacaoEntityDeletada.getVeiculoEntity());
+        emailService.sendEmail(locacaoEntityDeletada,"locacao-template-delete.ftl",locacaoEntityDeletada.getFuncionarioEntity().getEmail());
+
     }
 
     public LocacaoDTO findById(Integer idLocacao) throws RegraDeNegocioException {
-//        try {
-//            LocacaoEntity locacaoEntityRecuperada = locacaoRepository.findById(idLocacao);
-//
-//            if (locacaoEntityRecuperada.getIdLocacao() != null) {
-//                return converterEmDTO(locacaoEntityRecuperada);
-//            } else {
-//                throw new RegraDeNegocioException("Locação não encontrada");
-//            }
-//        } catch (BancoDeDadosException e) {
-//            throw new RegraDeNegocioException("Erro ao encontrar no banco de dados.");
-//        }
-        return null;
+
+        Optional<LocacaoEntity> locacaoEntityRecuperada = locacaoRepository.findById(idLocacao);
+
+        if (locacaoEntityRecuperada != null) {
+            return objectMapper.convertValue(locacaoEntityRecuperada, LocacaoDTO.class);
+        } else {
+            throw new RegraDeNegocioException("Locação não encontrada");
+        }
     }
 
-//    public LocacaoDTO update(Integer id, LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
-//        try {
-//            FuncionarioDTO funcionarioDTO = funcionarioService.findById(locacaoCreateDTO.getIdFuncionario());
-//            ClienteDTO clienteDTO = clienteService.findById(locacaoCreateDTO.getIdCliente());
-//
-//            VeiculoDTO veiculoDTO = veiculoService.findById(locacaoCreateDTO.getIdVeiculo());
-//
-//            if(veiculoDTO.getDisponibilidadeVeiculo().getDisponibilidade() == 1){
-//                throw new RegraDeNegocioException("Veiculo selecionado alugado.");
-//            }
-//            CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.findById(locacaoCreateDTO.getIdCartaoCredito());
-//            LocacaoEntity locacaoEntity = objectMapper.convertValue(this.findById(id), LocacaoEntity.class);
-//
-//            locacaoEntity.setVeiculo(objectMapper.convertValue(veiculoDTO, Veiculo.class));
-//            locacaoEntity.setClienteEntity(objectMapper.convertValue(clienteDTO, ClienteEntity.class));
-//            locacaoEntity.setFuncionarioEntity(objectMapper.convertValue(funcionarioDTO, FuncionarioEntity.class));
-//            locacaoEntity.setCartaoCreditoEntity(objectMapper.convertValue(cartaoCreditoDTO, CartaoCreditoEntity.class));
-//
-//            Duration d2 = Duration.between(locacaoEntity.getDataLocacao().atStartOfDay(),
-//                    locacaoEntity.getDataDevolucao().atStartOfDay());
-//            locacaoEntity.setValorLocacao(d2.toDays() * locacaoEntity.getVeiculo().getValorLocacao());
-//
-//            locacaoEntity.setDataLocacao(locacaoCreateDTO.getDataLocacao());
-//            locacaoEntity.setDataDevolucao(locacaoCreateDTO.getDataDevolucao());
-//
-//            if(locacaoEntity.getDataDevolucao().isBefore(locacaoEntity.getDataLocacao())) {
-//                throw new RegraDeNegocioException("A data da devolução não pode ser inferior a data de locação. Tente novamente!");
-//            }
-//
-//            LocacaoEntity locacaoEntityAdicionada = this.locacaoRepository.update(locacaoEntity.getIdLocacao(), locacaoEntity);
-//            locacaoEntityAdicionada.getVeiculo().alterarDisponibilidadeVeiculo();
-//            veiculoRepository.update(locacaoEntityAdicionada.getVeiculo().getIdVeiculo(), locacaoEntityAdicionada.getVeiculo());
-//
-//            emailService.sendEmail(locacaoEntity, "locacao-template-update.ftl", funcionarioDTO.getEmail());
-//            return converterEmDTO(locacaoEntityAdicionada);
-//        } catch (BancoDeDadosException e) {
-//            throw new RegraDeNegocioException("Erro ao editar no banco de dados.");
-//        }
-//        return null;
-//    }
+    public LocacaoDTO update(Integer id, LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
+
+        FuncionarioDTO funcionarioDTO = funcionarioService.findById(locacaoCreateDTO.getIdFuncionario());
+        ClienteDTO clienteDTO = clienteService.findById(locacaoCreateDTO.getIdCliente());
+        VeiculoDTO veiculoDTO = veiculoService.findById(locacaoCreateDTO.getIdVeiculo());
+
+        if (veiculoDTO.getDisponibilidadeVeiculo().getDisponibilidade() == 1) {
+            throw new RegraDeNegocioException("Veiculo selecionado alugado.");
+        }
+        CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.findById(locacaoCreateDTO.getIdCartaoCredito());
+        LocacaoEntity locacaoEntity = objectMapper.convertValue(this.findById(id), LocacaoEntity.class);
+
+        locacaoEntity.setVeiculoEntity(objectMapper.convertValue(veiculoDTO, VeiculoEntity.class));
+        locacaoEntity.setClienteEntity(objectMapper.convertValue(clienteDTO, ClienteEntity.class));
+        locacaoEntity.setFuncionarioEntity(objectMapper.convertValue(funcionarioDTO, FuncionarioEntity.class));
+        locacaoEntity.setCartaoCreditoEntity(objectMapper.convertValue(cartaoCreditoDTO, CartaoCreditoEntity.class));
+
+        Duration d2 = Duration.between(locacaoEntity.getDataLocacao().atStartOfDay(),
+                locacaoEntity.getDataDevolucao().atStartOfDay());
+        locacaoEntity.setValorLocacao(d2.toDays() * locacaoEntity.getVeiculoEntity().getValorLocacao());
+
+        locacaoEntity.setDataLocacao(locacaoCreateDTO.getDataLocacao());
+        locacaoEntity.setDataDevolucao(locacaoCreateDTO.getDataDevolucao());
+
+        if (locacaoEntity.getDataDevolucao().isBefore(locacaoEntity.getDataLocacao())) {
+            throw new RegraDeNegocioException("A data da devolução não pode ser inferior a data de locação. Tente novamente!");
+        }
+        locacaoEntity.setIdLocacao(id);
+        LocacaoEntity locacaoEntityAdicionada = this.locacaoRepository.save(locacaoEntity);
+        locacaoEntityAdicionada.getVeiculoEntity().alterarDisponibilidadeVeiculo();
+        veiculoRepository.save(locacaoEntityAdicionada.getVeiculoEntity());
+
+        //emailService.sendEmail(locacaoEntity, "locacao-template-update.ftl", funcionarioDTO.getEmail());
+        return converterEmDTO(locacaoEntityAdicionada);
+
+    }
 
     public List<LocacaoDTO> list() throws RegraDeNegocioException {
         try {
-           return locacaoRepository.findAll()
+            return locacaoRepository.findAll()
                     .stream()
                     .map(this::converterEmDTO)
                     .collect(Collectors.toList());

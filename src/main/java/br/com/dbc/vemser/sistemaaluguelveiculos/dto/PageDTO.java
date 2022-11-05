@@ -1,4 +1,4 @@
-package br.com.dbc.vemser.pessoaapi.dto;
+package br.com.dbc.vemser.sistemaaluguelveiculos.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

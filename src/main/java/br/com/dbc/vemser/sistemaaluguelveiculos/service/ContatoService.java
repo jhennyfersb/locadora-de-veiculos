@@ -21,43 +21,35 @@ public class ContatoService {
     private final ObjectMapper objectMapper;
 
     public ContatoDTO create(ContatoCreateDTO contato) throws RegraDeNegocioException {
-        try {
-            ContatoEntity contatoEntityAdicionado = contatoRepository.save(converterEntity(contato));
-            return converterEmDTO(contatoEntityAdicionado);
-        } catch (PersistenceException e) {
-            throw new RegraDeNegocioException("Erro ao criar no banco de dados.");
-        }
+
+        ContatoEntity contatoEntityAdicionado = contatoRepository.save(converterEntity(contato));
+        return converterEmDTO(contatoEntityAdicionado);
+
     }
 
     public void delete(Integer id) throws RegraDeNegocioException {
-        try {
-            this.findById(id);
-            contatoRepository.deleteById(id);
-        } catch (PersistenceException e) {
-            throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
-        }
+
+        this.findById(id);
+        contatoRepository.deleteById(id);
+
     }
 
     public ContatoDTO update(Integer id, ContatoCreateDTO contato) throws RegraDeNegocioException {
-        try {
-            this.findById(id);
-            ContatoEntity contatoEntity = converterEntity(contato);
-            contatoEntity.setIdContato(id);
-            return converterEmDTO(contatoRepository.save(contatoEntity));
-        } catch (PersistenceException e) {
-            throw new RegraDeNegocioException("Erro ao atualizar no banco de dados.");
-        }
+
+        this.findById(id);
+        ContatoEntity contatoEntity = converterEntity(contato);
+        contatoEntity.setIdContato(id);
+        return converterEmDTO(contatoRepository.save(contatoEntity));
+
     }
 
     public List<ContatoDTO> list() throws RegraDeNegocioException {
-        try {
-            List<ContatoEntity> listar = contatoRepository.findAll();
-            return listar.stream()
-                    .map(this::converterEmDTO)
-                    .collect(Collectors.toList());
-        } catch (PersistenceException e) {
-            throw new RegraDeNegocioException("Erro ao listar no banco de dados.");
-        }
+
+        List<ContatoEntity> listar = contatoRepository.findAll();
+        return listar.stream()
+                .map(this::converterEmDTO)
+                .collect(Collectors.toList());
+
     }
 
     public ContatoEntity converterEntity(ContatoCreateDTO contatoCreateDTO) {
@@ -70,16 +62,14 @@ public class ContatoService {
 
 
     public ContatoDTO findById(Integer id) throws RegraDeNegocioException {
-        try {
-            Optional<ContatoEntity> contatoEntityRecuperado = contatoRepository.findById(id);
 
-            if (contatoEntityRecuperado == null) {
-                throw new RegraDeNegocioException("Contato não encontrado");
-            }
-            return objectMapper.convertValue(contatoEntityRecuperado,ContatoDTO.class);
+        Optional<ContatoEntity> contatoEntityRecuperado = contatoRepository.findById(id);
 
-        } catch (PersistenceException e) {
-            throw new RegraDeNegocioException("Erro ao procurar no banco de dados.");
+        if (contatoEntityRecuperado == null) {
+            throw new RegraDeNegocioException("Contato não encontrado");
         }
+        return objectMapper.convertValue(contatoEntityRecuperado, ContatoDTO.class);
+
+
     }
 }

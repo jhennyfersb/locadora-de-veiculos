@@ -21,49 +21,40 @@ public class ClienteService {
     private final ObjectMapper objectMapper;
 
     public ClienteDTO create(ClienteCreateDTO cliente) throws RegraDeNegocioException {
-        try {
-            ClienteEntity clienteEntity = converterEntity(cliente);
-            return converterEmDTO(clienteRepository.save(clienteEntity));
 
-        } catch (PersistenceException e) {
-            throw new RegraDeNegocioException("Erro ao criar no banco de dados.");
-        }
+        ClienteEntity clienteEntity = converterEntity(cliente);
+        return converterEmDTO(clienteRepository.save(clienteEntity));
+
+
     }
 
     public ClienteDTO update(Integer idCliente, ClienteCreateDTO cliente) throws RegraDeNegocioException {
-        try {
-            this.findById(idCliente);
 
-            ClienteEntity clienteEntity = converterEntity(cliente);
-            clienteEntity.setIdCliente(idCliente);
-            return converterEmDTO(clienteRepository.save(clienteEntity));
+        this.findById(idCliente);
 
-        } catch (PersistenceException e) {
-            throw new RegraDeNegocioException("Erro ao atualizar no banco de dados.");
-        }
+        ClienteEntity clienteEntity = converterEntity(cliente);
+        clienteEntity.setIdCliente(idCliente);
+        return converterEmDTO(clienteRepository.save(clienteEntity));
+
+
     }
 
     public void delete(Integer idCliente) throws RegraDeNegocioException {
-        try {
-            this.findById(idCliente);
 
-            clienteRepository.deleteById(idCliente);
+        this.findById(idCliente);
 
-        } catch (PersistenceException e) {
-            throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
+        clienteRepository.deleteById(idCliente);
 
-        }
+
     }
 
     public List<ClienteDTO> list() throws RegraDeNegocioException {
-        try {
-            return clienteRepository.findAll().stream()
-                    .map(cliente -> objectMapper.convertValue(cliente, ClienteDTO.class))
-                    .collect(Collectors.toList());
 
-        } catch (PersistenceException e) {
-            throw new RegraDeNegocioException("Erro ao recuperar os dados no banco de dados.");
-        }
+        return clienteRepository.findAll().stream()
+                .map(cliente -> objectMapper.convertValue(cliente, ClienteDTO.class))
+                .collect(Collectors.toList());
+
+
     }
 
     public ClienteEntity converterEntity(ClienteCreateDTO clienteCreateDTO) {
@@ -75,16 +66,13 @@ public class ClienteService {
     }
 
     public ClienteDTO findById(Integer id) throws RegraDeNegocioException {
-        try {
-            Optional<ClienteEntity> clienteEntityRecuperado = clienteRepository.findById(id);
+        Optional<ClienteEntity> clienteEntityRecuperado = clienteRepository.findById(id);
 
-            if (clienteEntityRecuperado == null) {
-                throw new RegraDeNegocioException("Cliente não encontrado");
-            }
-            return objectMapper.convertValue(clienteEntityRecuperado,ClienteDTO.class);
-
-        } catch (PersistenceException e) {
-            throw new RegraDeNegocioException("Erro ao procurar no banco de dados.");
+        if (clienteEntityRecuperado == null) {
+            throw new RegraDeNegocioException("Cliente não encontrado");
         }
+        return objectMapper.convertValue(clienteEntityRecuperado, ClienteDTO.class);
+
+
     }
 }

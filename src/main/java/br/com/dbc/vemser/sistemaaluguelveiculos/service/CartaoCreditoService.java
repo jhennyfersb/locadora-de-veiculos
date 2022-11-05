@@ -21,42 +21,29 @@ public class CartaoCreditoService {
     private final ObjectMapper objectMapper;
 
     public CartaoCreditoDTO create(CartaoCreditoCreateDTO cartaoCredito) throws RegraDeNegocioException {
-        try {
-            CartaoCreditoEntity cartaoCreditoEntity = converterEntity(cartaoCredito);
-            return converterEmDTO(cartaoCreditoRepository.save(cartaoCreditoEntity));
-        } catch (PersistenceException e) {
-            throw new RegraDeNegocioException("Erro ao criar no banco de dados.");
-        }
+        CartaoCreditoEntity cartaoCreditoEntity = converterEntity(cartaoCredito);
+        return converterEmDTO(cartaoCreditoRepository.save(cartaoCreditoEntity));
+
     }
 
     public CartaoCreditoDTO update(Integer idCartao, CartaoCreditoCreateDTO cartaoCreditoAtualizar) throws RegraDeNegocioException {
-        try {
-            this.findById(idCartao);
-            CartaoCreditoEntity ccEntity = converterEntity(cartaoCreditoAtualizar);
-            ccEntity.setIdCartaoCredito(idCartao);
-            return converterEmDTO(cartaoCreditoRepository.save(ccEntity));
-        } catch (PersistenceException e) {
-            throw new RegraDeNegocioException("Erro ao atualizar no banco de dados.");
-        }
+        this.findById(idCartao);
+        CartaoCreditoEntity ccEntity = converterEntity(cartaoCreditoAtualizar);
+        ccEntity.setIdCartaoCredito(idCartao);
+        return converterEmDTO(cartaoCreditoRepository.save(ccEntity));
+
     }
 
     public void delete(Integer idCartao) throws RegraDeNegocioException {
-        try {
-            this.findById(idCartao);
-            cartaoCreditoRepository.deleteById(idCartao);
-        } catch (PersistenceException e) {
-            throw new RegraDeNegocioException("Erro ao deletar no banco de dados.");
-        }
+        this.findById(idCartao);
+        cartaoCreditoRepository.deleteById(idCartao);
     }
 
     public List<CartaoCreditoDTO> list() throws RegraDeNegocioException {
-        try {
-            return cartaoCreditoRepository.findAll().stream()
-                    .map(this::converterEmDTO)
-                    .collect(Collectors.toList());
-        } catch (PersistenceException e) {
-            throw new RegraDeNegocioException("Erro ao recuperar os dados no banco de dados.");
-        }
+        return cartaoCreditoRepository.findAll().stream()
+                .map(this::converterEmDTO)
+                .collect(Collectors.toList());
+
     }
 
     public CartaoCreditoEntity converterEntity(CartaoCreditoCreateDTO cartaoCreditoCreateDTO) {
@@ -68,16 +55,13 @@ public class CartaoCreditoService {
     }
 
     public CartaoCreditoDTO findById(Integer id) throws RegraDeNegocioException {
-        try {
-            Optional<CartaoCreditoEntity> ccRecuperado = cartaoCreditoRepository.findById(id);
 
-            if (ccRecuperado == null) {
-                throw new RegraDeNegocioException("Cartão de Crédito não encontrado");
-            }
-            return objectMapper.convertValue(ccRecuperado,CartaoCreditoDTO.class);
+        Optional<CartaoCreditoEntity> ccRecuperado = cartaoCreditoRepository.findById(id);
 
-        } catch (PersistenceException e) {
-            throw new RegraDeNegocioException("Erro ao procurar no banco de dados.");
+        if (ccRecuperado == null) {
+            throw new RegraDeNegocioException("Cartão de Crédito não encontrado");
         }
+        return objectMapper.convertValue(ccRecuperado, CartaoCreditoDTO.class);
+
     }
 }

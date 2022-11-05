@@ -1,5 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.PageDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.DisponibilidadeVeiculo;
@@ -24,8 +25,9 @@ public class VeiculoController /*implements VeiculoControllerInterface */{
     private final VeiculoService veiculoService;
 
     @GetMapping
-    public List<VeiculoDTO> list() throws RegraDeNegocioException {
-        return veiculoService.list();
+    public PageDTO<VeiculoDTO> list(@RequestParam(defaultValue = "0") Integer pagina,
+                                    @RequestParam(defaultValue = "20") Integer tamanho)  throws RegraDeNegocioException {
+        return veiculoService.list(pagina, tamanho);
     }
 
     @GetMapping("/veiculos-por-disponibilidade")
