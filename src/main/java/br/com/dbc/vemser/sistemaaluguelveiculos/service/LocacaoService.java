@@ -2,6 +2,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.*;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.DisponibilidadeVeiculo;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,31 +32,19 @@ public class LocacaoService {
     private final EmailService emailService;
 
     public LocacaoDTO create(LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
-//        try {
-//            LocacaoEntity locacaoEntityAdicionada = locacaoRepository.create(converterEmLocacao(locacaoDTO));
-//            FuncionarioEntity funcionarioEntity = funcionarioRepository.findById(locacaoEntityAdicionada.getFuncionarioEntity().getIdFuncionario());
-//            locacaoEntityAdicionada.getVeiculo().alterarDisponibilidadeVeiculo();
-//            veiculoRepository.update(locacaoEntityAdicionada.getVeiculo().getIdVeiculo(), locacaoEntityAdicionada.getVeiculo());
-//
-//            emailService.sendEmail(locacaoEntityAdicionada, "locacao-template.ftl", funcionarioEntity.getEmail());
-//            return converterEmDTO(locacaoEntityAdicionada);
-//        } catch (BancoDeDadosException e) {
-//            throw new RegraDeNegocioException("Erro ao criar no banco de dados.");
-//        }
         LocacaoEntity locacaoEntity = criarLocacaoAPartirDeIds(locacaoCreateDTO);
         LocacaoEntity locacaoSave = locacaoRepository.save(locacaoEntity);
-        // locacaoEntity.setIdLocacao(locacaoSave.getIdLocacao());
         veiculoService.alterarDisponibilidadeVeiculo(locacaoEntity.getVeiculoEntity());
         return converterEmDTO(locacaoSave);
     }
 
     public void delete(Integer id) throws RegraDeNegocioException {
 
-        LocacaoEntity locacaoEntityDeletada = converterDTOEmLocacao(findById(id));
+        LocacaoDTO locacaoEntityDeletada = findById(id);
         locacaoRepository.deleteById(id);
-        locacaoEntityDeletada.getVeiculoEntity().alterarDisponibilidadeVeiculo();
-        veiculoRepository.save(locacaoEntityDeletada.getVeiculoEntity());
-        emailService.sendEmail(locacaoEntityDeletada, "locacao-template-delete.ftl", locacaoEntityDeletada.getFuncionarioEntity().getEmail());
+        locacaoEntityDeletada.getVeiculo().setDisponibilidadeVeiculo(DisponibilidadeVeiculo.DISPONIVEL);
+        veiculoRepository.save(objectMapper.convertValue(locacaoEntityDeletada.getVeiculo(), VeiculoEntity.class));
+//        emailService.sendEmail(locacaoEntityDeletada, "locacao-template-delete.ftl", locacaoEntityDeletada.getFuncionarioEntity().getEmail());
 
     }
 
@@ -63,8 +52,8 @@ public class LocacaoService {
 
         Optional<LocacaoEntity> locacaoEntityRecuperada = locacaoRepository.findById(idLocacao);
 
-        if (locacaoEntityRecuperada != null) {
-            return objectMapper.convertValue(locacaoEntityRecuperada, LocacaoDTO.class);
+        if (locacaoEntityRecuperada.isPresent()) {
+            return converterEmDTO(locacaoEntityRecuperada.get());
         } else {
             throw new RegraDeNegocioException("Locação não encontrada");
         }
@@ -76,11 +65,11 @@ public class LocacaoService {
         ClienteDTO clienteDTO = clienteService.findById(locacaoCreateDTO.getIdCliente());
         VeiculoDTO veiculoDTO = veiculoService.findById(locacaoCreateDTO.getIdVeiculo());
 
-        if (veiculoDTO.getDisponibilidadeVeiculo().getDisponibilidade() == 1) {
+        LocacaoEntity locacaoEntity = objectMapper.convertValue(this.findById(id), LocacaoEntity.class);
+        if (veiculoDTO.getDisponibilidadeVeiculo().getDisponibilidade() == 1 && locacaoEntity.getVeiculoEntity().getIdVeiculo() != locacaoCreateDTO.getIdVeiculo()) {
             throw new RegraDeNegocioException("Veiculo selecionado alugado.");
         }
         CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.findById(locacaoCreateDTO.getIdCartaoCredito());
-        LocacaoEntity locacaoEntity = objectMapper.convertValue(this.findById(id), LocacaoEntity.class);
 
         locacaoEntity.setVeiculoEntity(objectMapper.convertValue(veiculoDTO, VeiculoEntity.class));
         locacaoEntity.setClienteEntity(objectMapper.convertValue(clienteDTO, ClienteEntity.class));

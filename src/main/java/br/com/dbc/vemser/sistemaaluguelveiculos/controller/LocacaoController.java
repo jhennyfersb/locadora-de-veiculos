@@ -28,7 +28,9 @@ public class LocacaoController implements LocacaoControllerInterface {
         return locacaoService.list();
     }
     @GetMapping("relatorio-locacao")
-    public List<RelatorioLocacaoDTO> listarRelatoriosLocacao(@RequestParam Integer idCliente, Integer idveiculo, Integer idFuncionario){
+    public List<RelatorioLocacaoDTO> listarRelatoriosLocacao(@RequestParam(required = false) Integer idCliente,
+                                                             @RequestParam(required = false) Integer idveiculo,
+                                                             @RequestParam(required = false) Integer idFuncionario){
         return locacaoService.listarRelatoriosLocacao(idCliente,idveiculo,idFuncionario);
     }
     @GetMapping("relatorio-cidade")

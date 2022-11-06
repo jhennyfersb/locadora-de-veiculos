@@ -1,7 +1,10 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -29,22 +32,22 @@ public class LocacaoEntity {
     private Double valorLocacao;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
     private ClienteEntity clienteEntity;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_veiculo", referencedColumnName = "id_veiculo")
     private VeiculoEntity veiculoEntity;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_cartao", referencedColumnName = "id_cartao")
     private CartaoCreditoEntity cartaoCreditoEntity;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_funcionario", referencedColumnName = "id_funcionario")
     private FuncionarioEntity funcionarioEntity;
 
