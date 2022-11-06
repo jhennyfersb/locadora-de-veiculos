@@ -2,6 +2,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.PageDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 public interface EnderecoControllerInterface {
     @Operation(summary = "Retornar endereço com id específico.", description = "Retorna endereço com id especificado.")
@@ -32,8 +32,10 @@ public interface EnderecoControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @GetMapping("/{idCliente}")
-     List<EnderecoDTO> findEnderecoByIdCliente(@PathVariable("idCliente") Integer idCliente) throws RegraDeNegocioException;
+    @GetMapping("/{idCliente}/cliente")
+    PageDTO<EnderecoDTO> findEnderecoByIdCliente(@PathVariable("idCliente") Integer idCliente,
+                                                        @RequestParam Integer pagina,
+                                                        @RequestParam Integer tamanho) throws RegraDeNegocioException;
 
     @Operation(summary = "Listar endereços.", description = "Lista todos endereços do banco de dados.")
     @ApiResponses(
@@ -44,7 +46,8 @@ public interface EnderecoControllerInterface {
             }
     )
     @GetMapping
-    List<EnderecoDTO> list() throws RegraDeNegocioException;
+    PageDTO<EnderecoDTO> list(@RequestParam(defaultValue = "0") Integer pagina,
+                                     @RequestParam(defaultValue = "20") Integer tamanho) throws RegraDeNegocioException;
 
     @Operation(summary = "Criar o registro de um endereço.", description = "Cria um cadastro de endereço no banco de dados.")
     @ApiResponses(

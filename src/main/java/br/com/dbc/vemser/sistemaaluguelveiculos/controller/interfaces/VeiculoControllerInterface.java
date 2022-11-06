@@ -1,7 +1,9 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.PageDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.DisponibilidadeVeiculo;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,19 +24,18 @@ public interface VeiculoControllerInterface {
             }
     )
     @GetMapping("/{idVeiculo}")
-    VeiculoDTO listByIdVeiculo(Integer id) throws RegraDeNegocioException;
+    VeiculoDTO listByIdVeiculo(@PathVariable("idVeiculo") Integer id) throws RegraDeNegocioException;
 
-    @Operation(summary = "Retornar veículos disponíveis.", description = "Retorna veículos disponíveis.")
+    @Operation(summary = "Retornar veículo por disponibilidade.", description = "Retorna veículo por disponibilidade.")
     @ApiResponses(
             value = {
-                    @ApiResponse(responseCode = "200", description = "Retorna veículos disponíveis."),
+                    @ApiResponse(responseCode = "200", description = "Retorna veículo por disponibilidade."),
                     @ApiResponse(responseCode = "403", description = "Você não tem permissão para acessar este recurso"),
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @GetMapping("/disponiveis")
-    public List<VeiculoDTO> listVeiculosDisponives() throws RegraDeNegocioException;
-
+    @GetMapping("/veiculos-por-disponibilidade")
+    public List<VeiculoDTO> listarVeiculosPorDisponibilidade(@RequestParam("disponibilidade") DisponibilidadeVeiculo disponibilidade) throws RegraDeNegocioException;
 
     @Operation(summary = "Listar veículos", description = "Lista todas as veículos do banco de dados.")
     @ApiResponses(
@@ -45,7 +46,8 @@ public interface VeiculoControllerInterface {
             }
     )
     @GetMapping
-    public List<VeiculoDTO> list() throws RegraDeNegocioException;
+    public PageDTO<VeiculoDTO> list(@RequestParam Integer pagina,
+                                    @RequestParam Integer tamanho) throws RegraDeNegocioException;
 
     @Operation(summary = "Criar um registro de veículo.", description = "Cria um cadastro de veículo no banco de dados.")
     @ApiResponses(

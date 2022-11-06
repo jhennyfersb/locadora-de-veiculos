@@ -1,5 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces.EnderecoControllerInterface;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.PageDTO;
@@ -19,7 +20,7 @@ import javax.validation.Valid;
 @Validated
 @RequiredArgsConstructor
 @RequestMapping("/endereco")
-public class EnderecoController /*implements EnderecoControllerInterface*/ {
+public class EnderecoController implements EnderecoControllerInterface {
 
     private final EnderecoService enderecoService;
 
