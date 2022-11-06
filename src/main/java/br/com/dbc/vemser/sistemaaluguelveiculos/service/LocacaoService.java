@@ -43,8 +43,8 @@ public class LocacaoService {
 
         LocacaoDTO locacaoEntityDeletada = findById(id);
         locacaoRepository.deleteById(id);
-        locacaoEntityDeletada.getVeiculo().setDisponibilidadeVeiculo(DisponibilidadeVeiculo.DISPONIVEL);
-        veiculoRepository.save(objectMapper.convertValue(locacaoEntityDeletada.getVeiculo(), VeiculoEntity.class));
+        locacaoEntityDeletada.getVeiculoEntity().setDisponibilidadeVeiculo(DisponibilidadeVeiculo.DISPONIVEL);
+        veiculoRepository.save(objectMapper.convertValue(locacaoEntityDeletada.getVeiculoEntity(), VeiculoEntity.class));
 
     }
 

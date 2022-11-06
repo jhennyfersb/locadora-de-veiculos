@@ -1,6 +1,7 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,7 @@ public class EnderecoEntity {
     @Column(name = "id_endereco")
     private Integer idEndereco;
 
-    @Column(name = "id_cliente")
+    @Column(name = "id_cliente", insertable = false, updatable = false)
     private Integer idCliente;
 
     @Column(name = "rua")
@@ -47,7 +48,7 @@ public class EnderecoEntity {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente", insertable = false, updatable = false)
+    @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
     private ClienteEntity clienteEntity;
 
 

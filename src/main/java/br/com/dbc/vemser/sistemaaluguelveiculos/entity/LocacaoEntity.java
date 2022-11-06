@@ -1,6 +1,7 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity(name = "locacao")
 public class LocacaoEntity {
     @Id
@@ -32,22 +34,22 @@ public class LocacaoEntity {
     private Double valorLocacao;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
     private ClienteEntity clienteEntity;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_veiculo", referencedColumnName = "id_veiculo")
     private VeiculoEntity veiculoEntity;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cartao", referencedColumnName = "id_cartao")
     private CartaoCreditoEntity cartaoCreditoEntity;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_funcionario", referencedColumnName = "id_funcionario")
     private FuncionarioEntity funcionarioEntity;
 

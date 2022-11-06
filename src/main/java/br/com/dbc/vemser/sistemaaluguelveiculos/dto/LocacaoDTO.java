@@ -14,8 +14,8 @@ public class LocacaoDTO {
     private LocalDate dataLocacao;
     private LocalDate dataDevolucao;
     private Double valorLocacao;
-    private ClienteDTO cliente;
-    private VeiculoDTO veiculo;
-    private CartaoCreditoDTO cartaoCredito;
-    private FuncionarioDTO funcionario;
+    private ClienteDTO clienteEntity;
+    private VeiculoDTO veiculoEntity;
+    private CartaoCreditoDTO cartaoCreditoEntity;
+    private FuncionarioDTO funcionarioEntity;
 }
