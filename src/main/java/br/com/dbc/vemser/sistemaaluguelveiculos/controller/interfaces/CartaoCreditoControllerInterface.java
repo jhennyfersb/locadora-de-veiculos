@@ -21,7 +21,7 @@ public interface CartaoCreditoControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @GetMapping("/{idCartaoCredito}")
+    @GetMapping
     CartaoCreditoDTO listByIdCartaoCredito(Integer id) throws RegraDeNegocioException;
 
     @Operation(summary = "Listar cartões de crédito.", description = "Lista todos os cartões de crédito do banco de dados.")
@@ -55,9 +55,9 @@ public interface CartaoCreditoControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @PutMapping("/{idCartao}")
+    @PutMapping
     ResponseEntity<CartaoCreditoDTO> update(@PathVariable("idCartao") Integer idCartao,
-                                                   @Valid @RequestBody CartaoCreditoCreateDTO cartaoCredito) throws RegraDeNegocioException;
+                                            @Valid @RequestBody CartaoCreditoCreateDTO cartaoCredito) throws RegraDeNegocioException;
 
     @Operation(summary = "Excluir o registro de um cartão de crédito.", description = "Exclui um cadastro de cartão de crédito no banco de dados.")
     @ApiResponses(
@@ -68,6 +68,6 @@ public interface CartaoCreditoControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @DeleteMapping("/{idCartao}")
-    ResponseEntity<Void> delete(@PathVariable ("idCartao") Integer idCartao) throws RegraDeNegocioException;
+    @DeleteMapping
+    ResponseEntity<Void> delete(@PathVariable("idCartao") Integer idCartao) throws RegraDeNegocioException;
 }

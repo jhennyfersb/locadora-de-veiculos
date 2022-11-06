@@ -21,7 +21,7 @@ public interface ContatoControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @GetMapping("/{idContato}")
+    @GetMapping
     ContatoDTO listByIdContato(Integer id) throws RegraDeNegocioException;
 
     @Operation(summary = "Listar contatos", description = "Lista todos contatos do banco de dados.")
@@ -54,9 +54,9 @@ public interface ContatoControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @PutMapping("/{idContato}")
+    @PutMapping
     ResponseEntity<ContatoDTO> update(@PathVariable("idContato") Integer id,
-                                             @Valid @RequestBody ContatoCreateDTO contatoAtualizar) throws RegraDeNegocioException;
+                                      @Valid @RequestBody ContatoCreateDTO contatoAtualizar) throws RegraDeNegocioException;
 
     @Operation(summary = "Excluir o registro de um contato.", description = "Exclui um cadastro de contato no banco de dados.")
     @ApiResponses(
@@ -66,6 +66,6 @@ public interface ContatoControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @DeleteMapping("/{idContato}")
+    @DeleteMapping
     ResponseEntity<ContatoDTO> delete(@PathVariable("idContato") Integer id) throws RegraDeNegocioException;
 }

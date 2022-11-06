@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @NoArgsConstructor
-public class LocacaoDTO  {
+public class LocacaoDTO {
     private Integer idLocacao;
     private LocalDate dataLocacao;
     private LocalDate dataDevolucao;

@@ -18,7 +18,7 @@ public class CartaoCreditoCreateDTO {
     @NotEmpty
     @NotBlank
     @NotNull
-    @Schema(description = "Número do cartão de crédito.", example="9595 9898 9492 8788")
+    @Schema(description = "Número do cartão de crédito.", example = "9595 9898 9492 8788")
     private String numero;
 
     @NotNull
@@ -28,10 +28,10 @@ public class CartaoCreditoCreateDTO {
     @NotEmpty
     @NotBlank
     @NotNull
-    @Schema(description = "Data de validade do cartão.", example="09/2030")
+    @Schema(description = "Data de validade do cartão.", example = "09/2030")
     private String validade;
 
     @NotNull
-    @Schema(description = "Limite do cartão.", example="60000")
+    @Schema(description = "Limite do cartão.", example = "60000")
     private Double limite;
 }

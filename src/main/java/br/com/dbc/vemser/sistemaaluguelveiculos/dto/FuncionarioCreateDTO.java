@@ -14,23 +14,23 @@ import javax.validation.constraints.Size;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FuncionarioCreateDTO{
+public class FuncionarioCreateDTO {
 
     @NotNull
-    @Schema(description = "Nome do funcionário.", example="Maifa")
+    @Schema(description = "Nome do funcionário.", example = "Maifa")
     private String nome;
 
     @NotNull
     @Size(min = 11, max = 11)
-    @Schema(description = "Cpf do funcionário.", example="99999999999")
+    @Schema(description = "Cpf do funcionário.", example = "99999999999")
     private String cpf;
 
     @NotEmpty
     @NotNull
-    @Schema(description = "E-mail do funcionário", example="maifa@javamail.com.br")
+    @Schema(description = "E-mail do funcionário", example = "maifa@javamail.com.br")
     private String email;
 
     @NotNull
-    @Schema(description = "Número de matrícula do funcionário.", example="8")
+    @Schema(description = "Número de matrícula do funcionário.", example = "8")
     private Integer matricula;
 }

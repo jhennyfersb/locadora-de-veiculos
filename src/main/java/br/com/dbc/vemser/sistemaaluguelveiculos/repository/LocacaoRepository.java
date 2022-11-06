@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 
-public interface LocacaoRepository extends JpaRepository<LocacaoEntity,Integer> {
+public interface LocacaoRepository extends JpaRepository<LocacaoEntity, Integer> {
 
     @Query(" select new br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacaoDTO(" +
             " c.nome," +
@@ -30,14 +30,14 @@ public interface LocacaoRepository extends JpaRepository<LocacaoEntity,Integer> 
             " v.placa," +
             " v.quilometragem," +
             " f.nome)" +
-            "  from locacao l" +
+            "  from locacao l " +
             " left join l.clienteEntity c" +
             " left join c.contatoEntities co" +
             " left join c.enderecoEntities e" +
             " left join l.veiculoEntity v" +
             " left join l.funcionarioEntity f" +
-            " where (:idCliente is null or c.idCliente = :idCliente)"+
-            " and (:idVeiculo is null or v.idVeiculo = :idVeiculo)"+
+            " where (:idCliente is null or c.idCliente = :idCliente)" +
+            " and (:idVeiculo is null or v.idVeiculo = :idVeiculo)" +
             " and (:idFuncionario is null or f.idFuncionario = :idFuncionario)")
     List<RelatorioLocacaoDTO> listarRelatoriosLocacao(Integer idCliente, Integer idVeiculo, Integer idFuncionario);
 
@@ -47,17 +47,15 @@ public interface LocacaoRepository extends JpaRepository<LocacaoEntity,Integer> 
             "cl.cpf," +
             "count(cl.idCliente)) " +
             "from  locacao l " +
-            "inner join  cliente cl on cl.idCliente= l.clienteEntity.idCliente " +
+            "left join  cliente cl on cl.idCliente= l.clienteEntity.idCliente " +
             "group by cl.idCliente,cl.nome,cl.cpf order by count(cl.idCliente) desc ")
     List<RelatorioLocacaoPorClienteDTO> locacaoPorClienteQuantidade();
 
     @Query("select new br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacaoPorCidadeDTO(" +
-            "ec.cidade," +
-            "count(ec.cidade)) " +
+            "(select distinct EC.cidade from endereco_cliente EC where l.clienteEntity.idCliente = EC.idCliente)," +
+            "count(l.clienteEntity.idCliente)) " +
             "from  locacao l " +
-            "inner join  cliente cl on cl.idCliente= l.clienteEntity.idCliente " +
-            "inner join endereco_cliente ec on ec.idCliente = cl.idCliente " +
-            "group by ec.cidade order by count(ec.cidade) desc ")
+            "group by l.clienteEntity.idCliente order by count(l.clienteEntity.idCliente) desc ")
     List<RelatorioLocacaoPorCidadeDTO> locacaoPorCidade();
 
 }

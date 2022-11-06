@@ -6,7 +6,7 @@ public enum DisponibilidadeVeiculo {
 
     private Integer disponibilidade;
 
-    DisponibilidadeVeiculo(Integer disponibilidade){
+    DisponibilidadeVeiculo(Integer disponibilidade) {
         this.disponibilidade = disponibilidade;
     }
 

@@ -21,7 +21,7 @@ public interface FuncionarioControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @GetMapping("/{idFuncionario}")
+    @GetMapping
     FuncionarioDTO listByIdFuncionario(Integer id) throws RegraDeNegocioException;
 
     @Operation(summary = "Listar funcionários", description = "Lista todas os funcionários do banco de dados.")
@@ -55,9 +55,9 @@ public interface FuncionarioControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @PutMapping("/{idFuncionario}")
+    @PutMapping
     ResponseEntity<FuncionarioDTO> update(@PathVariable("idFuncionario") Integer id,
-                                                 @Valid @RequestBody FuncionarioCreateDTO funcionarioAtualizar) throws RegraDeNegocioException;
+                                          @Valid @RequestBody FuncionarioCreateDTO funcionarioAtualizar) throws RegraDeNegocioException;
 
 
     @Operation(summary = "Excluir um registro de funcionário.", description = "Exclui um cadastro de funcionários no banco de dados.")
@@ -68,6 +68,6 @@ public interface FuncionarioControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @DeleteMapping("/{idFuncionario}")
+    @DeleteMapping
     ResponseEntity<FuncionarioDTO> delete(@PathVariable("idFuncionario") Integer id) throws RegraDeNegocioException;
 }

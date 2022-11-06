@@ -23,7 +23,7 @@ public interface VeiculoControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @GetMapping("/{idVeiculo}")
+    @GetMapping
     VeiculoDTO listByIdVeiculo(@PathVariable("idVeiculo") Integer id) throws RegraDeNegocioException;
 
     @Operation(summary = "Retornar veículo por disponibilidade.", description = "Retorna veículo por disponibilidade.")
@@ -34,8 +34,8 @@ public interface VeiculoControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @GetMapping("/veiculos-por-disponibilidade")
-    public List<VeiculoDTO> listarVeiculosPorDisponibilidade(@RequestParam("disponibilidade") DisponibilidadeVeiculo disponibilidade) throws RegraDeNegocioException;
+    @GetMapping
+    List<VeiculoDTO> listarVeiculosPorDisponibilidade(@RequestParam("disponibilidade") DisponibilidadeVeiculo disponibilidade) throws RegraDeNegocioException;
 
     @Operation(summary = "Listar veículos", description = "Lista todas as veículos do banco de dados.")
     @ApiResponses(
@@ -46,8 +46,8 @@ public interface VeiculoControllerInterface {
             }
     )
     @GetMapping
-    public PageDTO<VeiculoDTO> list(@RequestParam Integer pagina,
-                                    @RequestParam Integer tamanho) throws RegraDeNegocioException;
+    PageDTO<VeiculoDTO> list(@RequestParam Integer pagina,
+                             @RequestParam Integer tamanho) throws RegraDeNegocioException;
 
     @Operation(summary = "Criar um registro de veículo.", description = "Cria um cadastro de veículo no banco de dados.")
     @ApiResponses(
@@ -58,7 +58,7 @@ public interface VeiculoControllerInterface {
             }
     )
     @PostMapping
-    public ResponseEntity<VeiculoDTO> create(@Valid @RequestBody VeiculoCreateDTO veiculoCreateDTO) throws RegraDeNegocioException;
+    ResponseEntity<VeiculoDTO> create(@Valid @RequestBody VeiculoCreateDTO veiculoCreateDTO) throws RegraDeNegocioException;
 
     @Operation(summary = "Atualizar um registro de veículo.", description = "Atualiza um cadastro de veículo no banco de dados.")
     @ApiResponses(
@@ -68,9 +68,9 @@ public interface VeiculoControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @PutMapping("/{idVeiculo}")
-    public ResponseEntity<VeiculoDTO> update(@PathVariable("idVeiculo") Integer idVeiculo,
-                                             @Valid @RequestBody VeiculoCreateDTO veiculoAtualizar) throws RegraDeNegocioException;
+    @PutMapping
+    ResponseEntity<VeiculoDTO> update(@PathVariable("idVeiculo") Integer idVeiculo,
+                                      @Valid @RequestBody VeiculoCreateDTO veiculoAtualizar) throws RegraDeNegocioException;
 
     @Operation(summary = "Excluir um registro de veículo.", description = "Exclui um cadastro de veículo no banco de dados.")
     @ApiResponses(
@@ -80,6 +80,6 @@ public interface VeiculoControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @DeleteMapping("/{idVeiculo}")
-    public ResponseEntity<VeiculoDTO> delete(@PathVariable("idVeiculo") Integer idVeiculo) throws RegraDeNegocioException;
+    @DeleteMapping
+    ResponseEntity<VeiculoDTO> delete(@PathVariable("idVeiculo") Integer idVeiculo) throws RegraDeNegocioException;
 }

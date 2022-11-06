@@ -6,7 +6,7 @@ public enum BandeiraCartao {
 
     private Integer tipoBandeira;
 
-    BandeiraCartao(Integer tipoBandeira){
+    BandeiraCartao(Integer tipoBandeira) {
         this.tipoBandeira = tipoBandeira;
     }
 

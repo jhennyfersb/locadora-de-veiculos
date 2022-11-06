@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface VeiculoRepository extends JpaRepository<VeiculoEntity,Integer> {
+public interface VeiculoRepository extends JpaRepository<VeiculoEntity, Integer> {
     @Query("select v from veiculo v where v.disponibilidadeVeiculo = :disponibilidadeVeiculo ")
     List<VeiculoEntity> retornarVeiculosPorDisponibilidade(@Param("disponibilidadeVeiculo") DisponibilidadeVeiculo disponibilidadeVeiculo);
 

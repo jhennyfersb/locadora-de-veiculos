@@ -52,11 +52,11 @@ public class EnderecoController implements EnderecoControllerInterface {
 
     @PutMapping("/{idEndereco}")
     public ResponseEntity<EnderecoDTO> update(@PathVariable("idEndereco") Integer id,
-                                             @Valid @RequestBody EnderecoCreateDTO enderecoAtualizar) throws RegraDeNegocioException {
+                                              @Valid @RequestBody EnderecoCreateDTO enderecoAtualizar) throws RegraDeNegocioException {
         log.info("Atualizando endereco...");
         EnderecoDTO enderecoDTO = enderecoService.update(id, enderecoAtualizar);
         log.info("Endereço atualizado");
-        return new ResponseEntity<>(enderecoDTO,HttpStatus.OK);
+        return new ResponseEntity<>(enderecoDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{idEndereco}")

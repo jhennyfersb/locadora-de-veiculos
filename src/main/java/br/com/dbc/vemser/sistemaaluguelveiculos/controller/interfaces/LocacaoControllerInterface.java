@@ -20,7 +20,7 @@ public interface LocacaoControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @GetMapping("/{idLocacao}")
+    @GetMapping
     LocacaoDTO listByIdLocacao(Integer id) throws RegraDeNegocioException;
 
     @Operation(summary = "Listar locações", description = "Lista todas as locações do banco de dados.")
@@ -33,6 +33,7 @@ public interface LocacaoControllerInterface {
     )
     @GetMapping
     List<LocacaoDTO> list() throws RegraDeNegocioException;
+
     @Operation(summary = "Relatorio de locações por cidade", description = "Relatorio de todas as locações do banco de dados por cidade.")
     @ApiResponses(
             value = {
@@ -43,6 +44,7 @@ public interface LocacaoControllerInterface {
     )
     @GetMapping
     List<RelatorioLocacaoPorCidadeDTO> locacaoPorCidade();
+
     @Operation(summary = "Relatorio de locações por id", description = "Relatorio de todas as locações do banco de dados.")
     @ApiResponses(
             value = {
@@ -53,6 +55,7 @@ public interface LocacaoControllerInterface {
     )
     @GetMapping
     List<RelatorioLocacaoDTO> listarRelatoriosLocacao(@RequestParam Integer idCliente, Integer idveiculo, Integer idFuncionario);
+
     @Operation(summary = "Relatario quantidade de locações por cliente", description = "Relatorio quantidade de locações por cliente no banco de dados.")
     @ApiResponses(
             value = {
@@ -84,9 +87,9 @@ public interface LocacaoControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @PutMapping("/{idLocacao}")
+    @PutMapping
     ResponseEntity<LocacaoDTO> update(@PathVariable("idLocacao") Integer id,
-                                             @Valid @RequestBody LocacaoCreateDTO locacaoAtualizar) throws RegraDeNegocioException;
+                                      @Valid @RequestBody LocacaoCreateDTO locacaoAtualizar) throws RegraDeNegocioException;
 
     @Operation(summary = "Excluir um registro de locação.", description = "Exclui um cadastro de locação no banco de dados.")
     @ApiResponses(
@@ -96,6 +99,6 @@ public interface LocacaoControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @DeleteMapping("/{idLocacao}")
+    @DeleteMapping
     ResponseEntity<LocacaoDTO> delete(@PathVariable("idLocacao") Integer id) throws RegraDeNegocioException;
 }

@@ -18,16 +18,20 @@ import java.util.Set;
 @Entity(name = "funcionario")
 public class FuncionarioEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "SEQ_FUNCIONARIO")
-    @SequenceGenerator(name = "SEQ_FUNCIONARIO",sequenceName = "seq_funcionario",allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_FUNCIONARIO")
+    @SequenceGenerator(name = "SEQ_FUNCIONARIO", sequenceName = "seq_funcionario", allocationSize = 1)
     @Column(name = "id_funcionario")
     private Integer idFuncionario;
+
     @Column(name = "nome_funcionario")
     private String nome;
+
     @Column(name = "cpf_funcionario")
     private String cpf;
+
     @Column(name = "email_funcionario")
     private String email;
+
     @Column(name = "matricula")
     private Integer matricula;
 

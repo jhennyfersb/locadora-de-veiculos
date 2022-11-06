@@ -21,7 +21,7 @@ public interface EnderecoControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @GetMapping("/{idEndereco}")
+    @GetMapping
     EnderecoDTO listByIdEndereco(Integer id) throws RegraDeNegocioException;
 
     @Operation(summary = "Listar endereços por id cliente.", description = "Lista todos endereços do banco de dados por id cliente.")
@@ -32,10 +32,10 @@ public interface EnderecoControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @GetMapping("/{idCliente}/cliente")
+    @GetMapping
     PageDTO<EnderecoDTO> findEnderecoByIdCliente(@PathVariable("idCliente") Integer idCliente,
-                                                        @RequestParam Integer pagina,
-                                                        @RequestParam Integer tamanho) throws RegraDeNegocioException;
+                                                 @RequestParam Integer pagina,
+                                                 @RequestParam Integer tamanho) throws RegraDeNegocioException;
 
     @Operation(summary = "Listar endereços.", description = "Lista todos endereços do banco de dados.")
     @ApiResponses(
@@ -47,7 +47,7 @@ public interface EnderecoControllerInterface {
     )
     @GetMapping
     PageDTO<EnderecoDTO> list(@RequestParam(defaultValue = "0") Integer pagina,
-                                     @RequestParam(defaultValue = "20") Integer tamanho) throws RegraDeNegocioException;
+                              @RequestParam(defaultValue = "20") Integer tamanho) throws RegraDeNegocioException;
 
     @Operation(summary = "Criar o registro de um endereço.", description = "Cria um cadastro de endereço no banco de dados.")
     @ApiResponses(
@@ -68,9 +68,9 @@ public interface EnderecoControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @PutMapping("/{idEndereco}")
+    @PutMapping
     ResponseEntity<EnderecoDTO> update(@PathVariable("idEndereco") Integer id,
-                                             @Valid @RequestBody EnderecoCreateDTO enderecoAtualizar) throws RegraDeNegocioException;
+                                       @Valid @RequestBody EnderecoCreateDTO enderecoAtualizar) throws RegraDeNegocioException;
 
     @Operation(summary = "Excluir o registro de um endereço.", description = "Exclui um cadastro de endereço no banco de dados.")
     @ApiResponses(
@@ -80,6 +80,6 @@ public interface EnderecoControllerInterface {
                     @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção")
             }
     )
-    @DeleteMapping("/{idEndereco}")
+    @DeleteMapping
     ResponseEntity<EnderecoDTO> delete(@PathVariable("idEndereco") Integer id) throws RegraDeNegocioException;
 }

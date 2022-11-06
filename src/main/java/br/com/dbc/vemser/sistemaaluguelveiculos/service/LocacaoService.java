@@ -35,6 +35,7 @@ public class LocacaoService {
         LocacaoEntity locacaoEntity = criarLocacaoAPartirDeIds(locacaoCreateDTO);
         LocacaoEntity locacaoSave = locacaoRepository.save(locacaoEntity);
         veiculoService.alterarDisponibilidadeVeiculo(locacaoEntity.getVeiculoEntity());
+        emailService.sendEmail(locacaoSave, "locacao-template.ftl", locacaoSave.getFuncionarioEntity().getEmail());
         return converterEmDTO(locacaoSave);
     }
 
@@ -44,7 +45,6 @@ public class LocacaoService {
         locacaoRepository.deleteById(id);
         locacaoEntityDeletada.getVeiculo().setDisponibilidadeVeiculo(DisponibilidadeVeiculo.DISPONIVEL);
         veiculoRepository.save(objectMapper.convertValue(locacaoEntityDeletada.getVeiculo(), VeiculoEntity.class));
-//        emailService.sendEmail(locacaoEntityDeletada, "locacao-template-delete.ftl", locacaoEntityDeletada.getFuncionarioEntity().getEmail());
 
     }
 
@@ -66,7 +66,8 @@ public class LocacaoService {
         VeiculoDTO veiculoDTO = veiculoService.findById(locacaoCreateDTO.getIdVeiculo());
 
         LocacaoEntity locacaoEntity = objectMapper.convertValue(this.findById(id), LocacaoEntity.class);
-        if (veiculoDTO.getDisponibilidadeVeiculo().getDisponibilidade() == 1 && locacaoEntity.getVeiculoEntity().getIdVeiculo() != locacaoCreateDTO.getIdVeiculo()) {
+        if (veiculoDTO.getDisponibilidadeVeiculo().getDisponibilidade() == 1 &&
+                locacaoEntity.getVeiculoEntity().getIdVeiculo() != locacaoCreateDTO.getIdVeiculo()) {
             throw new RegraDeNegocioException("Veiculo selecionado alugado.");
         }
         CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.findById(locacaoCreateDTO.getIdCartaoCredito());
@@ -91,7 +92,7 @@ public class LocacaoService {
         locacaoEntityAdicionada.getVeiculoEntity().alterarDisponibilidadeVeiculo();
         veiculoRepository.save(locacaoEntityAdicionada.getVeiculoEntity());
 
-        //emailService.sendEmail(locacaoEntity, "locacao-template-update.ftl", funcionarioDTO.getEmail());
+        emailService.sendEmail(locacaoEntity, "locacao-template-update.ftl", funcionarioDTO.getEmail());
         return converterEmDTO(locacaoEntityAdicionada);
 
     }
@@ -156,14 +157,17 @@ public class LocacaoService {
         CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.converterEmDTO(locacaoEntity.getCartaoCreditoEntity());
         FuncionarioDTO funcionarioDTO = funcionarioService.converterEmDTO(locacaoEntity.getFuncionarioEntity());
 
-        return new LocacaoDTO(locacaoEntity.getIdLocacao(), locacaoEntity.getDataLocacao(), locacaoEntity.getDataDevolucao(), locacaoEntity.getValorLocacao(), clienteDTO,
-                veiculoDTO, cartaoCreditoDTO, funcionarioDTO);
+        return new LocacaoDTO(locacaoEntity.getIdLocacao(),
+                locacaoEntity.getDataLocacao(),
+                locacaoEntity.getDataDevolucao(),
+                locacaoEntity.getValorLocacao(),
+                clienteDTO,
+                veiculoDTO,
+                cartaoCreditoDTO,
+                funcionarioDTO);
 
     }
 
-    public LocacaoEntity converterDTOEmLocacao(LocacaoDTO locacaodto) {
-        return objectMapper.convertValue(locacaodto, LocacaoEntity.class);
-    }
 
     public List<RelatorioLocacaoDTO> listarRelatoriosLocacao(Integer idCliente, Integer idVeiculo, Integer idFuncionario) {
         return locacaoRepository.listarRelatoriosLocacao(idCliente, idVeiculo, idFuncionario);
@@ -172,7 +176,8 @@ public class LocacaoService {
     public List<RelatorioLocacaoPorClienteDTO> locacaoPorClienteQuantidade() {
         return locacaoRepository.locacaoPorClienteQuantidade();
     }
-    public List<RelatorioLocacaoPorCidadeDTO> locacaoPorCidade(){
+
+    public List<RelatorioLocacaoPorCidadeDTO> locacaoPorCidade() {
         return locacaoRepository.locacaoPorCidade();
     }
 }

@@ -18,8 +18,8 @@ import java.util.Set;
 @Entity(name = "cartao_credito")
 public class CartaoCreditoEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "SEQ_CARTAO_CREDITO")
-    @SequenceGenerator(name = "SEQ_CARTAO_CREDITO",sequenceName = "seq_cartao_credito",allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_CARTAO_CREDITO")
+    @SequenceGenerator(name = "SEQ_CARTAO_CREDITO", sequenceName = "seq_cartao_credito", allocationSize = 1)
     @Column(name = "id_cartao")
     private Integer idCartaoCredito;
 

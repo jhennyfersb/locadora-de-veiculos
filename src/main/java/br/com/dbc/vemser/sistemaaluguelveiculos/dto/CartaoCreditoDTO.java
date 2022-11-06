@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartaoCreditoDTO extends CartaoCreditoCreateDTO{
+public class CartaoCreditoDTO extends CartaoCreditoCreateDTO {
     private Integer idCartaoCredito;
 }

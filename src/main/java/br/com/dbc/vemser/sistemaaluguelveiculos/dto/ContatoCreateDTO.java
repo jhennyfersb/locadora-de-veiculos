@@ -22,10 +22,10 @@ public class ContatoCreateDTO {
     private Integer idCliente;
 
     @NotBlank(message = "Nome não pode ser vazio ou nulo")
-    @Schema(description = "Telefone do contato", example="99595-1313")
+    @Schema(description = "Telefone do contato", example = "99595-1313")
     private String telefone;
 
     @Email
-    @Schema(description = "Email do contato", example="bruno.bardu@dbccompany.com.br")
+    @Schema(description = "Email do contato", example = "bruno.bardu@dbccompany.com.br")
     private String email;
 }

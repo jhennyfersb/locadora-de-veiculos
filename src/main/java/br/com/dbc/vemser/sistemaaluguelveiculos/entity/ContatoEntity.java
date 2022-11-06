@@ -16,19 +16,22 @@ import javax.persistence.*;
 @Entity(name = "contato")
 public class ContatoEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "SEQ_CONTATO")
-    @SequenceGenerator(name = "SEQ_CONTATO",sequenceName = "seq_contato",allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_CONTATO")
+    @SequenceGenerator(name = "SEQ_CONTATO", sequenceName = "seq_contato", allocationSize = 1)
     @Column(name = "id_contato")
     private Integer idContato;
+
     @Column(name = "id_cliente")
     private Integer idCliente;
+
     @Column(name = "telefone")
     private String telefone;
+
     @Column(name = "email")
     private String email;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="id_cliente", referencedColumnName = "id_cliente", insertable = false, updatable = false)
+    @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente", insertable = false, updatable = false)
     private ClienteEntity clienteEntity;
 }

@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface EnderecoRepository extends JpaRepository<EnderecoEntity,Integer> {
-    Page<EnderecoEntity> findByIdClienteLike (Integer id, Pageable pageable);
+public interface EnderecoRepository extends JpaRepository<EnderecoEntity, Integer> {
+    Page<EnderecoEntity> findByIdClienteLike(Integer id, Pageable pageable);
 }

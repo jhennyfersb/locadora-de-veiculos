@@ -27,19 +27,21 @@ public class LocacaoController implements LocacaoControllerInterface {
     public List<LocacaoDTO> list() throws RegraDeNegocioException {
         return locacaoService.list();
     }
+
     @GetMapping("relatorio-locacao")
     public List<RelatorioLocacaoDTO> listarRelatoriosLocacao(@RequestParam(required = false) Integer idCliente,
                                                              @RequestParam(required = false) Integer idveiculo,
-                                                             @RequestParam(required = false) Integer idFuncionario){
-        return locacaoService.listarRelatoriosLocacao(idCliente,idveiculo,idFuncionario);
+                                                             @RequestParam(required = false) Integer idFuncionario) {
+        return locacaoService.listarRelatoriosLocacao(idCliente, idveiculo, idFuncionario);
     }
+
     @GetMapping("relatorio-cidade")
-    public List<RelatorioLocacaoPorCidadeDTO> locacaoPorCidade(){
+    public List<RelatorioLocacaoPorCidadeDTO> locacaoPorCidade() {
         return locacaoService.locacaoPorCidade();
     }
 
     @GetMapping("relatorio")
-    public List<RelatorioLocacaoPorClienteDTO> locacaoPorClienteQuantidade(){
+    public List<RelatorioLocacaoPorClienteDTO> locacaoPorClienteQuantidade() {
         return locacaoService.locacaoPorClienteQuantidade();
     }
 

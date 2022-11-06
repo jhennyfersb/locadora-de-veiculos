@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContatoDTO extends ContatoCreateDTO{
+public class ContatoDTO extends ContatoCreateDTO {
     private Integer idContato;
 }

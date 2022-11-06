@@ -3,6 +3,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
 import br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces.ClienteControllerInterface;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ClienteCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ClienteDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioClienteDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.service.ClienteService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,10 @@ public class ClienteController implements ClienteControllerInterface {
         return clienteService.list();
     }
 
+    @GetMapping("relatorio-cliente")
+    public List<RelatorioClienteDTO> relatorioCliente(@RequestParam(required = false) Integer idCliente) {
+        return clienteService.relatorioCliente(idCliente);
+    }
 
     @GetMapping("/{idCliente}")
     public ClienteDTO listByIdCliente(@PathVariable("idCliente") Integer id) throws RegraDeNegocioException {

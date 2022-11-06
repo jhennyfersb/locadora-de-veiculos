@@ -27,12 +27,12 @@ public class VeiculoController implements VeiculoControllerInterface {
 
     @GetMapping
     public PageDTO<VeiculoDTO> list(@RequestParam(defaultValue = "0") Integer pagina,
-                                    @RequestParam(defaultValue = "20") Integer tamanho)  throws RegraDeNegocioException {
+                                    @RequestParam(defaultValue = "20") Integer tamanho) throws RegraDeNegocioException {
         return veiculoService.list(pagina, tamanho);
     }
 
     @GetMapping("/veiculos-por-disponibilidade")
-    public List<VeiculoDTO> listarVeiculosPorDisponibilidade(@RequestParam("disponibilidade")DisponibilidadeVeiculo disponibilidade) throws RegraDeNegocioException {
+    public List<VeiculoDTO> listarVeiculosPorDisponibilidade(@RequestParam("disponibilidade") DisponibilidadeVeiculo disponibilidade) throws RegraDeNegocioException {
         return veiculoService.listVeiculosDisponiveis(disponibilidade);
     }
 

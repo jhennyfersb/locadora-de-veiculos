@@ -44,11 +44,11 @@ public class ContatoController implements ContatoControllerInterface {
 
     @PutMapping("/{idContato}")
     public ResponseEntity<ContatoDTO> update(@PathVariable("idContato") Integer id,
-                                                 @Valid @RequestBody ContatoCreateDTO contatoAtualizar) throws RegraDeNegocioException {
+                                             @Valid @RequestBody ContatoCreateDTO contatoAtualizar) throws RegraDeNegocioException {
         log.info("Atualizando contato...");
         ContatoDTO contatoDTO = contatoService.update(id, contatoAtualizar);
         log.info("contato atualizado");
-        return new ResponseEntity<>(contatoDTO,HttpStatus.OK);
+        return new ResponseEntity<>(contatoDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{idContato}")

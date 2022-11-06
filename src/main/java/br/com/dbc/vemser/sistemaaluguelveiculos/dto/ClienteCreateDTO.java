@@ -16,11 +16,11 @@ import javax.validation.constraints.Size;
 public class ClienteCreateDTO {
 
     @NotBlank
-    @Schema(description = "Nome do cliente.", example="Carlinhos da viola")
+    @Schema(description = "Nome do cliente.", example = "Carlinhos da viola")
     private String nome;
 
     @NotBlank(message = "Cpf não pode ser vazio ou nulo")
     @Size(min = 11, max = 11)
-    @Schema(description = "Cpf do cliente.", example="84858485844")
+    @Schema(description = "Cpf do cliente.", example = "84858485844")
     private String cpf;
 }

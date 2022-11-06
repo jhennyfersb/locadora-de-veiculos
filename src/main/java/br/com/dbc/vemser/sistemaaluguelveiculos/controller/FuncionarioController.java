@@ -44,11 +44,11 @@ public class FuncionarioController implements FuncionarioControllerInterface {
 
     @PutMapping("/{idFuncionario}")
     public ResponseEntity<FuncionarioDTO> update(@PathVariable("idFuncionario") Integer id,
-                                              @Valid @RequestBody FuncionarioCreateDTO funcionarioAtualizar) throws RegraDeNegocioException {
+                                                 @Valid @RequestBody FuncionarioCreateDTO funcionarioAtualizar) throws RegraDeNegocioException {
         log.info("Atualizando funcionário...");
         FuncionarioDTO funcionarioDTO = funcionarioService.update(id, funcionarioAtualizar);
         log.info("Funcionário atualizado!");
-        return new ResponseEntity<>(funcionarioDTO,HttpStatus.OK);
+        return new ResponseEntity<>(funcionarioDTO, HttpStatus.OK);
     }
 
     @DeleteMapping("/{idFuncionario}")
