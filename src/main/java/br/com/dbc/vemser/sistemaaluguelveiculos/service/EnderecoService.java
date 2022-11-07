@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class EnderecoService {
     private final EnderecoRepository enderecoRepository;
     private final ObjectMapper objectMapper;
-    private final ClienteService clienteService;
+
 
     public EnderecoDTO create(EnderecoCreateDTO enderecoCreateDTO) throws RegraDeNegocioException {
         EnderecoEntity enderecoEntityAdicionado = enderecoRepository.save(converterEntity(enderecoCreateDTO));

@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 
@@ -20,8 +19,8 @@ import java.util.Set;
 @Entity(name = "cliente")
 public class ClienteEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "SEQ_CLIENTE")
-    @SequenceGenerator(name = "SEQ_CLIENTE",sequenceName = "seq_cliente",allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_CLIENTE")
+    @SequenceGenerator(name = "SEQ_CLIENTE", sequenceName = "seq_cliente", allocationSize = 1)
     @Column(name = "id_cliente")
     private Integer idCliente;
 

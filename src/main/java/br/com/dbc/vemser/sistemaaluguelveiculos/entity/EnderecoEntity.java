@@ -1,7 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +30,7 @@ public class EnderecoEntity {
     @Column(name = "numero")
     private String numero;
 
-    @Column(name ="bairro")
+    @Column(name = "bairro")
     private String bairro;
 
     @Column(name = "cidade")
@@ -43,7 +42,7 @@ public class EnderecoEntity {
     @Column(name = "cep")
     private String cep;
 
-    @Column(name ="complemento")
+    @Column(name = "complemento")
     private String complemento;
 
     @JsonIgnore
