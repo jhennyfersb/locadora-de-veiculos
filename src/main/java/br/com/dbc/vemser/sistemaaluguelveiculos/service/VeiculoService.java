@@ -50,18 +50,18 @@ public class VeiculoService {
         Sort ordenacao = Sort.by("idVeiculo");
         PageRequest pageRequest = PageRequest.of(pagina, tamanho, ordenacao);
         Page<VeiculoEntity> listar = veiculoRepository.findAll(pageRequest);
-        List<VeiculoDTO> enderecoPagina = listar.stream()
+        List<VeiculoDTO> veiculoPagina = listar.stream()
                 .map(this::converterEmDTO)
                 .collect(Collectors.toList());
         return new PageDTO<>(listar.getTotalElements(),
                 listar.getTotalPages(),
                 pagina,
                 tamanho,
-                enderecoPagina);
+                veiculoPagina);
 
     }
 
-    public List<VeiculoDTO> listVeiculosDisponiveis(DisponibilidadeVeiculo disponibilidadeVeiculo) throws RegraDeNegocioException {
+    public List<VeiculoDTO> listVeiculosDisponiveis(DisponibilidadeVeiculo disponibilidadeVeiculo)  {
 
         return veiculoRepository.retornarVeiculosPorDisponibilidade(disponibilidadeVeiculo)
                 .stream()
