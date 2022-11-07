@@ -34,7 +34,7 @@ public class LocacaoService {
     public LocacaoDTO create(LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
         LocacaoEntity locacaoEntity = criarLocacaoAPartirDeIds(locacaoCreateDTO);
         LocacaoEntity locacaoSave = locacaoRepository.save(locacaoEntity);
-        veiculoService.alterarDisponibilidadeVeiculo(locacaoEntity.getVeiculoEntity());
+       // veiculoService.alterarDisponibilidadeVeiculo(locacaoEntity.getVeiculoEntity());
         emailService.sendEmail(locacaoSave, "locacao-template.ftl", locacaoSave.getFuncionarioEntity().getEmail());
         return converterEmDTO(locacaoSave);
     }
@@ -134,6 +134,7 @@ public class LocacaoService {
                 throw new RegraDeNegocioException("A data da devolução não pode ser inferior a data de locação. Tente novamente!");
             }
 
+
             LocacaoEntity locacaoEntity = new LocacaoEntity(null,
                     locacaoCreateDTO.getDataLocacao(),
                     locacaoCreateDTO.getDataDevolucao(),
@@ -144,6 +145,7 @@ public class LocacaoService {
 
             Duration d2 = Duration.between(locacaoEntity.getDataLocacao().atStartOfDay(), locacaoEntity.getDataDevolucao().atStartOfDay());
             locacaoEntity.setValorLocacao(d2.toDays() * locacaoEntity.getVeiculoEntity().getValorLocacao());
+            locacaoEntity.getVeiculoEntity().alterarDisponibilidadeVeiculo();
 
             return locacaoEntity;
         } catch (PersistenceException e) {
@@ -165,7 +167,6 @@ public class LocacaoService {
                 veiculoDTO,
                 cartaoCreditoDTO,
                 funcionarioDTO);
-
     }
 
 
