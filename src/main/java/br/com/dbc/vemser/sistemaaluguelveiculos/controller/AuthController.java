@@ -2,6 +2,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LoginCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LoginDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.FuncionarioEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
@@ -36,7 +37,7 @@ public class AuthController {
     }
 
     @PostMapping
-    public String auth(@RequestBody @Valid LoginDTO loginDTO) {
+    public String auth(@RequestBody @Valid LoginCreateDTO loginDTO) {
         // FIXME adicionar mecanismo de autenticação para verificar se o usuário é válido e retornar o token
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(loginDTO.getCpf(),
                 loginDTO.getSenha());
