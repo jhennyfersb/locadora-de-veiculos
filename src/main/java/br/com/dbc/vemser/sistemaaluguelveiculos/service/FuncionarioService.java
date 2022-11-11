@@ -84,8 +84,9 @@ public class FuncionarioService {
     }
 
     public Optional<FuncionarioEntity> findByLogin(String cpf) {
+        //não está retornando o cargo do banco de dados
         Optional<FuncionarioEntity> funcionarioEntity = funcionarioRepository.findByCpf(cpf);
-        CargoEntity cargoEntity = cargoService.findByIdCargo(1);
+        CargoEntity cargoEntity = cargoService.findByIdCargo(1);//testando se funciona a injeção
         return funcionarioEntity;
     }
 
