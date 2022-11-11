@@ -14,4 +14,7 @@ public class LoginDTO {
     @NotNull
     @Schema(description = "Cpf do usuário", example="85235795125")
     private String cpf;
+    @NotNull
+    @Schema(description = "Senha do usuário", example="123")
+    private String senha;
 }
