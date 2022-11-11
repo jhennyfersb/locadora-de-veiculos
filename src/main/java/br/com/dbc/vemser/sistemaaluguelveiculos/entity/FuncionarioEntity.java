@@ -21,7 +21,6 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity(name = "funcionario")
 public class FuncionarioEntity implements UserDetails {
     @Id

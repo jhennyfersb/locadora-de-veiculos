@@ -2,6 +2,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LoginCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LoginDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.CargoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.FuncionarioEntity;
@@ -9,6 +10,9 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioExcepti
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.FuncionarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +28,7 @@ public class FuncionarioService {
     private final ObjectMapper objectMapper;
     private final PasswordEncoder passwordEncoder;
     private final CargoService cargoService;
+
 
     public FuncionarioDTO create(FuncionarioCreateDTO funcionario) throws RegraDeNegocioException {
 
@@ -105,6 +110,14 @@ public class FuncionarioService {
         Optional<FuncionarioEntity> funcionarioEntity = findByLogin(getIdLoggedUser());
         return objectMapper.convertValue(funcionarioEntity.get(), LoginDTO.class);
     }
+
+    public FuncionarioDTO setAtivoFuncionario(Integer idFuncionario,char ativo) throws RegraDeNegocioException {
+        Optional<FuncionarioEntity> funcionarioEntity = funcionarioRepository.findById(idFuncionario);
+        funcionarioEntity.get().setAtivo(ativo);
+        return converterEmDTO(funcionarioRepository.save(funcionarioEntity.get()));
+    }
+
+
 
 }
 

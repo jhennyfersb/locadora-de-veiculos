@@ -12,9 +12,16 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class LoginDTO {
     @NotNull
-    @Schema(description = "Cpf do usuário", example="85235795125")
+    @Schema(description = "Cargo do usuario")
+    private String cargoNome;
+    @NotNull
+    @Schema(description = "Cpf do usuário", example = "85235795125")
     private String cpf;
     @NotNull
-    @Schema(description = "Senha do usuário", example="123")
-    private String senha;
+    @Schema(description = "Nome do funcionário.", example = "Maifa")
+    private String nome;
+    @Schema(description = "E-mail do funcionário", example = "maifa@javamail.com.br")
+    private String email;
+
+
 }

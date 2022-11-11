@@ -31,20 +31,21 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/create")
-    public ResponseEntity<FuncionarioDTO> create (@RequestBody @Valid FuncionarioCreateDTO funcionarioCreateDTO) throws RegraDeNegocioException {
+    public ResponseEntity<FuncionarioDTO> create(@RequestBody @Valid FuncionarioCreateDTO funcionarioCreateDTO) throws RegraDeNegocioException {
         FuncionarioDTO funcionarioDTO = funcionarioService.create(funcionarioCreateDTO);
         return new ResponseEntity<>(funcionarioDTO, HttpStatus.OK);
     }
 
     @PostMapping
     public String auth(@RequestBody @Valid LoginCreateDTO loginDTO) {
-        // FIXME adicionar mecanismo de autenticação para verificar se o usuário é válido e retornar o token
+        // adicionar mecanismo de autenticação para verificar se o usuário é válido e retornar o token
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(loginDTO.getCpf(),
                 loginDTO.getSenha());
 
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
         Object principal = authentication.getPrincipal();
         FuncionarioEntity funcionarioEntity = (FuncionarioEntity) principal;
+        //FuncionarioEntity funcionarioEntity = authenticationManager.funcionarioValido(loginDTO);
         return tokenService.getToken(funcionarioEntity);
     }
 
@@ -52,4 +53,21 @@ public class AuthController {
     public ResponseEntity<LoginDTO> retornarId() throws RegraDeNegocioException {
         return new ResponseEntity<>(funcionarioService.getLoggedUser(), HttpStatus.OK);
     }
+
+    @PostMapping("/solicar-troca-senha")
+    public void trocarSenha(@RequestBody @Valid String cpf) throws RegraDeNegocioException {
+        Optional<FuncionarioEntity> funcionarioEntity = funcionarioService.findByLogin(cpf);
+        if(funcionarioEntity==null){
+            throw new RegraDeNegocioException("Funcionario não existe");
+        }
+        String token = tokenService.getToken(funcionarioEntity.get());
+        emailService.sendEmailRecuperarSenha(funcionarioEntity.get(),"recuperar-senha.ftl",funcionarioEntity.get().getEmail());
+        new ResponseEntity<>(null,HttpStatus.OK);
+    }
+
+    @PostMapping("/trocar-senha/{token}")
+    public String trocarSenhaComToken(@RequestBody @Valid String senha) {
+        return null;
+    }
+
 }

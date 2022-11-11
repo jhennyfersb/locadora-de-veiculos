@@ -10,8 +10,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@Entity
-@Table(name = "CARGO")
+@Entity(name = "CARGO")
 public class CargoEntity implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CARGO_SEQUENCIA")
