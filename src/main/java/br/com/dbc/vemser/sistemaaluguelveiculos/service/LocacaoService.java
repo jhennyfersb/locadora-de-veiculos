@@ -34,8 +34,18 @@ public class LocacaoService {
     public LocacaoDTO create(LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
         LocacaoEntity locacaoEntity = criarLocacaoAPartirDeIds(locacaoCreateDTO);
         LocacaoEntity locacaoSave = locacaoRepository.save(locacaoEntity);
-       // veiculoService.alterarDisponibilidadeVeiculo(locacaoEntity.getVeiculoEntity());
-        emailService.sendEmail(locacaoSave, "locacao-template.ftl", locacaoSave.getFuncionarioEntity().getEmail());
+
+        String base = "Olá, Você acaba de realizar uma locação.<br>"+
+                "Dados da locacação:<br>"+
+                "O identicador da locação é "+locacaoSave.getIdLocacao()+".<br>"+
+                "Valor da Locação: "+locacaoSave.getValorLocacao()+".<br>"+
+                "O veiculo é um "+locacaoSave.getVeiculoEntity().getModelo()+
+                " da marca "+locacaoSave.getVeiculoEntity().getMarca()+
+                " de placa  "+locacaoSave.getVeiculoEntity().getPlaca()+"<br>"+
+                "Data da locação é "+locacaoSave.getDataLocacao()+".<br>"+
+                "Data de devolução "+locacaoSave.getDataDevolucao()+"<br>";
+
+        emailService.sendEmail(base,locacaoSave.getFuncionarioEntity().getEmail());
         return converterEmDTO(locacaoSave);
     }
 
@@ -91,8 +101,6 @@ public class LocacaoService {
         LocacaoEntity locacaoEntityAdicionada = this.locacaoRepository.save(locacaoEntity);
         locacaoEntityAdicionada.getVeiculoEntity().alterarDisponibilidadeVeiculo();
         veiculoRepository.save(locacaoEntityAdicionada.getVeiculoEntity());
-
-        emailService.sendEmail(locacaoEntity, "locacao-template-update.ftl", funcionarioDTO.getEmail());
         return converterEmDTO(locacaoEntityAdicionada);
 
     }

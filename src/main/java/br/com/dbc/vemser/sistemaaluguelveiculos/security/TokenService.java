@@ -27,10 +27,13 @@ public class TokenService {
     @Value("${jwt.expiration}")
     private String expiration;
 
-    public String getToken(FuncionarioEntity funcionarioEntity) {
+    public String getToken(FuncionarioEntity funcionarioEntity,String expiration) {
+        if(expiration != null){
+            this.expiration = expiration;
+        }
         LocalDateTime localDateTimeAtual = LocalDateTime.now();
         Date dataAtual = Date.from(localDateTimeAtual.atZone(ZoneId.systemDefault()).toInstant());
-        LocalDateTime dateExpiracaoLocalDate = localDateTimeAtual.plusMonths(Long.parseLong(expiration));
+        LocalDateTime dateExpiracaoLocalDate = localDateTimeAtual.plusMinutes(Long.parseLong(this.expiration));
         Date expiracao = Date.from(dateExpiracaoLocalDate.atZone(ZoneId.systemDefault()).toInstant());
 
 

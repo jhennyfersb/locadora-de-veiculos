@@ -1,5 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.FuncionarioEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.LocacaoEntity;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -29,27 +30,20 @@ public class EmailService {
 
     private final JavaMailSender emailSender;
 
-    public void sendEmail(LocacaoEntity locacaoEntity, String templateName, String destinatario) {
+
+    public void sendEmail(String base, String destinatario) {
 
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         Map<String, Object> dados = new HashMap<>();
-        dados.put("nome", locacaoEntity.getFuncionarioEntity().getNome());
-        dados.put("email", from);
-        dados.put("id", locacaoEntity.getFuncionarioEntity().getIdFuncionario());
-        dados.put("idLocacao", locacaoEntity.getIdLocacao());
-        dados.put("valorLocacao", locacaoEntity.getValorLocacao());
-        dados.put("modeloVeiculo", locacaoEntity.getVeiculoEntity().getModelo());
-        dados.put("marcaVeiculo", locacaoEntity.getVeiculoEntity().getMarca());
-        dados.put("placaVeiculo", locacaoEntity.getVeiculoEntity().getPlaca());
-        dados.put("dataLocacao", locacaoEntity.getDataLocacao());
-        dados.put("dataDevolucao", locacaoEntity.getDataDevolucao());
+        dados.put("base",base);
+        dados.put("email",from);
         try {
             TO = destinatario;
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
             mimeMessageHelper.setFrom(from);
-            mimeMessageHelper.setTo(TO);
-            mimeMessageHelper.setSubject("Locação");
-            mimeMessageHelper.setText(geContentFromTemplate(dados, templateName), true);
+            mimeMessageHelper.setTo(destinatario);
+            mimeMessageHelper.setSubject("Troca de senha");
+            mimeMessageHelper.setText(geContentFromTemplate(dados, "email-template.ftl"), true);
 
             emailSender.send(mimeMessageHelper.getMimeMessage());
 

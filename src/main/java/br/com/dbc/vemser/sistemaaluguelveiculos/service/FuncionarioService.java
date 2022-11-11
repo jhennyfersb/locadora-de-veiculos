@@ -108,7 +108,9 @@ public class FuncionarioService {
 
     public LoginDTO getLoggedUser() throws RegraDeNegocioException{
         Optional<FuncionarioEntity> funcionarioEntity = findByLogin(getIdLoggedUser());
-        return objectMapper.convertValue(funcionarioEntity.get(), LoginDTO.class);
+        LoginDTO loginDTO = objectMapper.convertValue(funcionarioEntity.get(), LoginDTO.class);
+        loginDTO.setCargoNome(funcionarioEntity.get().getCargoEntity().getNome());
+        return loginDTO;
     }
 
     public FuncionarioDTO setAtivoFuncionario(Integer idFuncionario,char ativo) throws RegraDeNegocioException {
@@ -117,6 +119,12 @@ public class FuncionarioService {
         return converterEmDTO(funcionarioRepository.save(funcionarioEntity.get()));
     }
 
+    public FuncionarioDTO atualizarSenhaFuncionario(String cpf,String senha){
+        Optional<FuncionarioEntity> funcionarioEntity = funcionarioRepository.findByCpf(cpf);
+        funcionarioEntity.get().setSenha(passwordEncoder.encode(senha));
+        return converterEmDTO(funcionarioRepository.save(funcionarioEntity.get()));
+
+    }
 
 
 }

@@ -25,12 +25,9 @@ public class VeiculoService {
     private final ObjectMapper objectMapper;
 
     public VeiculoDTO create(VeiculoCreateDTO veiculo) throws RegraDeNegocioException {
-
         VeiculoEntity veiculoEntity = converterEntity(veiculo);
         veiculoEntity.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.valueOf("DISPONIVEL"));
         return converterEmDTO(veiculoRepository.save(veiculoEntity));
-
-
     }
 
     public VeiculoDTO update(Integer idVeiculo, VeiculoCreateDTO veiculo) throws RegraDeNegocioException {
@@ -61,7 +58,7 @@ public class VeiculoService {
 
     }
 
-    public List<VeiculoDTO> listVeiculosDisponiveis(DisponibilidadeVeiculo disponibilidadeVeiculo)  {
+    public List<VeiculoDTO> listVeiculosDisponiveis(DisponibilidadeVeiculo disponibilidadeVeiculo) {
 
         return veiculoRepository.retornarVeiculosPorDisponibilidade(disponibilidadeVeiculo)
                 .stream()

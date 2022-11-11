@@ -17,7 +17,4 @@ public class LoginCreateDTO {
     @NotNull
     @Schema(description = "Senha do usuário", example="123")
     private String senha;
-    @NotNull
-    @Schema(description = "Cargo do usuario")
-    private int idCargo;
 }

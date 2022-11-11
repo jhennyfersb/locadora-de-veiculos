@@ -22,7 +22,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/cliente")
 public class ClienteController implements ClienteControllerInterface {
-
     private final ClienteService clienteService;
 
     @GetMapping

@@ -21,7 +21,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/contato")
 public class ContatoController implements ContatoControllerInterface {
-
     private final ContatoService contatoService;
 
     @GetMapping

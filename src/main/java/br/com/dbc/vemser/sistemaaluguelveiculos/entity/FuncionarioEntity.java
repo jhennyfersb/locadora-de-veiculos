@@ -43,18 +43,11 @@ public class FuncionarioEntity implements UserDetails {
     @Column(name = "senha")
     private String senha;
 
-    //criar no banco de dados > string 'T' e 'F' ou 'S' e'N'
-    //private String enabled="T";
-
-    //private String expired="F";
-
-    //private String locked="F";
-
-    //@Column(name= "id_cargo",insertable = false,updatable = false)
-    //private int idCargo;
+    @Column(name = "Ativo")
+    private char ativo;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_cargo", referencedColumnName = "id_cargo")
     private CargoEntity cargoEntity;
 
@@ -98,7 +91,6 @@ public class FuncionarioEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-//        return enabled=="T";
-        return true;
+        return ativo=='T';
     }
 }

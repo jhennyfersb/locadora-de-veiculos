@@ -21,7 +21,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/cartao")
 public class CartaoCreditoController implements CartaoCreditoControllerInterface {
-
     private final CartaoCreditoService cartaoCreditoService;
 
     @GetMapping

@@ -21,7 +21,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/funcionario")
 public class FuncionarioController implements FuncionarioControllerInterface {
-
     private final FuncionarioService funcionarioService;
 
     @GetMapping
@@ -57,5 +56,21 @@ public class FuncionarioController implements FuncionarioControllerInterface {
         funcionarioService.delete(id);
         log.info("Funcionário deletado!");
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/ativar-funcionario/{idFuncionario}")
+    public ResponseEntity<FuncionarioDTO> ativarFuncionario(@PathVariable("idFuncionario") Integer id) throws RegraDeNegocioException {
+        log.info("Atualizando funcionário...");
+        FuncionarioDTO funcionarioDTO = funcionarioService.setAtivoFuncionario(id,'T');
+        log.info("Funcionário ATIVO!");
+        return new ResponseEntity<>(funcionarioDTO, HttpStatus.OK);
+    }
+
+    @PutMapping("/desativar-funcionario/{idFuncionario}")
+    public ResponseEntity<FuncionarioDTO> desativarFuncionario(@PathVariable("idFuncionario") Integer id) throws RegraDeNegocioException {
+        log.info("Atualizando funcionário...");
+        FuncionarioDTO funcionarioDTO = funcionarioService.setAtivoFuncionario(id,'F');
+        log.info("Funcionário DESATIVADO!");
+        return new ResponseEntity<>(funcionarioDTO, HttpStatus.OK);
     }
 }
