@@ -7,16 +7,20 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class TokenService {
+
+    private static final String KEY_CARGOS = "CARGOS";
 
     @Value("${jwt.secret}")
     private String secret;
@@ -27,15 +31,12 @@ public class TokenService {
     public String getToken(FuncionarioEntity funcionarioEntity){
         LocalDateTime localDateTimeAtual = LocalDateTime.now();
         Date dataAtual = Date.from(localDateTimeAtual.atZone(ZoneId.systemDefault()).toInstant());
-
-        LocalDateTime localDateTimeExpirar = localDateTimeAtual.plusDays(Long.parseLong(expiration));
-        Date expiracao = Date.from(localDateTimeExpirar.atZone(ZoneId.systemDefault()).toInstant());
-//        // FIXME por meio do usuário, gerar um token
-
+        Date expiracao = Date.from(localDateTimeAtual.plusDays(Integer.parseInt(expiration)).atZone(ZoneId.systemDefault()).toInstant());
 
         return Jwts.builder().
                 setIssuer("vemser-api")
                 .claim(Claims.ID, funcionarioEntity.getCpf())
+                .claim(KEY_CARGOS,funcionarioEntity.getCargoEntity().getAuthority())
                 .setIssuedAt(dataAtual)
                 .setExpiration(expiracao)
                 .signWith(SignatureAlgorithm.HS256, secret)
@@ -54,6 +55,11 @@ public class TokenService {
                 .getBody();
 
         String user = claims.get(Claims.ID, String.class);
-        return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
+        List<String> cargos = claims.get(KEY_CARGOS, List.class);
+
+        List<SimpleGrantedAuthority> listaDeCargos = cargos.stream()
+                .map(SimpleGrantedAuthority::new)
+                .toList();
+        return new UsernamePasswordAuthenticationToken(user, null, listaDeCargos);
     }
 }

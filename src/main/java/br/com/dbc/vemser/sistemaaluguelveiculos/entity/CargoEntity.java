@@ -1,10 +1,12 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,6 +21,11 @@ public class CargoEntity implements GrantedAuthority {
 
     @Column(name = "NOME")
     private String nome;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cargoEntity")
+    private Set<FuncionarioEntity> funcionarioEntities;
+
 
     @Override
     public String getAuthority() {

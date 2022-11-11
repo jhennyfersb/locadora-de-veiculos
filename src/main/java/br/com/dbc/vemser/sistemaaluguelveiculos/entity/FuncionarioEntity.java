@@ -39,9 +39,24 @@ public class FuncionarioEntity implements UserDetails {
 
     @Column(name = "matricula")
     private Integer matricula;
-
     @Column(name = "senha")
     private String senha;
+
+    //criar no banco de dados > string 'T' e 'F' ou 'S' e'N'
+    //private String enabled="T";
+
+    //private String expired="F";
+
+    //private String locked="F";
+
+    @Column(name= "id_cargo",insertable = false,updatable = false)
+    private int idCargo;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_cargo", referencedColumnName = "id_cargo")
+    private CargoEntity cargoEntity;
+
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "funcionarioEntity")
@@ -65,20 +80,24 @@ public class FuncionarioEntity implements UserDetails {
     @Override
     public boolean isAccountNonExpired() {
         return true;
+        // return expired=="F";
     }
 
     @Override
     public boolean isAccountNonLocked() {
+//        return locked=="F";
         return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
+//        return true;
         return true;
     }
 
     @Override
     public boolean isEnabled() {
+//        return enabled=="T";
         return true;
     }
 }

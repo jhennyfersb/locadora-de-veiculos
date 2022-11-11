@@ -3,8 +3,10 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LoginDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.CargoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.FuncionarioEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
+import br.com.dbc.vemser.sistemaaluguelveiculos.repository.CargoRepository;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.FuncionarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ public class FuncionarioService {
     private final FuncionarioRepository funcionarioRepository;
     private final ObjectMapper objectMapper;
     private final PasswordEncoder passwordEncoder;
+    private final CargoService cargoService;
 
     public FuncionarioDTO create(FuncionarioCreateDTO funcionario) throws RegraDeNegocioException {
 
@@ -81,7 +84,9 @@ public class FuncionarioService {
     }
 
     public Optional<FuncionarioEntity> findByLogin(String cpf) {
-        return funcionarioRepository.findByCpf(cpf);
+        Optional<FuncionarioEntity> funcionarioEntity = funcionarioRepository.findByCpf(cpf);
+        CargoEntity cargoEntity = cargoService.findByIdCargo(1);
+        return funcionarioEntity;
     }
 
     public String getIdLoggedUser() {
