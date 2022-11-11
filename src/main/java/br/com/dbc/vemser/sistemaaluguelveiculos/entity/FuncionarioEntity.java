@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -49,8 +51,8 @@ public class FuncionarioEntity implements UserDetails {
 
     //private String locked="F";
 
-    @Column(name= "id_cargo",insertable = false,updatable = false)
-    private int idCargo;
+    //@Column(name= "id_cargo",insertable = false,updatable = false)
+    //private int idCargo;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -60,11 +62,11 @@ public class FuncionarioEntity implements UserDetails {
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "funcionarioEntity")
-    private Set<LocacaoEntity> locacaoEntities;
+    private Set<LocacaoEntity> locacaoEntities = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return List.of(cargoEntity);
     }
 
     @Override

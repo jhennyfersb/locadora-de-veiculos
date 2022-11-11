@@ -37,7 +37,7 @@ public class AuthController {
     }
 
     @PostMapping
-    public String auth(@RequestBody @Valid LoginCreateDTO loginDTO) throws RegraDeNegocioException {
+    public String auth(@RequestBody @Valid LoginCreateDTO loginDTO) {
         // FIXME adicionar mecanismo de autenticação para verificar se o usuário é válido e retornar o token
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(loginDTO.getCpf(),
                 loginDTO.getSenha());

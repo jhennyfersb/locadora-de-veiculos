@@ -6,7 +6,6 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LoginDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.CargoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.FuncionarioEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
-import br.com.dbc.vemser.sistemaaluguelveiculos.repository.CargoRepository;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.FuncionarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +31,11 @@ public class FuncionarioService {
             throw new RegraDeNegocioException("Já existe uma conta com esse nome de usuário");
         }
         FuncionarioEntity funcionarioEntity = converterEntity(funcionario);
-        funcionarioEntity.setSenha(passwordEncoder.encode(funcionario.getSenha()));
-        funcionarioRepository.save(funcionarioEntity);
-        return converterEmDTO(funcionarioEntity);
+        CargoEntity cargoFuncionario = cargoService.findByIdCargo(funcionario.getIdCargo());
+        funcionarioEntity.setCargoEntity(cargoFuncionario);
+        String encode = passwordEncoder.encode(funcionarioEntity.getPassword());
+        funcionarioEntity.setSenha(encode);
+        return converterEmDTO(funcionarioRepository.save(funcionarioEntity));
     }
 
     public void delete(Integer id) throws RegraDeNegocioException {
@@ -47,11 +48,13 @@ public class FuncionarioService {
     public FuncionarioDTO update(Integer id, FuncionarioCreateDTO funcionario) throws RegraDeNegocioException {
 
         this.findById(id);
-
         FuncionarioEntity funcionarioEntity = converterEntity(funcionario);
         funcionarioEntity.setIdFuncionario(id);
+        CargoEntity cargoFuncionario = cargoService.findByIdCargo(funcionario.getIdCargo());
+        funcionarioEntity.setCargoEntity(cargoFuncionario);
+        String encode = passwordEncoder.encode(funcionarioEntity.getPassword());
+        funcionarioEntity.setSenha(encode);
         return converterEmDTO(funcionarioRepository.save(funcionarioEntity));
-
 
     }
 
@@ -70,7 +73,11 @@ public class FuncionarioService {
     }
 
     public FuncionarioDTO converterEmDTO(FuncionarioEntity funcionarioEntity) {
-        return objectMapper.convertValue(funcionarioEntity, FuncionarioDTO.class);
+        FuncionarioDTO funcionarioDTO = new FuncionarioDTO(funcionarioEntity.getIdFuncionario(),
+                funcionarioEntity.getNome(),
+                funcionarioEntity.getCpf(),
+                funcionarioEntity.getEmail(),funcionarioEntity.getMatricula());
+        return funcionarioDTO;
     }
 
     public FuncionarioDTO findById(Integer id) throws RegraDeNegocioException {
@@ -80,13 +87,13 @@ public class FuncionarioService {
         if (funcionarioEntityRecuperado.isEmpty()) {
             throw new RegraDeNegocioException("Funcionario não encontrado");
         }
-        return objectMapper.convertValue(funcionarioEntityRecuperado, FuncionarioDTO.class);
+        return converterEmDTO(funcionarioEntityRecuperado.get());
     }
 
     public Optional<FuncionarioEntity> findByLogin(String cpf) {
         //não está retornando o cargo do banco de dados
         Optional<FuncionarioEntity> funcionarioEntity = funcionarioRepository.findByCpf(cpf);
-        CargoEntity cargoEntity = cargoService.findByIdCargo(1);//testando se funciona a injeção
+       // CargoEntity cargoEntity = cargoService.findByIdCargo(1);//testando se funciona a injeção
         return funcionarioEntity;
     }
 
@@ -98,5 +105,6 @@ public class FuncionarioService {
         Optional<FuncionarioEntity> funcionarioEntity = findByLogin(getIdLoggedUser());
         return objectMapper.convertValue(funcionarioEntity.get(), LoginDTO.class);
     }
+
 }
 

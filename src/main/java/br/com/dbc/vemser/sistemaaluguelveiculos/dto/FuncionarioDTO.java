@@ -33,4 +33,5 @@ public class FuncionarioDTO {
     @Schema(description = "Número de matrícula do funcionário.", example = "8")
     private Integer matricula;
 
+
 }

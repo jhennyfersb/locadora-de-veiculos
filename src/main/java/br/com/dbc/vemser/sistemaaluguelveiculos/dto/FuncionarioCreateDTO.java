@@ -34,6 +34,13 @@ public class FuncionarioCreateDTO {
     @Schema(description = "Número de matrícula do funcionário.", example = "8")
     private Integer matricula;
 
+    @NotNull
+    @Schema(description = "senha do funcionário.", example = "123")
     private String senha;
+
+    @NotNull
+    @Schema(description = "id do cargo do funcionário.", example = "admin = 1, auxiliar = 2 ,cliente = 3")
+    private Integer idCargo;
+
 
 }
