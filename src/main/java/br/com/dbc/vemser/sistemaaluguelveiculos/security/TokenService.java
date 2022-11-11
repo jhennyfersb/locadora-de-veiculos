@@ -1,6 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.security;
 
-import br.com.dbc.vemser.pessoaapi.entity.UsuarioEntity;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.FuncionarioEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -24,7 +24,7 @@ public class TokenService {
     @Value("${jwt.expiration}")
     private String expiration;
 
-    public String getToken(UsuarioEntity usuarioEntity){
+    public String getToken(FuncionarioEntity funcionarioEntity){
         LocalDateTime localDateTimeAtual = LocalDateTime.now();
         Date dataAtual = Date.from(localDateTimeAtual.atZone(ZoneId.systemDefault()).toInstant());
 
@@ -32,9 +32,10 @@ public class TokenService {
         Date expiracao = Date.from(localDateTimeExpirar.atZone(ZoneId.systemDefault()).toInstant());
 //        // FIXME por meio do usuário, gerar um token
 
-       return Jwts.builder().
+
+        return Jwts.builder().
                 setIssuer("vemser-api")
-                .claim(Claims.ID, usuarioEntity.getIdUsuario().toString())
+                .claim(Claims.ID, funcionarioEntity.getCpf())
                 .setIssuedAt(dataAtual)
                 .setExpiration(expiracao)
                 .signWith(SignatureAlgorithm.HS256, secret)

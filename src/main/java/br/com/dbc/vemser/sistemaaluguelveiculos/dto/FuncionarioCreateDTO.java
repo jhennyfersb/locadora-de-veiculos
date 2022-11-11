@@ -33,4 +33,7 @@ public class FuncionarioCreateDTO {
     @NotNull
     @Schema(description = "Número de matrícula do funcionário.", example = "8")
     private Integer matricula;
+
+    private String senha;
+
 }

@@ -1,7 +1,7 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.security;
 
-import br.com.dbc.vemser.pessoaapi.entity.UsuarioEntity;
-import br.com.dbc.vemser.pessoaapi.service.UsuarioService;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.FuncionarioEntity;
+import br.com.dbc.vemser.sistemaaluguelveiculos.service.FuncionarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,12 +14,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthenticationService implements UserDetailsService {
 
-    private final UsuarioService usuarioService;
+    private final FuncionarioService funcionarioService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UsuarioEntity> usuarioEntityOptional = usuarioService.findByLogin(username);
-        return usuarioEntityOptional
+        Optional<FuncionarioEntity> funcionarioEntityOptional = funcionarioService.findByLogin(username);
+        return funcionarioEntityOptional
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário inválido"));
     }
 }
