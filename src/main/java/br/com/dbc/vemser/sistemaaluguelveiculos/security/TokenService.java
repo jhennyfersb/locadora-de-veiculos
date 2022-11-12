@@ -27,13 +27,16 @@ public class TokenService {
     @Value("${jwt.expiration}")
     private String expiration;
 
+    @Value("${jwt.expirationSenha}")
+    private String expirationSenha;
+
     public String getToken(FuncionarioEntity funcionarioEntity,String expiration) {
         if(expiration != null){
             this.expiration = expiration;
         }
         LocalDateTime localDateTimeAtual = LocalDateTime.now();
         Date dataAtual = Date.from(localDateTimeAtual.atZone(ZoneId.systemDefault()).toInstant());
-        LocalDateTime dateExpiracaoLocalDate = localDateTimeAtual.plusMinutes(Long.parseLong(this.expiration));
+        LocalDateTime dateExpiracaoLocalDate = localDateTimeAtual.plusMonths(Long.parseLong(this.expiration));
         Date expiracao = Date.from(dateExpiracaoLocalDate.atZone(ZoneId.systemDefault()).toInstant());
 
 
@@ -41,6 +44,24 @@ public class TokenService {
                 setIssuer("vemser-api")
                 .claim(Claims.ID, funcionarioEntity.getCpf())
                 .claim(KEY_CARGOS, funcionarioEntity.getCargoEntity().getAuthority())
+                .setIssuedAt(dataAtual)
+                .setExpiration(expiracao)
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .compact();
+    }
+    public String getTokenSenha(FuncionarioEntity funcionarioEntity,String expirationSenha) {
+        if(expirationSenha != null){
+            this.expirationSenha = expirationSenha;
+        }
+        LocalDateTime localDateTimeAtual = LocalDateTime.now();
+        Date dataAtual = Date.from(localDateTimeAtual.atZone(ZoneId.systemDefault()).toInstant());
+        LocalDateTime dateExpiracaoLocalDate = localDateTimeAtual.plusMinutes(Long.parseLong(this.expirationSenha));
+        Date expiracao = Date.from(dateExpiracaoLocalDate.atZone(ZoneId.systemDefault()).toInstant());
+
+
+        return Jwts.builder().
+                setIssuer("vemser-api")
+                .claim(Claims.ID, funcionarioEntity.getCpf())
                 .setIssuedAt(dataAtual)
                 .setExpiration(expiracao)
                 .signWith(SignatureAlgorithm.HS256, secret)

@@ -5,6 +5,7 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.entity.FuncionarioEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.security.TokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,9 +17,13 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+    @Value("${jwt.expirationSenha}")
+    private String expirationSenha;
     private final FuncionarioService funcionarioService;
     private final EmailService emailService;
     private final AuthenticationManager authenticationManager;
+
+    private final TokenService tokenService;
 
     private final PasswordService passwordService;
 
@@ -36,9 +41,10 @@ public class AuthService {
         if (funcionarioEntity.isEmpty()) {
             throw new RegraDeNegocioException("Funcionario não existe");
         }
-        String token = UUID.randomUUID().toString();
-        passwordService.createPasswordResetTokenForUser(funcionarioEntity.get(), token);
-        String base = "Olá " + funcionarioEntity.get().getNome() + " seu token para trocar de senha é: <br>" + token;
+       // String token = UUID.randomUUID().toString();
+        String tokenSenha = tokenService.getTokenSenha(funcionarioEntity.get(),expirationSenha);
+        passwordService.createPasswordResetTokenForUser(funcionarioEntity.get(), tokenSenha);
+        String base = "Olá " + funcionarioEntity.get().getNome() + " seu token para trocar de senha é: <br>" + tokenSenha;
         emailService.sendEmail(base, funcionarioEntity.get().getEmail());
     }
 
@@ -51,4 +57,5 @@ public class AuthService {
          */
         return funcionarioByToken.getCpf();
     }
+
 }

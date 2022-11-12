@@ -6,6 +6,7 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioExcepti
 import br.com.dbc.vemser.sistemaaluguelveiculos.security.TokenService;
 import br.com.dbc.vemser.sistemaaluguelveiculos.service.AuthService;
 import br.com.dbc.vemser.sistemaaluguelveiculos.service.FuncionarioService;
+import br.com.dbc.vemser.sistemaaluguelveiculos.service.PasswordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ public class AuthController {
     private final FuncionarioService funcionarioService;
     private final TokenService tokenService;
     private final AuthService authService;
+    private final PasswordService passwordService;
 
 
     @PostMapping("/create")
@@ -51,6 +53,7 @@ public class AuthController {
     public void trocarSenhaAuntenticado(@RequestBody @Valid UserSenhaDTO userSenhaDTO) throws RegraDeNegocioException {
         String cpf = authService.procurarUsuario(userSenhaDTO.getToken());
         funcionarioService.atualizarSenhaFuncionario(cpf, userSenhaDTO.getSenha());
+        passwordService.deleteToken(userSenhaDTO.getToken());
         new ResponseEntity<>(null, HttpStatus.OK);
     }
 

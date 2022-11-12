@@ -7,11 +7,14 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class PasswordService {
 
     private final PasswordResetTokenRepository passwordResetTokenRepository;
+
 
     public void createPasswordResetTokenForUser(FuncionarioEntity funcionarioEntity, String token) {
         PasswordResetToken myToken = new PasswordResetToken(token, funcionarioEntity);
@@ -20,5 +23,9 @@ public class PasswordService {
 
     public FuncionarioEntity findFuncionarioByToken(String token) {
         return passwordResetTokenRepository.findByToken(token).get().getFuncionarioEntity();
+    }
+    public void deleteToken(String token){
+        Optional<PasswordResetToken> byToken = passwordResetTokenRepository.findByToken(token);
+        passwordResetTokenRepository.delete(byToken.get());
     }
 }
