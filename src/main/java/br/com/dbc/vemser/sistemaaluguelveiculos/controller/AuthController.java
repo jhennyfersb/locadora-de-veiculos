@@ -4,8 +4,8 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.dto.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.FuncionarioEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.security.TokenService;
-import br.com.dbc.vemser.sistemaaluguelveiculos.service.EmailService;
 import br.com.dbc.vemser.sistemaaluguelveiculos.service.FuncionarioService;
+import br.com.dbc.vemser.sistemaaluguelveiculos.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -25,8 +24,8 @@ import java.util.Optional;
 public class AuthController {
     private final FuncionarioService funcionarioService;
     private final TokenService tokenService;
-    private final EmailService emailService;
-    private final AuthenticationManager authenticationManager;
+    private final AuthService authService;
+
 
     @PostMapping("/create")
     public ResponseEntity<FuncionarioDTO> create(@RequestBody @Valid FuncionarioCreateDTO funcionarioCreateDTO) throws RegraDeNegocioException {
@@ -36,11 +35,7 @@ public class AuthController {
 
     @PostMapping
     public String auth(@RequestBody @Valid LoginCreateDTO loginDTO) {
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(loginDTO.getCpf(),
-                loginDTO.getSenha());
-        Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-        Object principal = authentication.getPrincipal();
-        FuncionarioEntity funcionarioEntity = (FuncionarioEntity) principal;
+        FuncionarioEntity funcionarioEntity = authService.auth(loginDTO);
         return tokenService.getToken(funcionarioEntity, null);
     }
 
@@ -49,26 +44,17 @@ public class AuthController {
         return new ResponseEntity<>(funcionarioService.getLoggedUser(), HttpStatus.OK);
     }
 
-    @PostMapping("/solicar-troca-senha")
-    public void trocarSenha(@RequestBody @Valid String cpf) throws RegraDeNegocioException {
-        Optional<FuncionarioEntity> funcionarioEntity = funcionarioService.findByLogin(cpf);
-        if(funcionarioEntity.isEmpty()){
-            throw new RegraDeNegocioException("Funcionario não existe");
-        }
-        String token = tokenService.getToken(funcionarioEntity.get(),"15");
-        String base = "Olá "+funcionarioEntity.get().getNome()+" seu token para trocar de senha é: <br>"+token;
-        emailService.sendEmail(base,funcionarioEntity.get().getEmail());
-        new ResponseEntity<>(null,HttpStatus.OK);
+    @PostMapping("/solicitar-troca-senha/{cpf}")
+    public void trocarSenha(@PathVariable("cpf")String cpf) throws RegraDeNegocioException {
+
+        authService.trocarSenha(cpf);
+        new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @PostMapping("/trocar-senha")
     public void trocarSenhaAuntenticado(@RequestBody @Valid UserSenhaDTO userSenhaDTO) throws RegraDeNegocioException {
-        String cpf = funcionarioService.getIdLoggedUser();
-        if (cpf == null) {
-            throw new RegraDeNegocioException("Erro ao procurar usuario");
-        }
-      funcionarioService.atualizarSenhaFuncionario(cpf, userSenhaDTO.getSenha());
-
+        String cpf = authService.procurarUsuario();
+        funcionarioService.atualizarSenhaFuncionario(cpf, userSenhaDTO.getSenha());
         new ResponseEntity<>(null, HttpStatus.OK);
     }
 
