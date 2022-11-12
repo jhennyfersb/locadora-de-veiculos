@@ -4,14 +4,11 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.dto.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.FuncionarioEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.security.TokenService;
-import br.com.dbc.vemser.sistemaaluguelveiculos.service.FuncionarioService;
 import br.com.dbc.vemser.sistemaaluguelveiculos.service.AuthService;
+import br.com.dbc.vemser.sistemaaluguelveiculos.service.FuncionarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +37,7 @@ public class AuthController {
     }
 
     @GetMapping
-    public ResponseEntity<LoginDTO> retornarId() throws RegraDeNegocioException {
+    public ResponseEntity<LoginDTO> retornarId() {
         return new ResponseEntity<>(funcionarioService.getLoggedUser(), HttpStatus.OK);
     }
 
@@ -52,9 +49,8 @@ public class AuthController {
 
     @PostMapping("/trocar-senha")
     public void trocarSenhaAuntenticado(@RequestBody @Valid UserSenhaDTO userSenhaDTO) throws RegraDeNegocioException {
-        String cpf = authService.procurarUsuario();
+        String cpf = authService.procurarUsuario(userSenhaDTO.getToken());
         funcionarioService.atualizarSenhaFuncionario(cpf, userSenhaDTO.getSenha());
-
         new ResponseEntity<>(null, HttpStatus.OK);
     }
 

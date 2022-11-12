@@ -11,16 +11,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final FuncionarioService funcionarioService;
-    private final TokenService tokenService;
     private final EmailService emailService;
     private final AuthenticationManager authenticationManager;
 
-    public FuncionarioEntity auth(LoginCreateDTO loginDTO){
+    private final PasswordService passwordService;
+
+    public FuncionarioEntity auth(LoginCreateDTO loginDTO) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(loginDTO.getCpf(),
                 loginDTO.getSenha());
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
@@ -28,20 +30,25 @@ public class AuthService {
         FuncionarioEntity funcionarioEntity = (FuncionarioEntity) principal;
         return funcionarioEntity;
     }
+
     public void trocarSenha(String cpf) throws RegraDeNegocioException {
         Optional<FuncionarioEntity> funcionarioEntity = funcionarioService.findByLogin(cpf);
-        if(funcionarioEntity.isEmpty()){
+        if (funcionarioEntity.isEmpty()) {
             throw new RegraDeNegocioException("Funcionario não existe");
         }
-        String token = tokenService.getToken(funcionarioEntity.get(),"15");
-        String base = "Olá "+funcionarioEntity.get().getNome()+" seu token para trocar de senha é: <br>"+token;
-        emailService.sendEmail(base,funcionarioEntity.get().getEmail());
+        String token = UUID.randomUUID().toString();
+        passwordService.createPasswordResetTokenForUser(funcionarioEntity.get(), token);
+        String base = "Olá " + funcionarioEntity.get().getNome() + " seu token para trocar de senha é: <br>" + token;
+        emailService.sendEmail(base, funcionarioEntity.get().getEmail());
     }
-    public String procurarUsuario() throws RegraDeNegocioException {
-        String cpf = funcionarioService.getIdLoggedUser();
+
+    public String procurarUsuario(String token) throws RegraDeNegocioException {
+        FuncionarioEntity funcionarioByToken = passwordService.findFuncionarioByToken(token);
+        /*String cpf = funcionarioService.getIdLoggedUser();
         if (cpf == null) {
             throw new RegraDeNegocioException("Erro ao procurar usuario");
         }
-        return cpf;
+         */
+        return funcionarioByToken.getCpf();
     }
 }
