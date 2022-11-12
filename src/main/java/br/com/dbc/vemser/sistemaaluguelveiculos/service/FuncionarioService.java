@@ -113,11 +113,10 @@ public class FuncionarioService {
         return converterEmDTO(funcionarioRepository.save(funcionarioEntity.get()));
     }
 
-    public FuncionarioDTO atualizarSenhaFuncionario(String cpf, String senha) {
+    public void atualizarSenhaFuncionario(String cpf, String senha) {
         Optional<FuncionarioEntity> funcionarioEntity = funcionarioRepository.findByCpf(cpf);
         funcionarioEntity.get().setSenha(passwordEncoder.encode(senha));
-        return converterEmDTO(funcionarioRepository.save(funcionarioEntity.get()));
-
+        converterEmDTO(funcionarioRepository.save(funcionarioEntity.get()));
     }
 
 

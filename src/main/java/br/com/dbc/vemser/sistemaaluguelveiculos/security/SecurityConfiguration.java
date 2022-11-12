@@ -32,14 +32,13 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests((authz) ->
                         authz.antMatchers("/auth/**").permitAll()
                                 .antMatchers(HttpMethod.GET,"/locacao/relatorio,locacao/relatorio-locacao").hasRole("ADMIN")
+                                .antMatchers(HttpMethod.POST,"/veiculo/**").hasRole("ADMIN")
                                 .antMatchers(HttpMethod.DELETE,"/**").hasRole("ADMIN")
                                 .antMatchers("/locacao/**").hasAnyRole("ADMIN","AUXILIAR")
-                                .antMatchers("/veiculo/**").hasRole("ADMIN")
                                 .anyRequest().authenticated());
         http.addFilterBefore(new TokenAuthenticationFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
