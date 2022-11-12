@@ -1,9 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioCreateDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LoginCreateDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LoginDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.FuncionarioEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.security.TokenService;
@@ -44,7 +41,7 @@ public class AuthController {
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
         Object principal = authentication.getPrincipal();
         FuncionarioEntity funcionarioEntity = (FuncionarioEntity) principal;
-        return tokenService.getToken(funcionarioEntity,null);
+        return tokenService.getToken(funcionarioEntity, null);
     }
 
     @GetMapping
@@ -65,13 +62,14 @@ public class AuthController {
     }
 
     @PostMapping("/trocar-senha")
-    public void trocarSenhaAuntenticado(@RequestBody @Valid String senha) throws RegraDeNegocioException {
+    public void trocarSenhaAuntenticado(@RequestBody @Valid UserSenhaDTO userSenhaDTO) throws RegraDeNegocioException {
         String cpf = funcionarioService.getIdLoggedUser();
-        if(cpf==null){
+        if (cpf == null) {
             throw new RegraDeNegocioException("Erro ao procurar usuario");
         }
-        funcionarioService.atualizarSenhaFuncionario(cpf,senha);
-        new ResponseEntity<>(null,HttpStatus.OK);
+      funcionarioService.atualizarSenhaFuncionario(cpf, userSenhaDTO.getSenha());
+
+        new ResponseEntity<>(null, HttpStatus.OK);
     }
 
 }

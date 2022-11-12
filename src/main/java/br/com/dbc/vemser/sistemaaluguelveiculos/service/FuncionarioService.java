@@ -2,7 +2,6 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LoginCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LoginDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.CargoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.FuncionarioEntity;
@@ -10,9 +9,6 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioExcepti
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.FuncionarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -81,7 +77,7 @@ public class FuncionarioService {
         FuncionarioDTO funcionarioDTO = new FuncionarioDTO(funcionarioEntity.getIdFuncionario(),
                 funcionarioEntity.getNome(),
                 funcionarioEntity.getCpf(),
-                funcionarioEntity.getEmail(),funcionarioEntity.getMatricula());
+                funcionarioEntity.getEmail(), funcionarioEntity.getMatricula());
         return funcionarioDTO;
     }
 
@@ -98,7 +94,7 @@ public class FuncionarioService {
     public Optional<FuncionarioEntity> findByLogin(String cpf) {
         //não está retornando o cargo do banco de dados
         Optional<FuncionarioEntity> funcionarioEntity = funcionarioRepository.findByCpf(cpf);
-       // CargoEntity cargoEntity = cargoService.findByIdCargo(1);//testando se funciona a injeção
+        // CargoEntity cargoEntity = cargoService.findByIdCargo(1);//testando se funciona a injeção
         return funcionarioEntity;
     }
 
@@ -106,20 +102,20 @@ public class FuncionarioService {
         return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
     }
 
-    public LoginDTO getLoggedUser() throws RegraDeNegocioException{
+    public LoginDTO getLoggedUser() throws RegraDeNegocioException {
         Optional<FuncionarioEntity> funcionarioEntity = findByLogin(getIdLoggedUser());
         LoginDTO loginDTO = objectMapper.convertValue(funcionarioEntity.get(), LoginDTO.class);
         loginDTO.setCargoNome(funcionarioEntity.get().getCargoEntity().getNome());
         return loginDTO;
     }
 
-    public FuncionarioDTO setAtivoFuncionario(Integer idFuncionario,char ativo) throws RegraDeNegocioException {
+    public FuncionarioDTO setAtivoFuncionario(Integer idFuncionario, char ativo) throws RegraDeNegocioException {
         Optional<FuncionarioEntity> funcionarioEntity = funcionarioRepository.findById(idFuncionario);
         funcionarioEntity.get().setAtivo(ativo);
         return converterEmDTO(funcionarioRepository.save(funcionarioEntity.get()));
     }
 
-    public FuncionarioDTO atualizarSenhaFuncionario(String cpf,String senha){
+    public FuncionarioDTO atualizarSenhaFuncionario(String cpf, String senha) {
         Optional<FuncionarioEntity> funcionarioEntity = funcionarioRepository.findByCpf(cpf);
         funcionarioEntity.get().setSenha(passwordEncoder.encode(senha));
         return converterEmDTO(funcionarioRepository.save(funcionarioEntity.get()));

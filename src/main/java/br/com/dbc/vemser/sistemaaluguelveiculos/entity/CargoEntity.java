@@ -1,5 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.entity;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.UserSenhaDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +25,6 @@ public class CargoEntity implements GrantedAuthority {
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cargoEntity")
     private Set<FuncionarioEntity> funcionariosEntities;
-
 
     @Override
     public String getAuthority() {
