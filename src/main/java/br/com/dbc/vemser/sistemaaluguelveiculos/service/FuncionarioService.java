@@ -92,9 +92,7 @@ public class FuncionarioService {
     }
 
     public Optional<FuncionarioEntity> findByLogin(String cpf) {
-        //não está retornando o cargo do banco de dados
         Optional<FuncionarioEntity> funcionarioEntity = funcionarioRepository.findByCpf(cpf);
-        // CargoEntity cargoEntity = cargoService.findByIdCargo(1);//testando se funciona a injeção
         return funcionarioEntity;
     }
 
@@ -102,14 +100,14 @@ public class FuncionarioService {
         return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
     }
 
-    public LoginDTO getLoggedUser() throws RegraDeNegocioException {
+    public LoginDTO getLoggedUser(){
         Optional<FuncionarioEntity> funcionarioEntity = findByLogin(getIdLoggedUser());
         LoginDTO loginDTO = objectMapper.convertValue(funcionarioEntity.get(), LoginDTO.class);
         loginDTO.setCargoNome(funcionarioEntity.get().getCargoEntity().getNome());
         return loginDTO;
     }
 
-    public FuncionarioDTO setAtivoFuncionario(Integer idFuncionario, char ativo) throws RegraDeNegocioException {
+    public FuncionarioDTO setAtivoFuncionario(Integer idFuncionario, char ativo) {
         Optional<FuncionarioEntity> funcionarioEntity = funcionarioRepository.findById(idFuncionario);
         funcionarioEntity.get().setAtivo(ativo);
         return converterEmDTO(funcionarioRepository.save(funcionarioEntity.get()));

@@ -48,7 +48,7 @@ public class TokenService {
     }
 
     public UsernamePasswordAuthenticationToken isValid(String token) {
-        // FIXME validar se o token é válido e retornar o usuário se for válido
+        // validar se o token é válido e retornar o usuário se for válido
         if (token == null) {
             return null;
         }
@@ -62,9 +62,7 @@ public class TokenService {
 
         String cargo = claims.get(KEY_CARGOS, String.class);
 
-       // List<SimpleGrantedAuthority> listaDeCargos = cargos.stream()
-       //         .map(SimpleGrantedAuthority::new)
-       //         .toList();
+
         SimpleGrantedAuthority cargoSimple = new SimpleGrantedAuthority(cargo);
         return new UsernamePasswordAuthenticationToken(user, null, Collections.singleton(cargoSimple));
     }

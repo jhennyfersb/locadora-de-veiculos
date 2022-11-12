@@ -3,6 +3,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,7 +31,10 @@ public class SecurityConfiguration {
                 .csrf().disable()
                 .authorizeHttpRequests((authz) ->
                         authz.antMatchers("/auth/**").permitAll()
-                                .antMatchers("/locacao/**").hasRole("ADMIN")
+                                .antMatchers(HttpMethod.GET,"/locacao/relatorio,locacao/relatorio-locacao").hasRole("ADMIN")
+                                .antMatchers(HttpMethod.DELETE,"/**").hasRole("ADMIN")
+                                .antMatchers("/locacao/**").hasAnyRole("ADMIN","AUXILIAR")
+                                .antMatchers("/veiculo/**").hasRole("ADMIN")
                                 .anyRequest().authenticated());
         http.addFilterBefore(new TokenAuthenticationFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
         return http.build();

@@ -46,7 +46,6 @@ public class AuthController {
 
     @PostMapping("/solicitar-troca-senha/{cpf}")
     public void trocarSenha(@PathVariable("cpf")String cpf) throws RegraDeNegocioException {
-
         authService.trocarSenha(cpf);
         new ResponseEntity<>(null, HttpStatus.OK);
     }
@@ -55,6 +54,7 @@ public class AuthController {
     public void trocarSenhaAuntenticado(@RequestBody @Valid UserSenhaDTO userSenhaDTO) throws RegraDeNegocioException {
         String cpf = authService.procurarUsuario();
         funcionarioService.atualizarSenhaFuncionario(cpf, userSenhaDTO.getSenha());
+
         new ResponseEntity<>(null, HttpStatus.OK);
     }
 
