@@ -1,7 +1,9 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.security;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.FuncionarioEntity;
+import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.InvalidTokenException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
@@ -86,5 +88,18 @@ public class TokenService {
 
         SimpleGrantedAuthority cargoSimple = new SimpleGrantedAuthority(cargo);
         return new UsernamePasswordAuthenticationToken(user, null, Collections.singleton(cargoSimple));
+    }
+
+    public String getCpfByToken(String token) throws InvalidTokenException {
+        token = token.replace("Bearer ", "");
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(secret)
+                    .parseClaimsJws(token)
+                    .getBody();
+            return claims.get(Claims.ID, String.class);
+        } catch (ExpiredJwtException exception) {
+            throw new InvalidTokenException("Token Expirado");
+        }
     }
 }
