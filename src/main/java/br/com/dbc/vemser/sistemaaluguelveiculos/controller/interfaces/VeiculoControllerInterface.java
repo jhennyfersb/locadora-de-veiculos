@@ -1,5 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LoginCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.PageDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoDTO;

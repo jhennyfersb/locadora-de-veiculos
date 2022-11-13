@@ -1,5 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces.AuthControllerInterface;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LoginCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LoginDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.UserSenhaDTO;
@@ -20,7 +21,7 @@ import javax.validation.Valid;
 @RequestMapping("/auth")
 @Validated
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthController implements AuthControllerInterface {
     private final FuncionarioService funcionarioService;
     private final TokenService tokenService;
     private final AuthService authService;
@@ -33,7 +34,7 @@ public class AuthController {
     }
 
     @GetMapping
-    public ResponseEntity<LoginDTO> retornarId() {
+    public ResponseEntity<LoginDTO> retornarUsuarioLogado() {
         return new ResponseEntity<>(funcionarioService.getLoggedUser(), HttpStatus.OK);
     }
 
