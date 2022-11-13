@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class CargoService {
     private final CargoRepository cargoRepository;
 
-    public CargoEntity findByIdCargo(Integer idCargo){
+    public CargoEntity findByIdCargo(Integer idCargo) {
         return cargoRepository.findByIdCargo(idCargo);
     }
 

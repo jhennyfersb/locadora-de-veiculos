@@ -96,6 +96,5 @@ public class EnderecoService {
                 pagina,
                 tamanho,
                 dto);
-
     }
 }

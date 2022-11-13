@@ -25,36 +25,24 @@ public class ClienteService {
         ClienteEntity clienteEntity = converterEntity(cliente);
         return converterEmDTO(clienteRepository.save(clienteEntity));
 
-
     }
 
     public ClienteDTO update(Integer idCliente, ClienteCreateDTO cliente) throws RegraDeNegocioException {
-
         this.findById(idCliente);
-
         ClienteEntity clienteEntity = converterEntity(cliente);
         clienteEntity.setIdCliente(idCliente);
         return converterEmDTO(clienteRepository.save(clienteEntity));
-
-
     }
 
     public void delete(Integer idCliente) throws RegraDeNegocioException {
-
         this.findById(idCliente);
-
         clienteRepository.deleteById(idCliente);
-
-
     }
 
     public List<ClienteDTO> list() throws RegraDeNegocioException {
-
         return clienteRepository.findAll().stream()
                 .map(cliente -> objectMapper.convertValue(cliente, ClienteDTO.class))
                 .collect(Collectors.toList());
-
-
     }
 
     public ClienteEntity converterEntity(ClienteCreateDTO clienteCreateDTO) {
@@ -72,9 +60,7 @@ public class ClienteService {
             throw new RegraDeNegocioException("Cliente não encontrado");
         }
         return objectMapper.convertValue(clienteEntityRecuperado, ClienteDTO.class);
-
     }
-
     public List<RelatorioClienteDTO> relatorioCliente(Integer idCliente) {
         return clienteRepository.relatorioCliente(idCliente);
     }

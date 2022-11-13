@@ -100,7 +100,7 @@ public class FuncionarioService {
         return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
     }
 
-    public LoginDTO getLoggedUser(){
+    public LoginDTO getLoggedUser() {
         Optional<FuncionarioEntity> funcionarioEntity = findByLogin(getIdLoggedUser());
         LoginDTO loginDTO = objectMapper.convertValue(funcionarioEntity.get(), LoginDTO.class);
         loginDTO.setCargoNome(funcionarioEntity.get().getCargoEntity().getNome());

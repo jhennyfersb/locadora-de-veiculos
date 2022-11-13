@@ -1,7 +1,5 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.FuncionarioEntity;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.LocacaoEntity;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
@@ -35,16 +33,15 @@ public class EmailService {
 
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         Map<String, Object> dados = new HashMap<>();
-        dados.put("base",base);
-        dados.put("email",from);
+        dados.put("base", base);
+        dados.put("email", from);
         try {
             TO = destinatario;
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
             mimeMessageHelper.setFrom(from);
             mimeMessageHelper.setTo(destinatario);
-            mimeMessageHelper.setSubject("Troca de senha");
+            mimeMessageHelper.setSubject("Aluguel de Veiculos");
             mimeMessageHelper.setText(geContentFromTemplate(dados, "email-template.ftl"), true);
-
             emailSender.send(mimeMessageHelper.getMimeMessage());
 
         } catch (MessagingException | IOException | TemplateException e) {
@@ -52,7 +49,8 @@ public class EmailService {
         }
     }
 
-    public String geContentFromTemplate(Map<String, Object> dados, String templateName) throws IOException, TemplateException {
+    public String geContentFromTemplate(Map<String, Object> dados,
+                                        String templateName) throws IOException, TemplateException {
         Template template = fmConfiguration.getTemplate(templateName);
         return FreeMarkerTemplateUtils.processTemplateIntoString(template, dados);
     }

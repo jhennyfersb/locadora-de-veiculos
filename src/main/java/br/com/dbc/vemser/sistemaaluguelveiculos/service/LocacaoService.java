@@ -35,17 +35,17 @@ public class LocacaoService {
         LocacaoEntity locacaoEntity = criarLocacaoAPartirDeIds(locacaoCreateDTO);
         LocacaoEntity locacaoSave = locacaoRepository.save(locacaoEntity);
 
-        String base = "Olá, Você acaba de realizar uma locação.<br>"+
-                "Dados da locacação:<br>"+
-                "O identicador da locação é "+locacaoSave.getIdLocacao()+".<br>"+
-                "Valor da Locação: "+locacaoSave.getValorLocacao()+".<br>"+
-                "O veiculo é um "+locacaoSave.getVeiculoEntity().getModelo()+
-                " da marca "+locacaoSave.getVeiculoEntity().getMarca()+
-                " de placa  "+locacaoSave.getVeiculoEntity().getPlaca()+"<br>"+
-                "Data da locação é "+locacaoSave.getDataLocacao()+".<br>"+
-                "Data de devolução "+locacaoSave.getDataDevolucao()+"<br>";
+        String base = "Olá, Você acaba de realizar uma locação.<br>" +
+                "Dados da locacação:<br>" +
+                "O identicador da locação é " + locacaoSave.getIdLocacao() + ".<br>" +
+                "Valor da Locação: " + locacaoSave.getValorLocacao() + ".<br>" +
+                "O veiculo é um " + locacaoSave.getVeiculoEntity().getModelo() +
+                " da marca " + locacaoSave.getVeiculoEntity().getMarca() +
+                " de placa  " + locacaoSave.getVeiculoEntity().getPlaca() + "<br>" +
+                "Data da locação é " + locacaoSave.getDataLocacao() + ".<br>" +
+                "Data de devolução " + locacaoSave.getDataDevolucao() + "<br>";
 
-        emailService.sendEmail(base,locacaoSave.getFuncionarioEntity().getEmail());
+        emailService.sendEmail(base, locacaoSave.getFuncionarioEntity().getEmail());
         return converterEmDTO(locacaoSave);
     }
 
@@ -71,7 +71,8 @@ public class LocacaoService {
 
     public LocacaoDTO update(Integer id, LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
 
-        FuncionarioDTO funcionarioDTO = funcionarioService.findById(locacaoCreateDTO.getIdFuncionario());
+        FuncionarioDTO funcionarioDTO = funcionarioService
+                .converterEmDTO(funcionarioRepository.findByCpf(funcionarioService.getIdLoggedUser()).get());
         ClienteDTO clienteDTO = clienteService.findById(locacaoCreateDTO.getIdCliente());
         VeiculoDTO veiculoDTO = veiculoService.findById(locacaoCreateDTO.getIdVeiculo());
 
@@ -119,7 +120,7 @@ public class LocacaoService {
     public LocacaoEntity criarLocacaoAPartirDeIds(LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
 
         try {
-            Optional<FuncionarioEntity> funcionarioEntity = funcionarioRepository.findById(locacaoCreateDTO.getIdFuncionario());
+            Optional<FuncionarioEntity> funcionarioEntity = funcionarioRepository.findByCpf(funcionarioService.getIdLoggedUser());
             if (funcionarioEntity.isEmpty()) {
                 throw new RegraDeNegocioException("Funcionário não encontrado.");
             }
@@ -151,7 +152,8 @@ public class LocacaoService {
                     cartaoCreditoEntity.get(),
                     funcionarioEntity.get());
 
-            Duration d2 = Duration.between(locacaoEntity.getDataLocacao().atStartOfDay(), locacaoEntity.getDataDevolucao().atStartOfDay());
+            Duration d2 = Duration.between(locacaoEntity.getDataLocacao().atStartOfDay(),
+                    locacaoEntity.getDataDevolucao().atStartOfDay());
             locacaoEntity.setValorLocacao(d2.toDays() * locacaoEntity.getVeiculoEntity().getValorLocacao());
             locacaoEntity.getVeiculoEntity().alterarDisponibilidadeVeiculo();
 
@@ -177,8 +179,9 @@ public class LocacaoService {
                 funcionarioDTO);
     }
 
-
-    public List<RelatorioLocacaoDTO> listarRelatoriosLocacao(Integer idCliente, Integer idVeiculo, Integer idFuncionario) {
+    public List<RelatorioLocacaoDTO> listarRelatoriosLocacao(Integer idCliente,
+                                                             Integer idVeiculo,
+                                                             Integer idFuncionario) {
         return locacaoRepository.listarRelatoriosLocacao(idCliente, idVeiculo, idFuncionario);
     }
 

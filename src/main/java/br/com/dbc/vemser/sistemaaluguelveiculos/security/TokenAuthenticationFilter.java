@@ -19,12 +19,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        // FIXME recuperar token do header
-        // FIXME recuperar usuário do token
-        // FIXME adicionar o usuário no contexto do spring security
+
         String headerAut = request.getHeader("Authorization");
 
-        //validacao token
         UsernamePasswordAuthenticationToken isValid = tokenService.isValid(headerAut);
 
         SecurityContextHolder.getContext().setAuthentication(isValid);

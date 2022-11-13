@@ -90,6 +90,6 @@ public class FuncionarioEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return ativo=='T';
+        return ativo == 'T';
     }
 }

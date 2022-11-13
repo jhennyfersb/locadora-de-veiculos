@@ -1,6 +1,5 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.entity;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.UserSenhaDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;

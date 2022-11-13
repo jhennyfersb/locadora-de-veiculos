@@ -32,8 +32,8 @@ public class TokenService {
     @Value("${jwt.expirationSenha}")
     private String expirationSenha;
 
-    public String getToken(FuncionarioEntity funcionarioEntity,String expiration) {
-        if(expiration != null){
+    public String getToken(FuncionarioEntity funcionarioEntity, String expiration) {
+        if (expiration != null) {
             this.expiration = expiration;
         }
         LocalDateTime localDateTimeAtual = LocalDateTime.now();
@@ -51,8 +51,9 @@ public class TokenService {
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }
-    public String getTokenSenha(FuncionarioEntity funcionarioEntity,String expirationSenha) {
-        if(expirationSenha != null){
+
+    public String getTokenSenha(FuncionarioEntity funcionarioEntity, String expirationSenha) {
+        if (expirationSenha != null) {
             this.expirationSenha = expirationSenha;
         }
         LocalDateTime localDateTimeAtual = LocalDateTime.now();
@@ -71,7 +72,6 @@ public class TokenService {
     }
 
     public UsernamePasswordAuthenticationToken isValid(String token) {
-        // validar se o token é válido e retornar o usuário se for válido
         if (token == null) {
             return null;
         }

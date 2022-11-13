@@ -37,7 +37,5 @@ public class LocacaoCreateDTO {
     @Schema(description = "Id Cartão de crédito da locação.")
     private Integer idCartaoCredito;
 
-    @NotNull
-    @Schema(description = "Id Cartão da locação.")
-    private Integer idFuncionario;
+
 }

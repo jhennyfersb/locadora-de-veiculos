@@ -42,7 +42,6 @@ public class CartaoCreditoService {
         return cartaoCreditoRepository.findAll().stream()
                 .map(this::converterEmDTO)
                 .collect(Collectors.toList());
-
     }
 
     public CartaoCreditoEntity converterEntity(CartaoCreditoCreateDTO cartaoCreditoCreateDTO) {

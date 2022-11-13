@@ -30,11 +30,11 @@ public class SecurityConfiguration {
                 .cors().and()
                 .csrf().disable()
                 .authorizeHttpRequests((authz) ->
-                        authz.antMatchers("/auth/**").permitAll()
-                                .antMatchers(HttpMethod.GET,"/locacao/relatorio,locacao/relatorio-locacao").hasRole("ADMIN")
-                                .antMatchers(HttpMethod.POST,"/veiculo/**").hasRole("ADMIN")
-                                .antMatchers(HttpMethod.DELETE,"/**").hasRole("ADMIN")
-                                .antMatchers("/locacao/**").hasAnyRole("ADMIN","AUXILIAR")
+                        authz.antMatchers(HttpMethod.POST, "/auth/**").permitAll()
+                                .antMatchers(HttpMethod.GET, "/auth").hasAnyRole("ADMIN", "AUXILIAR")
+                                .antMatchers(HttpMethod.POST, "/veiculo/**").hasRole("ADMIN")
+                                .antMatchers(HttpMethod.DELETE, "/**").hasRole("ADMIN")
+                                .antMatchers("/funcionario/**").hasAnyRole("ADMIN")
                                 .anyRequest().authenticated());
         http.addFilterBefore(new TokenAuthenticationFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
@@ -48,7 +48,6 @@ public class SecurityConfiguration {
                 "/swagger-resources/**",
                 "/swagger-ui/**");
     }
-
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -68,7 +67,8 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager
+            (AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }

@@ -61,7 +61,7 @@ public class FuncionarioController implements FuncionarioControllerInterface {
     @PutMapping("/ativar-funcionario/{idFuncionario}")
     public ResponseEntity<FuncionarioDTO> ativarFuncionario(@PathVariable("idFuncionario") Integer id) throws RegraDeNegocioException {
         log.info("Atualizando funcionário...");
-        FuncionarioDTO funcionarioDTO = funcionarioService.setAtivoFuncionario(id,'T');
+        FuncionarioDTO funcionarioDTO = funcionarioService.setAtivoFuncionario(id, 'T');
         log.info("Funcionário ATIVO!");
         return new ResponseEntity<>(funcionarioDTO, HttpStatus.OK);
     }
@@ -69,7 +69,7 @@ public class FuncionarioController implements FuncionarioControllerInterface {
     @PutMapping("/desativar-funcionario/{idFuncionario}")
     public ResponseEntity<FuncionarioDTO> desativarFuncionario(@PathVariable("idFuncionario") Integer id) throws RegraDeNegocioException {
         log.info("Atualizando funcionário...");
-        FuncionarioDTO funcionarioDTO = funcionarioService.setAtivoFuncionario(id,'F');
+        FuncionarioDTO funcionarioDTO = funcionarioService.setAtivoFuncionario(id, 'F');
         log.info("Funcionário DESATIVADO!");
         return new ResponseEntity<>(funcionarioDTO, HttpStatus.OK);
     }
