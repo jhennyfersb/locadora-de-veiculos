@@ -61,7 +61,6 @@ public class TokenService {
         LocalDateTime dateExpiracaoLocalDate = localDateTimeAtual.plusMinutes(Long.parseLong(this.expirationSenha));
         Date expiracao = Date.from(dateExpiracaoLocalDate.atZone(ZoneId.systemDefault()).toInstant());
 
-
         return Jwts.builder().
                 setIssuer("vemser-api")
                 .claim(Claims.ID, funcionarioEntity.getCpf())

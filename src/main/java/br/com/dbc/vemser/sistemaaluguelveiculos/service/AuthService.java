@@ -45,7 +45,8 @@ public class AuthService {
     }
 
     public String procurarUsuario(String token) throws RegraDeNegocioException {
-        return funcionarioService.findByLogin(tokenService.getCpfByToken(token)).get().getCpf();
+        String cpfByToken = tokenService.getCpfByToken(token);
+        return funcionarioService.findByLogin(cpfByToken).get().getCpf();
     }
 
 }

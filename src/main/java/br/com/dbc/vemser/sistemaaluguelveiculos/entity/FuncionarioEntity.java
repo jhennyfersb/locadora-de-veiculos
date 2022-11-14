@@ -73,18 +73,17 @@ public class FuncionarioEntity implements UserDetails {
     @Override
     public boolean isAccountNonExpired() {
         return true;
-        // return expired=="F";
+
     }
 
     @Override
     public boolean isAccountNonLocked() {
-//        return locked=="F";
         return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-//        return true;
+
         return true;
     }
 
