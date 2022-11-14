@@ -36,6 +36,7 @@ public class FuncionarioService {
         funcionarioEntity.setCargoEntity(cargoFuncionario);
         String encode = passwordEncoder.encode(funcionarioEntity.getPassword());
         funcionarioEntity.setSenha(encode);
+        funcionarioEntity.setAtivo('T');
         return converterEmDTO(funcionarioRepository.save(funcionarioEntity));
     }
 
@@ -48,13 +49,14 @@ public class FuncionarioService {
 
     public FuncionarioDTO update(Integer id, FuncionarioCreateDTO funcionario) throws RegraDeNegocioException {
 
-        this.findById(id);
+        FuncionarioEntity funcionarioEntity1 = funcionarioRepository.getById(id);
         FuncionarioEntity funcionarioEntity = converterEntity(funcionario);
         funcionarioEntity.setIdFuncionario(id);
         CargoEntity cargoFuncionario = cargoService.findByIdCargo(funcionario.getIdCargo());
         funcionarioEntity.setCargoEntity(cargoFuncionario);
         String encode = passwordEncoder.encode(funcionarioEntity.getPassword());
         funcionarioEntity.setSenha(encode);
+        funcionarioEntity.setAtivo(funcionarioEntity1.getAtivo());
         return converterEmDTO(funcionarioRepository.save(funcionarioEntity));
 
     }
