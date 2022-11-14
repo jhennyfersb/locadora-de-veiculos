@@ -120,7 +120,8 @@ public class LocacaoService {
     public LocacaoEntity criarLocacaoAPartirDeIds(LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
 
         try {
-            Optional<FuncionarioEntity> funcionarioEntity = funcionarioRepository.findByCpf(funcionarioService.getIdLoggedUser());
+            Optional<FuncionarioEntity> funcionarioEntity = funcionarioRepository
+                    .findByCpf(funcionarioService.getIdLoggedUser());
             if (funcionarioEntity.isEmpty()) {
                 throw new RegraDeNegocioException("Funcionário não encontrado.");
             }

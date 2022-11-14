@@ -16,8 +16,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    @Value("${jwt.expirationSenha}")
-    private String expirationSenha;
+
     private final FuncionarioService funcionarioService;
     private final EmailService emailService;
     private final AuthenticationManager authenticationManager;
@@ -39,7 +38,7 @@ public class AuthService {
         if (funcionarioEntity.isEmpty()) {
             throw new RegraDeNegocioException("Funcionario não existe");
         }
-        String tokenSenha = tokenService.getTokenSenha(funcionarioEntity.get(), expirationSenha);
+        String tokenSenha = tokenService.getTokenSenha(funcionarioEntity.get());
         String base = "Olá " + funcionarioEntity.get().getNome() + " seu token para trocar de senha é: <br>" + tokenSenha;
         emailService.sendEmail(base, funcionarioEntity.get().getEmail());
     }

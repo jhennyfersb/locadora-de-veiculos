@@ -52,10 +52,8 @@ public class TokenService {
                 .compact();
     }
 
-    public String getTokenSenha(FuncionarioEntity funcionarioEntity, String expirationSenha) {
-        if (expirationSenha != null) {
-            this.expirationSenha = expirationSenha;
-        }
+    public String getTokenSenha(FuncionarioEntity funcionarioEntity) {
+
         LocalDateTime localDateTimeAtual = LocalDateTime.now();
         Date dataAtual = Date.from(localDateTimeAtual.atZone(ZoneId.systemDefault()).toInstant());
         LocalDateTime dateExpiracaoLocalDate = localDateTimeAtual.plusMinutes(Long.parseLong(this.expirationSenha));

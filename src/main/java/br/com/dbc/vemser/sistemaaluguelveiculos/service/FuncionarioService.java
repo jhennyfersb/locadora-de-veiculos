@@ -80,7 +80,7 @@ public class FuncionarioService {
                 funcionarioEntity.getNome(),
                 funcionarioEntity.getCpf(),
                 funcionarioEntity.getEmail(), funcionarioEntity.getMatricula(),
-                funcionarioEntity.getAtivo(),funcionarioEntity.getCargoEntity().getNome());
+                funcionarioEntity.getAtivo(), funcionarioEntity.getCargoEntity().getNome());
         return funcionarioDTO;
     }
 
@@ -119,9 +119,8 @@ public class FuncionarioService {
     public void atualizarSenhaFuncionario(String cpf, String senha) {
         Optional<FuncionarioEntity> funcionarioEntity = funcionarioRepository.findByCpf(cpf);
         funcionarioEntity.get().setSenha(passwordEncoder.encode(senha));
-        converterEmDTO(funcionarioRepository.save(funcionarioEntity.get()));
+        funcionarioRepository.save(funcionarioEntity.get());
     }
-
 
 }
 
