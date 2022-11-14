@@ -79,7 +79,8 @@ public class FuncionarioService {
         FuncionarioDTO funcionarioDTO = new FuncionarioDTO(funcionarioEntity.getIdFuncionario(),
                 funcionarioEntity.getNome(),
                 funcionarioEntity.getCpf(),
-                funcionarioEntity.getEmail(), funcionarioEntity.getMatricula());
+                funcionarioEntity.getEmail(), funcionarioEntity.getMatricula(),
+                funcionarioEntity.getAtivo(),funcionarioEntity.getCargoEntity().getNome());
         return funcionarioDTO;
     }
 

@@ -1,5 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.dto;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.CargoEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,6 +33,10 @@ public class FuncionarioDTO {
     @NotNull
     @Schema(description = "Número de matrícula do funcionário.", example = "8")
     private Integer matricula;
+    @Schema(description = "Status do funcionario", example = "T")
+    private char ativo;
+    @Schema(description = "Cargo do funcionario", example = "ROLE_ADMIN")
+    private String cargo;
 
 
 }
