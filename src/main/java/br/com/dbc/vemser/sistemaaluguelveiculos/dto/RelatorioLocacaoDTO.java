@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 
+@Document(collection = "locacoes")
 @AllArgsConstructor
 @Getter
 @Setter
@@ -14,9 +16,7 @@ import java.time.LocalDate;
 public class RelatorioLocacaoDTO {
     private String nomeCliente;
     private String cpfCliente;
-    private String telefone;
     private String email;
-    private String cidade;
     private LocalDate dataLocacao;
     private LocalDate dataDevolucao;
     private double valor;

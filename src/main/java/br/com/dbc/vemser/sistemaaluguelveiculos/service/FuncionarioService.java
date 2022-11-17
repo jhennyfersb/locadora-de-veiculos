@@ -2,9 +2,12 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LogCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LoginDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.CargoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.FuncionarioEntity;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.EntityLog;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.TipoLog;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.FuncionarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +27,7 @@ public class FuncionarioService {
     private final ObjectMapper objectMapper;
     private final PasswordEncoder passwordEncoder;
     private final CargoService cargoService;
+    private final LogService logService;
 
 
     public FuncionarioDTO create(FuncionarioCreateDTO funcionario) throws RegraDeNegocioException {
@@ -37,13 +41,18 @@ public class FuncionarioService {
         String encode = passwordEncoder.encode(funcionarioEntity.getPassword());
         funcionarioEntity.setSenha(encode);
         funcionarioEntity.setAtivo('T');
-        return converterEmDTO(funcionarioRepository.save(funcionarioEntity));
+        FuncionarioDTO funcionarioDTO = converterEmDTO(funcionarioRepository.save(funcionarioEntity));
+        String cpfFuncionario = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        logService.salvarLog(new LogCreateDTO(TipoLog.CREATE,"CPF logado: "+cpfFuncionario, EntityLog.FUNCIONARIO));
+        return funcionarioDTO;
     }
 
     public void delete(Integer id) throws RegraDeNegocioException {
 
-        this.findById(id);
+        this.findById(id, false);
         funcionarioRepository.deleteById(id);
+        String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        logService.salvarLog(new LogCreateDTO(TipoLog.DELETE,"CPF logado: "+cpf, EntityLog.FUNCIONARIO));
 
     }
 
@@ -57,13 +66,18 @@ public class FuncionarioService {
         String encode = passwordEncoder.encode(funcionarioEntity.getPassword());
         funcionarioEntity.setSenha(encode);
         funcionarioEntity.setAtivo(funcionarioEntity1.getAtivo());
-        return converterEmDTO(funcionarioRepository.save(funcionarioEntity));
+        FuncionarioDTO funcionarioDTO = converterEmDTO(funcionarioRepository.save(funcionarioEntity));
+        String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        logService.salvarLog(new LogCreateDTO(TipoLog.UPDATE,"CPF logado: "+cpf, EntityLog.FUNCIONARIO));
+        return funcionarioDTO;
 
     }
 
     public List<FuncionarioDTO> list() throws RegraDeNegocioException {
 
         List<FuncionarioEntity> listar = funcionarioRepository.findAll();
+        String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        logService.salvarLog(new LogCreateDTO(TipoLog.READ,"CPF logado: "+cpf, EntityLog.FUNCIONARIO));
         return listar
                 .stream()
                 .map(this::converterEmDTO)
@@ -84,12 +98,16 @@ public class FuncionarioService {
         return funcionarioDTO;
     }
 
-    public FuncionarioDTO findById(Integer id) throws RegraDeNegocioException {
+    public FuncionarioDTO findById(Integer id, boolean gerarLog) throws RegraDeNegocioException {
 
         Optional<FuncionarioEntity> funcionarioEntityRecuperado = funcionarioRepository.findById(id);
 
         if (funcionarioEntityRecuperado.isEmpty()) {
             throw new RegraDeNegocioException("Funcionario não encontrado");
+        }
+        if(gerarLog){
+            String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+            logService.salvarLog(new LogCreateDTO(TipoLog.READ,"CPF logado: "+cpf, EntityLog.FUNCIONARIO));
         }
         return converterEmDTO(funcionarioEntityRecuperado.get());
     }
@@ -120,6 +138,8 @@ public class FuncionarioService {
         Optional<FuncionarioEntity> funcionarioEntity = funcionarioRepository.findByCpf(cpf);
         funcionarioEntity.get().setSenha(passwordEncoder.encode(senha));
         funcionarioRepository.save(funcionarioEntity.get());
+        String cpfFuncionario = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        logService.salvarLog(new LogCreateDTO(TipoLog.UPDATE,"CPF logado: "+cpfFuncionario, EntityLog.FUNCIONARIO));
     }
 
 }

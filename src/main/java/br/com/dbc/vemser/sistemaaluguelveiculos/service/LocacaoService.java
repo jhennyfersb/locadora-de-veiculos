@@ -3,10 +3,13 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.DisponibilidadeVeiculo;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.EntityLog;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.TipoLog;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
@@ -23,6 +26,7 @@ public class LocacaoService {
     private final ClienteRepository clienteRepository;
     private final CartaoCreditoRepository cartaoCreditoRepository;
     private final VeiculoRepository veiculoRepository;
+    private final RelatorioLocacaoRepository relatorioLocacaoRepository;
     private final FuncionarioService funcionarioService;
     private final ClienteService clienteService;
     private final VeiculoService veiculoService;
@@ -30,6 +34,7 @@ public class LocacaoService {
 
     private final ObjectMapper objectMapper;
     private final EmailService emailService;
+    private final LogService logService;
 
     public LocacaoDTO create(LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
         LocacaoEntity locacaoEntity = criarLocacaoAPartirDeIds(locacaoCreateDTO);
@@ -46,23 +51,49 @@ public class LocacaoService {
                 "Data de devolução " + locacaoSave.getDataDevolucao() + "<br>";
 
         emailService.sendEmail(base, locacaoSave.getFuncionarioEntity().getEmail());
+
+        RelatorioLocacaoDTO relatorioLocacaoDTO = new RelatorioLocacaoDTO();
+
+        relatorioLocacaoDTO.setNomeCliente(locacaoSave.getClienteEntity().getNome());
+        relatorioLocacaoDTO.setCpfCliente(locacaoSave.getClienteEntity().getCpf());
+        relatorioLocacaoDTO.setEmail(locacaoSave.getFuncionarioEntity().getEmail());
+        relatorioLocacaoDTO.setDataLocacao(locacaoSave.getDataLocacao());
+        relatorioLocacaoDTO.setDataDevolucao(locacaoSave.getDataDevolucao());
+        relatorioLocacaoDTO.setValor(locacaoSave.getValorLocacao());
+        relatorioLocacaoDTO.setMarca(locacaoSave.getVeiculoEntity().getMarca());
+        relatorioLocacaoDTO.setModelo(locacaoSave.getVeiculoEntity().getModelo());
+        relatorioLocacaoDTO.setCor(locacaoSave.getVeiculoEntity().getCor());
+        relatorioLocacaoDTO.setAno(locacaoSave.getVeiculoEntity().getAno());
+        relatorioLocacaoDTO.setPlaca(locacaoSave.getVeiculoEntity().getPlaca());
+        relatorioLocacaoDTO.setQuilometragem(locacaoSave.getVeiculoEntity().getQuilometragem());
+        relatorioLocacaoDTO.setNomeFuncionario(locacaoSave.getFuncionarioEntity().getNome());
+
+
+        relatorioLocacaoRepository.save(relatorioLocacaoDTO);
+        String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        logService.salvarLog(new LogCreateDTO(TipoLog.CREATE,"CPF logado: "+cpf, EntityLog.LOCACAO));
         return converterEmDTO(locacaoSave);
     }
 
     public void delete(Integer id) throws RegraDeNegocioException {
 
-        LocacaoDTO locacaoEntityDeletada = findById(id);
+        LocacaoDTO locacaoEntityDeletada = findById(id,false);
         locacaoRepository.deleteById(id);
         locacaoEntityDeletada.getVeiculoEntity().setDisponibilidadeVeiculo(DisponibilidadeVeiculo.DISPONIVEL);
         veiculoRepository.save(objectMapper.convertValue(locacaoEntityDeletada.getVeiculoEntity(), VeiculoEntity.class));
-
+        String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        logService.salvarLog(new LogCreateDTO(TipoLog.DELETE,"CPF logado: "+cpf, EntityLog.LOCACAO));
     }
 
-    public LocacaoDTO findById(Integer idLocacao) throws RegraDeNegocioException {
+    public LocacaoDTO findById(Integer idLocacao,boolean gerarLog) throws RegraDeNegocioException {
 
         Optional<LocacaoEntity> locacaoEntityRecuperada = locacaoRepository.findById(idLocacao);
 
         if (locacaoEntityRecuperada.isPresent()) {
+            if(gerarLog){
+                String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+                logService.salvarLog(new LogCreateDTO(TipoLog.READ,"CPF logado: "+cpf, EntityLog.LOCACAO));
+            }
             return converterEmDTO(locacaoEntityRecuperada.get());
         } else {
             throw new RegraDeNegocioException("Locação não encontrada");
@@ -73,15 +104,15 @@ public class LocacaoService {
 
         FuncionarioDTO funcionarioDTO = funcionarioService
                 .converterEmDTO(funcionarioRepository.findByCpf(funcionarioService.getIdLoggedUser()).get());
-        ClienteDTO clienteDTO = clienteService.findById(locacaoCreateDTO.getIdCliente());
-        VeiculoDTO veiculoDTO = veiculoService.findById(locacaoCreateDTO.getIdVeiculo());
+        ClienteDTO clienteDTO = clienteService.findById(locacaoCreateDTO.getIdCliente(),false);
+        VeiculoDTO veiculoDTO = veiculoService.findById(locacaoCreateDTO.getIdVeiculo(),false);
 
-        LocacaoEntity locacaoEntity = objectMapper.convertValue(this.findById(id), LocacaoEntity.class);
+        LocacaoEntity locacaoEntity = objectMapper.convertValue(this.findById(id,false), LocacaoEntity.class);
         if (veiculoDTO.getDisponibilidadeVeiculo().getDisponibilidade() == 1 &&
                 locacaoEntity.getVeiculoEntity().getIdVeiculo() != locacaoCreateDTO.getIdVeiculo()) {
             throw new RegraDeNegocioException("Veiculo selecionado alugado.");
         }
-        CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.findById(locacaoCreateDTO.getIdCartaoCredito());
+        CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.findById(locacaoCreateDTO.getIdCartaoCredito(),false);
 
         locacaoEntity.setVeiculoEntity(objectMapper.convertValue(veiculoDTO, VeiculoEntity.class));
         locacaoEntity.setClienteEntity(objectMapper.convertValue(clienteDTO, ClienteEntity.class));
@@ -102,16 +133,21 @@ public class LocacaoService {
         LocacaoEntity locacaoEntityAdicionada = this.locacaoRepository.save(locacaoEntity);
         locacaoEntityAdicionada.getVeiculoEntity().alterarDisponibilidadeVeiculo();
         veiculoRepository.save(locacaoEntityAdicionada.getVeiculoEntity());
+        String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        logService.salvarLog(new LogCreateDTO(TipoLog.UPDATE,"CPF logado: "+cpf, EntityLog.LOCACAO));
         return converterEmDTO(locacaoEntityAdicionada);
 
     }
 
     public List<LocacaoDTO> list() throws RegraDeNegocioException {
         try {
-            return locacaoRepository.findAll()
+            List<LocacaoDTO> lista = locacaoRepository.findAll()
                     .stream()
                     .map(this::converterEmDTO)
                     .collect(Collectors.toList());
+            String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+            logService.salvarLog(new LogCreateDTO(TipoLog.READ,"CPF logado: "+cpf, EntityLog.LOCACAO));
+            return lista;
         } catch (PersistenceException e) {
             throw new RegraDeNegocioException("Erro ao listar no banco de dados.");
         }
@@ -180,10 +216,8 @@ public class LocacaoService {
                 funcionarioDTO);
     }
 
-    public List<RelatorioLocacaoDTO> listarRelatoriosLocacao(Integer idCliente,
-                                                             Integer idVeiculo,
-                                                             Integer idFuncionario) {
-        return locacaoRepository.listarRelatoriosLocacao(idCliente, idVeiculo, idFuncionario);
+    public List<RelatorioLocacaoDTO> listarRelatoriosLocacao() {
+        return relatorioLocacaoRepository.findAll();
     }
 
     public List<RelatorioLocacaoPorClienteDTO> locacaoPorClienteQuantidade() {

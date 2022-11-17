@@ -54,7 +54,7 @@ public interface LocacaoControllerInterface {
             }
     )
     @GetMapping
-    List<RelatorioLocacaoDTO> listarRelatoriosLocacao(@RequestParam Integer idCliente, Integer idveiculo, Integer idFuncionario);
+    List<RelatorioLocacaoDTO> listarRelatoriosLocacao();
 
     @Operation(summary = "Relatario quantidade de locações por cliente", description = "Relatorio quantidade de locações por cliente no banco de dados.")
     @ApiResponses(

@@ -30,7 +30,7 @@ public class FuncionarioController implements FuncionarioControllerInterface {
 
     @GetMapping("/{idFuncionario}")
     public FuncionarioDTO listByIdFuncionario(@PathVariable("idFuncionario") Integer id) throws RegraDeNegocioException {
-        return funcionarioService.findById(id);
+        return funcionarioService.findById(id,false);
     }
 
     @PostMapping

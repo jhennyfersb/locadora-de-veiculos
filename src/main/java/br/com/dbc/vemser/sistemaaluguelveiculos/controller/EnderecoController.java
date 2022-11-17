@@ -32,7 +32,7 @@ public class EnderecoController implements EnderecoControllerInterface {
 
     @GetMapping("/{idEndereco}")
     public EnderecoDTO listByIdEndereco(@PathVariable("idEndereco") Integer id) throws RegraDeNegocioException {
-        return enderecoService.findById(id);
+        return enderecoService.findById(id,true);
     }
 
     @GetMapping("/{idCliente}/cliente")

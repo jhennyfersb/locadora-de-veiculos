@@ -29,10 +29,8 @@ public class LocacaoController implements LocacaoControllerInterface {
     }
 
     @GetMapping("relatorio-locacao")
-    public List<RelatorioLocacaoDTO> listarRelatoriosLocacao(@RequestParam(required = false) Integer idCliente,
-                                                             @RequestParam(required = false) Integer idveiculo,
-                                                             @RequestParam(required = false) Integer idFuncionario) {
-        return locacaoService.listarRelatoriosLocacao(idCliente, idveiculo, idFuncionario);
+    public List<RelatorioLocacaoDTO> listarRelatoriosLocacao() {
+        return locacaoService.listarRelatoriosLocacao();
     }
 
     @GetMapping("relatorio-cidade")
@@ -47,7 +45,7 @@ public class LocacaoController implements LocacaoControllerInterface {
 
     @GetMapping("/{idLocacao}")
     public LocacaoDTO listByIdLocacao(@PathVariable("idLocacao") Integer id) throws RegraDeNegocioException {
-        return locacaoService.findById(id);
+        return locacaoService.findById(id,true);
     }
 
     @PostMapping
