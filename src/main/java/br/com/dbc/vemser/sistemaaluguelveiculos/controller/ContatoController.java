@@ -30,7 +30,7 @@ public class ContatoController implements ContatoControllerInterface {
 
     @GetMapping("/{idContato}")
     public ContatoDTO listByIdContato(@PathVariable("idContato") Integer id) throws RegraDeNegocioException {
-        return contatoService.findById(id,true);
+        return contatoService.findDtoById(id);
     }
 
     @PostMapping

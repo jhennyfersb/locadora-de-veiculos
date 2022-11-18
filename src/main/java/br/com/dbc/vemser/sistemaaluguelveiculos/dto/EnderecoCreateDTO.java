@@ -46,4 +46,15 @@ public class EnderecoCreateDTO {
 
     @Schema(description = "Complemento do endereço", example = "Ap 13")
     private String complemento;
+
+    public EnderecoCreateDTO(int idEndereco,
+                             int idCliente,
+                             String rua,
+                             String numero,
+                             String bairro,
+                             String cidade,
+                             String estado,
+                             String cep,
+                             String complemento) {
+    }
 }

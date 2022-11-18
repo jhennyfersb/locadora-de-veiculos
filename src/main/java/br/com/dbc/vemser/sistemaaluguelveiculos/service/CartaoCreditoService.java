@@ -60,21 +60,17 @@ public class CartaoCreditoService {
         return lista;
     }
 
-    public CartaoCreditoEntity converterEntity(CartaoCreditoCreateDTO cartaoCreditoCreateDTO) {
+    private CartaoCreditoEntity converterEntity(CartaoCreditoCreateDTO cartaoCreditoCreateDTO) {
         return objectMapper.convertValue(cartaoCreditoCreateDTO, CartaoCreditoEntity.class);
     }
 
-    public CartaoCreditoDTO converterEmDTO(CartaoCreditoEntity cartaoCreditoEntity) {
+    private CartaoCreditoDTO converterEmDTO(CartaoCreditoEntity cartaoCreditoEntity) {
         return objectMapper.convertValue(cartaoCreditoEntity, CartaoCreditoDTO.class);
     }
 
-    public CartaoCreditoDTO findById(Integer id,boolean gerarLog) throws RegraDeNegocioException {
+    public CartaoCreditoDTO findDtoById(Integer id,boolean gerarLog) throws RegraDeNegocioException {
 
-        Optional<CartaoCreditoEntity> ccRecuperado = cartaoCreditoRepository.findById(id);
-
-        if (ccRecuperado == null) {
-            throw new RegraDeNegocioException("Cartão de Crédito não encontrado");
-        }
+        Optional<CartaoCreditoEntity> ccRecuperado = findById(id);
         if(gerarLog){
             String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
             logService.salvarLog(new LogCreateDTO(TipoLog.READ,"CPF logado: "+cpf, EntityLog.CARTAO_CREDITO));
@@ -82,4 +78,9 @@ public class CartaoCreditoService {
         return objectMapper.convertValue(ccRecuperado, CartaoCreditoDTO.class);
 
     }
+    private CartaoCreditoEntity findById(Integer id) throws RegraDeNegocioException{
+        return cartaoCreditoRepository.findById(id)
+                .orElseThrow(()-> new RegraDeNegocioException("Cartão não encontrado."));
+    }
+
 }

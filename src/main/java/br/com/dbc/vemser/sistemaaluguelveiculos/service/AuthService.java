@@ -19,7 +19,6 @@ public class AuthService {
     private final FuncionarioService funcionarioService;
     private final EmailService emailService;
     private final AuthenticationManager authenticationManager;
-
     private final TokenService tokenService;
 
 
