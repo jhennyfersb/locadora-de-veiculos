@@ -39,7 +39,7 @@ public class ClienteController implements ClienteControllerInterface {
 
     @GetMapping("/{idCliente}")
     public ClienteDTO listByIdCliente(@PathVariable("idCliente") Integer id) throws RegraDeNegocioException {
-        return clienteService.findById(id,true);
+        return clienteService.findById(id,false);
     }
 
     @PostMapping

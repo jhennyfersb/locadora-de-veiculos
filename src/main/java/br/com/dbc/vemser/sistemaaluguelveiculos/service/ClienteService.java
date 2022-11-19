@@ -5,6 +5,7 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ClienteDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LogCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioClienteDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.ClienteEntity;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.ContatoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.EntityLog;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.TipoLog;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
@@ -35,7 +36,7 @@ public class ClienteService {
     }
 
     public ClienteDTO update(Integer idCliente, ClienteCreateDTO cliente) throws RegraDeNegocioException {
-        this.findById(idCliente, false);
+        this.findById(idCliente,false);
         ClienteEntity clienteEntity = converterEntity(cliente);
         clienteEntity.setIdCliente(idCliente);
         ;
@@ -46,7 +47,7 @@ public class ClienteService {
     }
 
     public void delete(Integer idCliente) throws RegraDeNegocioException {
-        this.findById(idCliente, false);
+        this.findById(idCliente,false);
         String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         logService.salvarLog(new LogCreateDTO(TipoLog.DELETE, "CPF logado: " + cpf, EntityLog.CLIENTE));
         clienteRepository.deleteById(idCliente);
@@ -69,18 +70,19 @@ public class ClienteService {
         return objectMapper.convertValue(clienteEntity, ClienteDTO.class);
     }
 
-    public ClienteDTO findById(Integer id, boolean gerarLog) throws RegraDeNegocioException {
+    public ClienteDTO findById(Integer id,boolean retirarIssoFuturamente) throws RegraDeNegocioException {
 
-        Optional<ClienteEntity> clienteEntityRecuperado = clienteRepository.findById(id);
+        ClienteEntity clienteEntityRecuperado = findById(id);
 
-        if (clienteEntityRecuperado == null) {
-            throw new RegraDeNegocioException("Cliente não encontrado");
-        }
-        if (gerarLog) {
-            String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-            logService.salvarLog(new LogCreateDTO(TipoLog.READ, "CPF logado: " + cpf, EntityLog.CLIENTE));
-        }
+        String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        logService.salvarLog(new LogCreateDTO(TipoLog.READ, "CPF logado: " + cpf, EntityLog.CLIENTE));
+
         return objectMapper.convertValue(clienteEntityRecuperado, ClienteDTO.class);
+    }
+
+    public ClienteEntity findById(Integer id) throws RegraDeNegocioException {
+        return clienteRepository.findById(id)
+                .orElseThrow(() -> new RegraDeNegocioException("Contato não encontrado"));
     }
 
     public List<RelatorioClienteDTO> relatorioCliente(Integer idCliente) {

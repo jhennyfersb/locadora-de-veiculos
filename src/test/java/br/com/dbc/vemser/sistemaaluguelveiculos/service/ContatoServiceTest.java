@@ -55,7 +55,7 @@ public class ContatoServiceTest {
 
 
     @Test
-    public void deveTestarCreateComSucesso() throws RegraDeNegocioException{
+    public void deveTestarCreateComSucesso() throws RegraDeNegocioException {
         // Criar variaveis (SETUP)
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
         ContatoCreateDTO contatoCreateDTO = getContatoCreateDTO();
@@ -75,7 +75,7 @@ public class ContatoServiceTest {
     }
 
     @Test
-    public void deveTestarDeleteComSucesso() throws RegraDeNegocioException{
+    public void deveTestarDeleteComSucesso() throws RegraDeNegocioException {
         // Criar variaveis (SETUP)
         Integer id = 10;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
@@ -84,13 +84,13 @@ public class ContatoServiceTest {
         // Ação (ACT)
         contatoService.delete(id);
         // Verificação (ASSERT)
-        verify(contatoRepository,times(1)).deleteById(anyInt());
+        verify(contatoRepository, times(1)).deleteById(anyInt());
         verify(logService, times(1)).salvarLog(any());
     }
 
 
     @Test
-    public void deveTestarUpdateComSucesso() throws RegraDeNegocioException{
+    public void deveTestarUpdateComSucesso() throws RegraDeNegocioException {
         // Criar variaveis (SETUP)
         Integer id = 10;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
@@ -98,16 +98,16 @@ public class ContatoServiceTest {
         when(contatoRepository.findById(anyInt())).thenReturn(Optional.of(getContatoEntity()));
         when(contatoRepository.save(any())).thenReturn(getContatoEntity());
         // Ação (ACT)
-        ContatoDTO contato = contatoService.update(id,getContatoCreateDTO());
+        ContatoDTO contato = contatoService.update(id, getContatoCreateDTO());
         // Verificação (ASSERT)
         assertNotNull(contato);
-        assertEquals("99595-1313",contato.getTelefone());
+        assertEquals("99595-1313", contato.getTelefone());
         verify(logService, times(1)).salvarLog(any());
     }
 
     @Test
-    public void deveTestarListComSucesso() throws RegraDeNegocioException{
-                // Criar variaveis (SETUP)
+    public void deveTestarListComSucesso() throws RegraDeNegocioException {
+        // Criar variaveis (SETUP)
         // pessoaRepository.findAll()
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
         List<ContatoEntity> lista = new ArrayList<>();
@@ -125,7 +125,7 @@ public class ContatoServiceTest {
     }
 
     @Test
-    public void deveTestarFindComSucesso() throws RegraDeNegocioException{
+    public void deveTestarFindComSucesso() throws RegraDeNegocioException {
         // Criar variaveis (SETUP)
         Integer id = 2;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
@@ -137,26 +137,25 @@ public class ContatoServiceTest {
 
         // Verificação (ASSERT)
         assertNotNull(contato);
-        assertEquals(contato.getIdContato(),id);
+        assertEquals(contato.getIdContato(), id);
         verify(logService, times(1)).salvarLog(any());
     }
 
-    private static ContatoCreateDTO getContatoCreateDTO(){
-        return new ContatoCreateDTO(2,"99595-1313","bruno.bardu@dbccompany.com.br");
+    private static ContatoCreateDTO getContatoCreateDTO() {
+        return new ContatoCreateDTO(2, "99595-1313", "bruno.bardu@dbccompany.com.br");
     }
 
-    private static ContatoEntity getContatoEntity(){
-        return new ContatoEntity(2,1,"99595-1313","bruno.bardu@dbccompany.com.br",getClienteEntity());
+    private static ContatoEntity getContatoEntity() {
+        return new ContatoEntity(2, 1, "99595-1313", "bruno.bardu@dbccompany.com.br", getClienteEntity());
     }
 
-    private static ClienteEntity getClienteEntity(){
-        return new ClienteEntity(1,"Lucas","00000000000", Collections.emptySet(),Collections.emptySet(),Collections.emptySet());
+    private static ClienteEntity getClienteEntity() {
+        return new ClienteEntity(1, "Lucas", "00000000000", Collections.emptySet(), Collections.emptySet(), Collections.emptySet());
     }
 
-    private static UsernamePasswordAuthenticationToken getAuthentication(){
+    private static UsernamePasswordAuthenticationToken getAuthentication() {
         return new UsernamePasswordAuthenticationToken("00000000000", null, Collections.emptyList());
     }
-
 
 
 }
