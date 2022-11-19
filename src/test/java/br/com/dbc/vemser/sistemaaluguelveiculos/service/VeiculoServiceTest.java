@@ -102,7 +102,7 @@ public class VeiculoServiceTest {
         Integer busca = 10;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
         VeiculoEntity veiculoEntity = getVeiculoEntity();
-        veiculoEntity.setIdVeiculo(10);
+        veiculoEntity.setIdVeiculo(busca);
 
         when(veiculoRepository.findById(anyInt())).thenReturn(Optional.of(veiculoEntity));
 

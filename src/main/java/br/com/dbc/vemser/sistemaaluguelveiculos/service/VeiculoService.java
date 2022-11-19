@@ -85,7 +85,7 @@ public class VeiculoService {
         return lista;
     }
 
-    public VeiculoEntity converterEntity(VeiculoCreateDTO veiculoCreateDTO) {
+    private VeiculoEntity converterEntity(VeiculoCreateDTO veiculoCreateDTO) {
         return objectMapper.convertValue(veiculoCreateDTO, VeiculoEntity.class);
     }
 
@@ -110,11 +110,11 @@ public class VeiculoService {
 
 
 
-    public void alterarDisponibilidadeVeiculo(VeiculoEntity veiculoEntity) {
-        if (veiculoEntity.getDisponibilidadeVeiculo().getDisponibilidade() == 1) {
-            veiculoEntity.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.DISPONIVEL);
-        } else if (veiculoEntity.getDisponibilidadeVeiculo().getDisponibilidade() == 2) {
-            veiculoEntity.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.ALUGADO);
-        }
-    }
+//    public void alterarDisponibilidadeVeiculo(VeiculoEntity veiculoEntity) {
+//        if (veiculoEntity.getDisponibilidadeVeiculo().getDisponibilidade() == 1) {
+//            veiculoEntity.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.DISPONIVEL);
+//        } else if (veiculoEntity.getDisponibilidadeVeiculo().getDisponibilidade() == 2) {
+//            veiculoEntity.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.ALUGADO);
+//        }
+//    }
 }

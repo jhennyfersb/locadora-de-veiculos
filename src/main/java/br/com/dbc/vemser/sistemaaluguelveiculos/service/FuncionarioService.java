@@ -85,7 +85,7 @@ public class FuncionarioService {
 
     }
 
-    public FuncionarioEntity converterEntity(FuncionarioCreateDTO funcionarioCreateDTO) {
+    private FuncionarioEntity converterEntity(FuncionarioCreateDTO funcionarioCreateDTO) {
         return objectMapper.convertValue(funcionarioCreateDTO, FuncionarioEntity.class);
     }
 
