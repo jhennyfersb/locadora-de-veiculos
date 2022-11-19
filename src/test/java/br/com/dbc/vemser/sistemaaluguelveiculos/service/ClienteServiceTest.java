@@ -7,6 +7,7 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ContatoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.ClienteEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.ContatoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
+import br.com.dbc.vemser.sistemaaluguelveiculos.factory.ClienteFactory;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.ClienteRepository;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.ContatoRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -59,9 +60,8 @@ public class ClienteServiceTest {
     public void deveTestarCreateComSucesso() throws RegraDeNegocioException {
         // Criar variaveis (SETUP)
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
-        ClienteCreateDTO clienteCreateDTO = getClienteCreateDTO();
-        ClienteEntity clienteEntity = getClienteEntity();
-
+        ClienteCreateDTO clienteCreateDTO = ClienteFactory.getClienteCreateDTO();
+        ClienteEntity clienteEntity = ClienteFactory.getClienteEntity();
 
         when(clienteRepository.save(any())).thenReturn(clienteEntity);
 
@@ -71,17 +71,17 @@ public class ClienteServiceTest {
         // Verificação (ASSERT)
         assertNotNull(clienteDTO);
         assertNotNull(clienteDTO.getIdCliente());
-        assertEquals(1, clienteDTO.getIdCliente());
+        assertEquals(2, clienteDTO.getIdCliente());
         verify(logService, times(1)).salvarLog(any());
     }
 
     @Test
     public void deveTestarDeleteComSucesso() throws RegraDeNegocioException{
         // Criar variaveis (SETUP)
-        Integer id = 1;
+        Integer id = 2;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-        when(clienteRepository.findById(anyInt())).thenReturn(Optional.of(getClienteEntity()));
+        when(clienteRepository.findById(anyInt())).thenReturn(Optional.of(ClienteFactory.getClienteEntity()));
         // Ação (ACT)
         clienteService.delete(id);
         // Verificação (ASSERT)
@@ -95,13 +95,13 @@ public class ClienteServiceTest {
         Integer id = 1;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-        when(clienteRepository.findById(anyInt())).thenReturn(Optional.of(getClienteEntity()));
-        when(clienteRepository.save(any())).thenReturn(getClienteEntity());
+        when(clienteRepository.findById(anyInt())).thenReturn(Optional.of(ClienteFactory.getClienteEntity()));
+        when(clienteRepository.save(any())).thenReturn(ClienteFactory.getClienteEntity());
         // Ação (ACT)
-        ClienteDTO clienteDTO = clienteService.update(id,getClienteCreateDTO());
+        ClienteDTO clienteDTO = clienteService.update(id,ClienteFactory.getClienteCreateDTO());
         // Verificação (ASSERT)
         assertNotNull(clienteDTO);
-        assertEquals("00000000000",clienteDTO.getCpf());
+        assertEquals("05671239451",clienteDTO.getCpf());
         verify(logService, times(2)).salvarLog(any());
     }
 
@@ -111,7 +111,7 @@ public class ClienteServiceTest {
         // pessoaRepository.findAll()
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
         List<ClienteEntity> lista = new ArrayList<>();
-        lista.add(getClienteEntity());
+        lista.add(ClienteFactory.getClienteEntity());
         when(clienteRepository.findAll()).thenReturn(lista);
 
         // Ação (ACT)
@@ -127,10 +127,10 @@ public class ClienteServiceTest {
     @Test
     public void deveTestarFindComSucesso() throws RegraDeNegocioException {
         // Criar variaveis (SETUP)
-        Integer id = 1;
+        Integer id = 2;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-        when(clienteRepository.findById(anyInt())).thenReturn(Optional.of(getClienteEntity()));
+        when(clienteRepository.findById(anyInt())).thenReturn(Optional.of(ClienteFactory.getClienteEntity()));
 
         // Ação (ACT)
         ClienteDTO contato = clienteService.findById(id,false);
@@ -141,16 +141,11 @@ public class ClienteServiceTest {
         verify(logService, times(1)).salvarLog(any());
     }
 
-    private static ClienteCreateDTO getClienteCreateDTO(){
-        return new ClienteCreateDTO("Lucas","00000000000");
-    }
 
-    private static ClienteEntity getClienteEntity(){
-        return new ClienteEntity(1,"Lucas","00000000000", Collections.emptySet(),Collections.emptySet(),Collections.emptySet());
-    }
 
     private static UsernamePasswordAuthenticationToken getAuthentication(){
-        return new UsernamePasswordAuthenticationToken("00000000000", null, Collections.emptyList());
+        return new UsernamePasswordAuthenticationToken("00000000000",
+                null, Collections.emptyList());
     }
 
 }

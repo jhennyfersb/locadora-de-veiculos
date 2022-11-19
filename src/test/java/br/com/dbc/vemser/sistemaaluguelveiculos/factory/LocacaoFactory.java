@@ -10,9 +10,9 @@ public class LocacaoFactory {
         LocacaoEntity locacaoEntity = new LocacaoEntity(1,
                 LocalDate.now(),
                 LocalDate.now().plusDays(3),
-                ClienteFactory.getCliente(),
+                ClienteFactory.getClienteEntity(),
                 VeiculoFactory.getVeiculo(),
-                CartaoCreditoFactory.getCartaoCredito(),
+                CartaoCreditoFactory.getCartaoCreditoEntity(),
                 FuncionarioFactory.getFuncionarioEntity());
         locacaoEntity.setValorLocacao(234.00);
         return locacaoEntity;

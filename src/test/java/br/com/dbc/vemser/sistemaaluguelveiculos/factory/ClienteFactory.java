@@ -6,7 +6,7 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.entity.ClienteEntity;
 import java.util.Collections;
 
 public class ClienteFactory {
-    public static ClienteEntity getCliente(){
+    public static ClienteEntity getClienteEntity(){
         return new ClienteEntity(2,
                 "Jhennyfer",
                 "05671239451",
@@ -14,7 +14,7 @@ public class ClienteFactory {
                 Collections.emptySet(),
                 Collections.emptySet());
     }
-    public static ClienteDTO getClienteDTO(){
-       return new ClienteDTO(getCliente().getIdCliente());
+    public static ClienteDTO getClienteCreateDTO(){
+       return new ClienteDTO(getClienteEntity().getIdCliente());
     }
 }

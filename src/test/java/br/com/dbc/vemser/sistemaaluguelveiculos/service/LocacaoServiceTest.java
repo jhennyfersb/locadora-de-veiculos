@@ -3,7 +3,6 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.LocacaoEntity;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.DisponibilidadeVeiculo;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.factory.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.*;
@@ -54,8 +53,11 @@ public class LocacaoServiceTest {
     private VeiculoService veiculoService;
     @Mock
     private CartaoCreditoService cartaoCreditoService;
+    @Mock
+    private  EmailService emailService;
     private ObjectMapper objectMapper = new ObjectMapper();
-
+    @Mock
+    private  RelatorioLocacaoRepository relatorioLocacaoRepository;
     @Mock
     private LogService logService;
     @InjectMocks
@@ -83,10 +85,10 @@ public class LocacaoServiceTest {
         SecurityContextHolder.getContext().setAuthentication(dto);
         when(funcionarioRepository
                 .findByCpf(any())).thenReturn(Optional.of(FuncionarioFactory.getFuncionarioEntity()));
-        when(clienteRepository.findById(any())).thenReturn(Optional.of(ClienteFactory.getCliente()));
+        when(clienteRepository.findById(any())).thenReturn(Optional.of(ClienteFactory.getClienteEntity()));
         when(veiculoRepository.findById(any())).thenReturn(Optional.of(VeiculoFactory.getVeiculo()));
         when(cartaoCreditoRepository.findById(any())).thenReturn(Optional.of(CartaoCreditoFactory
-                .getCartaoCredito()));
+                .getCartaoCreditoEntity()));
         when(locacaoRepository.save(any())).thenReturn(LocacaoFactory.getLocacaoEntity());
         converterEntitysEmDTO();
         LocacaoDTO locacaoDTO = locacaoService.create(locacaoCreateDTO);
@@ -147,9 +149,9 @@ public class LocacaoServiceTest {
         SecurityContextHolder.getContext().setAuthentication(dto);
         when(funcionarioRepository
                 .findByCpf(any())).thenReturn(Optional.of(FuncionarioFactory.getFuncionarioEntity()));
-        when(clienteService.findById(any(),eq(false))).thenReturn(ClienteFactory.getClienteDTO());
+        when(clienteService.findById(any(),eq(false))).thenReturn(ClienteFactory.getClienteCreateDTO());
         when(veiculoService.findById(any(),eq(false))).thenReturn(VeiculoFactory.getVeiculoDTO());
-        when(cartaoCreditoService.findById(any())).thenReturn(CartaoCreditoFactory.getCartaoCredito());
+        when(cartaoCreditoService.findById(any())).thenReturn(CartaoCreditoFactory.getCartaoCreditoEntity());
         converterEntitysEmDTO();
 
         when(locacaoRepository.findById(anyInt())).thenReturn(Optional.of(locacaoEntity));

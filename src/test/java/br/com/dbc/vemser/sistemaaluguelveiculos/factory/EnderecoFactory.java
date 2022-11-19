@@ -13,7 +13,7 @@ public class EnderecoFactory {
                 "Pato Branco",
                 "Paraná",
                 "85501057",
-                "perto de",ClienteFactory.getCliente());
+                "perto de",ClienteFactory.getClienteEntity());
     }
     public static EnderecoCreateDTO getEnderecoCreateDTO() {
         EnderecoCreateDTO enderecoCreateDTO = new EnderecoCreateDTO(1,

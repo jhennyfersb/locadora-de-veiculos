@@ -9,6 +9,7 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.entity.ClienteEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.ContatoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.BandeiraCartao;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
+import br.com.dbc.vemser.sistemaaluguelveiculos.factory.CartaoCreditoFactory;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.CartaoCreditoRepository;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.ContatoRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -61,8 +62,8 @@ public class CartaoCreditoServiceTest {
     public void deveTestarCreateComSucesso() throws RegraDeNegocioException {
         // Criar variaveis (SETUP)
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
-        CartaoCreditoCreateDTO cartaoCreditoCreateDTO = getCartaoCreditoCreateDTO();
-        CartaoCreditoEntity cartaoCreditoEntity = getCartaoCreditoEntity();
+        CartaoCreditoCreateDTO cartaoCreditoCreateDTO = CartaoCreditoFactory.getCartaoCreditoCreateDTO();
+        CartaoCreditoEntity cartaoCreditoEntity = CartaoCreditoFactory.getCartaoCreditoEntity();
 
 
         when(cartaoCreditoRepository.save(any())).thenReturn(cartaoCreditoEntity);
@@ -82,7 +83,7 @@ public class CartaoCreditoServiceTest {
         Integer id = 10;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-        when(cartaoCreditoRepository.findById(anyInt())).thenReturn(Optional.of(getCartaoCreditoEntity()));
+        when(cartaoCreditoRepository.findById(anyInt())).thenReturn(Optional.of(CartaoCreditoFactory.getCartaoCreditoEntity()));
         // Ação (ACT)
         cartaoCreditoService.delete(id);
         // Verificação (ASSERT)
@@ -96,10 +97,10 @@ public class CartaoCreditoServiceTest {
         Integer id = 10;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-        when(cartaoCreditoRepository.findById(anyInt())).thenReturn(Optional.of(getCartaoCreditoEntity()));
-        when(cartaoCreditoRepository.save(any())).thenReturn(getCartaoCreditoEntity());
+        when(cartaoCreditoRepository.findById(anyInt())).thenReturn(Optional.of(CartaoCreditoFactory.getCartaoCreditoEntity()));
+        when(cartaoCreditoRepository.save(any())).thenReturn(CartaoCreditoFactory.getCartaoCreditoEntity());
         // Ação (ACT)
-        CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.update(id,getCartaoCreditoCreateDTO());
+        CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.update(id,CartaoCreditoFactory.getCartaoCreditoCreateDTO());
         // Verificação (ASSERT)
         assertNotNull(cartaoCreditoDTO);
         assertEquals("9595 9898 9492 8788",cartaoCreditoDTO.getNumero());
@@ -112,7 +113,7 @@ public class CartaoCreditoServiceTest {
         // pessoaRepository.findAll()
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
         List<CartaoCreditoEntity> lista = new ArrayList<>();
-        lista.add(getCartaoCreditoEntity());
+        lista.add(CartaoCreditoFactory.getCartaoCreditoEntity());
         when(cartaoCreditoRepository.findAll()).thenReturn(lista);
 
         // Ação (ACT)
@@ -128,10 +129,10 @@ public class CartaoCreditoServiceTest {
     @Test
     public void deveTestarFindComSucesso() throws RegraDeNegocioException{
         // Criar variaveis (SETUP)
-        Integer id = 1;
+        Integer id = 4;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-        when(cartaoCreditoRepository.findById(anyInt())).thenReturn(Optional.of(getCartaoCreditoEntity()));
+        when(cartaoCreditoRepository.findById(anyInt())).thenReturn(Optional.of(CartaoCreditoFactory.getCartaoCreditoEntity()));
 
         // Ação (ACT)
         CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.findDtoById(id);
@@ -142,13 +143,7 @@ public class CartaoCreditoServiceTest {
         verify(logService, times(1)).salvarLog(any());
     }
 
-    private static CartaoCreditoCreateDTO getCartaoCreditoCreateDTO(){
-        return new CartaoCreditoCreateDTO("9595 9898 9492 8788", BandeiraCartao.MASTERCARD,"09/2030",60000.00);
-    }
 
-    private static CartaoCreditoEntity getCartaoCreditoEntity(){
-        return new CartaoCreditoEntity(1,"9595 9898 9492 8788", BandeiraCartao.MASTERCARD,"09/2030",60000.00,Collections.emptySet());
-    }
 
     private static UsernamePasswordAuthenticationToken getAuthentication(){
         return new UsernamePasswordAuthenticationToken("00000000000", null, Collections.emptyList());

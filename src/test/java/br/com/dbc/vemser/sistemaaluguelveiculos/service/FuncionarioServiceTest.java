@@ -5,6 +5,7 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.dto.FuncionarioDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.CargoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.FuncionarioEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
+import br.com.dbc.vemser.sistemaaluguelveiculos.factory.FuncionarioFactory;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.FuncionarioRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -63,8 +64,8 @@ public class FuncionarioServiceTest {
     @Test
     public void deveTestarCreateComSucesso() throws RegraDeNegocioException {
         // Criar variaveis (SETUP)
-        FuncionarioCreateDTO funcionarioCreateDTO = getFuncionarioCreateDTO();
-        FuncionarioEntity funcionarioEntity = getFuncionarioEntity();
+        FuncionarioCreateDTO funcionarioCreateDTO = FuncionarioFactory.getFuncionarioCreateDTO();
+        FuncionarioEntity funcionarioEntity = FuncionarioFactory.getFuncionarioEntity();
         SecurityContextHolder.getContext().setAuthentication(dto);
 
         funcionarioEntity.setIdFuncionario(10);
@@ -85,7 +86,7 @@ public class FuncionarioServiceTest {
     @Test
     public void deveTestarListComSucesso() throws RegraDeNegocioException {
         // Criar variaveis (SETUP)
-        FuncionarioEntity funcionarioEntity = getFuncionarioEntity();
+        FuncionarioEntity funcionarioEntity = FuncionarioFactory.getFuncionarioEntity();
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
         List<FuncionarioEntity> list = new ArrayList<>();
         list.add(funcionarioEntity);
@@ -107,7 +108,7 @@ public class FuncionarioServiceTest {
         // Criar variaveis (SETUP)
         Integer busca = 12;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
-        FuncionarioEntity funcionarioEntity = getFuncionarioEntity();
+        FuncionarioEntity funcionarioEntity = FuncionarioFactory.getFuncionarioEntity();
         funcionarioEntity.setIdFuncionario(busca);
 
         when(funcionarioRepository.findById(anyInt())).thenReturn(Optional.of(funcionarioEntity));
@@ -137,7 +138,7 @@ public class FuncionarioServiceTest {
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
         //pessoaRepository.findById(id)
-        FuncionarioEntity funcionarioEntity = getFuncionarioEntity();
+        FuncionarioEntity funcionarioEntity = FuncionarioFactory.getFuncionarioEntity();
         funcionarioEntity.setIdFuncionario(12);
         when(funcionarioRepository.findById(anyInt())).thenReturn(Optional.of(funcionarioEntity));
 
@@ -153,15 +154,15 @@ public class FuncionarioServiceTest {
     public void deveTestarUpdateComSucesso() throws RegraDeNegocioException {
         // SETUP
         Integer id= 12;
-        FuncionarioCreateDTO funcionarioCreateDTO = getFuncionarioCreateDTO();
+        FuncionarioCreateDTO funcionarioCreateDTO = FuncionarioFactory.getFuncionarioCreateDTO();
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-        FuncionarioEntity funcionarioEntity = getFuncionarioEntity();
+        FuncionarioEntity funcionarioEntity = FuncionarioFactory.getFuncionarioEntity();
         funcionarioEntity.setNome("Raul Gil");
         funcionarioEntity.setIdFuncionario(id);
         when(funcionarioRepository.getById(anyInt())).thenReturn(funcionarioEntity);
 
-        FuncionarioEntity funcionarioEntity1 = getFuncionarioEntity();
+        FuncionarioEntity funcionarioEntity1 = FuncionarioFactory.getFuncionarioEntity();
         when(funcionarioRepository.save(any())).thenReturn(funcionarioEntity1);
 
         // ACT
@@ -184,7 +185,7 @@ public class FuncionarioServiceTest {
         // Criar variaveis (SETUP)
         String busca = "11122233344";
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
-        FuncionarioEntity funcionarioEntity = getFuncionarioEntity();
+        FuncionarioEntity funcionarioEntity = FuncionarioFactory.getFuncionarioEntity();
         funcionarioEntity.setCpf(busca);
 
         when(funcionarioRepository.findByCpf(any())).thenReturn(Optional.of(funcionarioEntity));
@@ -203,11 +204,11 @@ public class FuncionarioServiceTest {
         String cpf= "11122233344";
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-        FuncionarioEntity funcionarioEntity = getFuncionarioEntity();
+        FuncionarioEntity funcionarioEntity = FuncionarioFactory.getFuncionarioEntity();
         String senha = "99999";
         when(funcionarioRepository.findByCpf(any())).thenReturn(Optional.of(funcionarioEntity));
 
-        FuncionarioEntity funcionarioEntity1 = getFuncionarioEntity();
+        FuncionarioEntity funcionarioEntity1 = FuncionarioFactory.getFuncionarioEntity();
         funcionarioEntity1.setSenha(senha);
         when(funcionarioRepository.save(any())).thenReturn(funcionarioEntity1);
 
@@ -220,32 +221,7 @@ public class FuncionarioServiceTest {
         verify(passwordEncoder, times(1)).encode(any());
     }
 
-    private static FuncionarioEntity getFuncionarioEntity() {
-        FuncionarioEntity funcionarioEntity = new FuncionarioEntity();
-        CargoEntity cargoEntity = new CargoEntity();
-        cargoEntity.setIdCargo(1);
-        cargoEntity.setNome("ADMIN");
-        funcionarioEntity.setCpf("11122233344");
-        funcionarioEntity.setNome("Michael Jackson");
-        funcionarioEntity.setMatricula(13);
-        funcionarioEntity.setSenha("123");
-        funcionarioEntity.setEmail("michael@gmail.com.br");
-        funcionarioEntity.setCargoEntity(cargoEntity);
-        funcionarioEntity.setIdFuncionario(10);
-        funcionarioEntity.setAtivo('T');
-        return funcionarioEntity;
-    }
 
-    private static FuncionarioCreateDTO getFuncionarioCreateDTO() {
-        FuncionarioCreateDTO funcionarioCreateDTO = new FuncionarioCreateDTO();
-        funcionarioCreateDTO.setCpf("11122233344");
-        funcionarioCreateDTO.setNome("Michael Jackson");
-        funcionarioCreateDTO.setMatricula(13);
-        funcionarioCreateDTO.setSenha("123");
-        funcionarioCreateDTO.setEmail("michael@gmail.com.br");
-        funcionarioCreateDTO.setIdCargo(1);
-        return funcionarioCreateDTO;
-    }
 
     private static UsernamePasswordAuthenticationToken getAuthentication(){
         return new UsernamePasswordAuthenticationToken(1, null, Collections.emptyList());
