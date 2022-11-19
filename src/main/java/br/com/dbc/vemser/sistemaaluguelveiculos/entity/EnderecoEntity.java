@@ -51,14 +51,4 @@ public class EnderecoEntity {
     private ClienteEntity clienteEntity;
 
 
-    public EnderecoEntity(int idEndereco,
-                          int idCliente,
-                          String rua,
-                          String numero,
-                          String bairro,
-                          String cidade,
-                          String estado,
-                          String cep,
-                          String complemento) {
-    }
 }

@@ -49,6 +49,8 @@ public class FuncionarioServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+    UsernamePasswordAuthenticationToken dto
+            = new UsernamePasswordAuthenticationToken(1, null, Collections.emptyList());
 
     @Before
     public void init() {
@@ -63,7 +65,7 @@ public class FuncionarioServiceTest {
         // Criar variaveis (SETUP)
         FuncionarioCreateDTO funcionarioCreateDTO = getFuncionarioCreateDTO();
         FuncionarioEntity funcionarioEntity = getFuncionarioEntity();
-        SecurityContextHolder.getContext().setAuthentication(getAuthentication());
+        SecurityContextHolder.getContext().setAuthentication(dto);
 
         funcionarioEntity.setIdFuncionario(10);
         when(funcionarioRepository.save(any())).thenReturn(funcionarioEntity);
