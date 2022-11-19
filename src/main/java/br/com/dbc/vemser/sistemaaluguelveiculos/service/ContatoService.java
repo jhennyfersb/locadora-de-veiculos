@@ -35,7 +35,7 @@ public class ContatoService {
 
     public void delete(Integer id) throws RegraDeNegocioException {
 
-        findDtoById(id);
+        findById(id);
         contatoRepository.deleteById(id);
         String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         logService.salvarLog(new LogCreateDTO(TipoLog.DELETE, "CPF logado: " + cpf, EntityLog.CONTATO));
