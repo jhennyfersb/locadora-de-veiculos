@@ -26,13 +26,13 @@ public class ContatoServiceTest {
     @Mock
     private ContatoRepository contatoRepository;
 
-    @Before
-    public void init() {
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        ReflectionUtils.setField(contatoService, "objectMapper", objectMapper);
-    }
+//    @Before
+//    public void init() {
+//        objectMapper.registerModule(new JavaTimeModule());
+//        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+//        ReflectionUtils.setField(contatoService, "objectMapper", objectMapper);
+//    }
 
 
 

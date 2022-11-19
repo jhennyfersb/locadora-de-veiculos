@@ -30,7 +30,7 @@ public class CartaoCreditoController implements CartaoCreditoControllerInterface
 
     @GetMapping("/{idCartaoCredito}")
     public CartaoCreditoDTO listByIdCartaoCredito(@PathVariable("idCartaoCredito") Integer id) throws RegraDeNegocioException {
-        return cartaoCreditoService.findById(id,true);
+        return cartaoCreditoService.findDtoById(id,true);
     }
 
     @PostMapping

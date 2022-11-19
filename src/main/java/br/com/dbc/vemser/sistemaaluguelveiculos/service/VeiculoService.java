@@ -108,6 +108,8 @@ public class VeiculoService {
     }
 
 
+
+
     public void alterarDisponibilidadeVeiculo(VeiculoEntity veiculoEntity) {
         if (veiculoEntity.getDisponibilidadeVeiculo().getDisponibilidade() == 1) {
             veiculoEntity.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.DISPONIVEL);

@@ -112,12 +112,12 @@ public class LocacaoService {
                 locacaoEntity.getVeiculoEntity().getIdVeiculo() != locacaoCreateDTO.getIdVeiculo()) {
             throw new RegraDeNegocioException("Veiculo selecionado alugado.");
         }
-        CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.findById(locacaoCreateDTO.getIdCartaoCredito(),false);
+        CartaoCreditoEntity cartaoCreditoEntity = cartaoCreditoService.findById(locacaoCreateDTO.getIdCartaoCredito());
 
         locacaoEntity.setVeiculoEntity(objectMapper.convertValue(veiculoDTO, VeiculoEntity.class));
         locacaoEntity.setClienteEntity(objectMapper.convertValue(clienteDTO, ClienteEntity.class));
         locacaoEntity.setFuncionarioEntity(objectMapper.convertValue(funcionarioDTO, FuncionarioEntity.class));
-        locacaoEntity.setCartaoCreditoEntity(objectMapper.convertValue(cartaoCreditoDTO, CartaoCreditoEntity.class));
+        locacaoEntity.setCartaoCreditoEntity(cartaoCreditoEntity);
 
         Duration d2 = Duration.between(locacaoEntity.getDataLocacao().atStartOfDay(),
                 locacaoEntity.getDataDevolucao().atStartOfDay());

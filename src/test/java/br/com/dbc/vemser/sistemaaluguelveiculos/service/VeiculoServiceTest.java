@@ -1,5 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.PageDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.VeiculoEntity;
@@ -13,11 +14,18 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +33,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class VeiculoServiceTest {
     @InjectMocks // classe principal de testes
     private VeiculoService veiculoService;
@@ -32,16 +41,10 @@ public class VeiculoServiceTest {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Mock
-    private EmailService emailService;
-
-    @Mock
     private VeiculoRepository veiculoRepository;
 
-    // colocar essas linhas abaixo para testar getIdLoggedUser()
-    //        UsernamePasswordAuthenticationToken dto
-    //                = new UsernamePasswordAuthenticationToken(1, null, Collections.emptyList());
-    //        SecurityContextHolder.getContext().setAuthentication(dto);
-
+    @Mock
+    private LogService logService;
 
     @Before
     public void init() {
@@ -51,15 +54,13 @@ public class VeiculoServiceTest {
         ReflectionTestUtils.setField(veiculoService, "objectMapper", objectMapper);
     }
 
-    // deveTestarAlgumaCoisa
     @Test
     public void deveTestarCreateComSucesso() throws RegraDeNegocioException {
         // Criar variaveis (SETUP)
         VeiculoCreateDTO veiculoCreateDTO = getVeiculoCreateDTO();
-
         VeiculoEntity veiculoEntity = getVeiculoEntity();
+        SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-        // pessoaRepository.save(pessoaEntity);
         veiculoEntity.setIdVeiculo(10);
         when(veiculoRepository.save(any())).thenReturn(veiculoEntity);
 
@@ -67,37 +68,42 @@ public class VeiculoServiceTest {
         VeiculoDTO veiculoDTO = veiculoService.create(veiculoCreateDTO);
 
         // Verificação (ASSERT)
-//        assertTrue(pessoaDTO != null);
         Assertions.assertNotNull(veiculoDTO);
         Assertions.assertNotNull(veiculoDTO.getIdVeiculo());
         Assertions.assertEquals("Honda", veiculoDTO.getMarca());
+        verify(logService, times(1)).salvarLog(any());
     }
 
     @Test
-    public void deveTestarListComSucesso(){
+    public void deveTestarListComSucesso() throws RegraDeNegocioException {
         // Criar variaveis (SETUP)
-        // pessoaRepository.findAll()
-        List<VeiculoEntity> lista = new ArrayList<>();
-        lista.add(getVeiculoEntity());
-        when(veiculoRepository.findAll()).thenReturn(lista);
+        Integer pagina = 10;
+        Integer quantidade = 5;
+        VeiculoEntity veiculoEntity = getVeiculoEntity();
+        Page<VeiculoEntity> paginaMock = new PageImpl<>(List.of(veiculoEntity));
 
-        // Ação (ACT)
-        List<VeiculoDTO> list = veiculoService.list();
+        when(veiculoRepository.findAll(any(Pageable.class))).thenReturn(paginaMock);
 
-        // Verificação (ASSERT)
-        Assertions.assertNotNull(list);
-        Assertions.assertTrue(list.size() > 0);
-        Assertions.assertEquals(1, lista.size());
+        SecurityContextHolder.getContext().setAuthentication(getAuthentication());
+
+//        // ACT
+        PageDTO<VeiculoDTO> paginaSolicitada = veiculoService.list(pagina, quantidade);
+
+//        // ASSERT
+        Assertions.assertNotNull(paginaSolicitada);
+        Assertions.assertEquals(1, paginaSolicitada.getQuantidadePaginas());
+        Assertions.assertEquals(1, paginaSolicitada.getTotalElementos());
+        verify(logService, times(1)).salvarLog(any());
     }
 
     @Test
     public void deveTestarFindByIdComSucesso() throws RegraDeNegocioException {
         // Criar variaveis (SETUP)
         Integer busca = 10;
-
-        //pessoaRepository.findById(id)
+        SecurityContextHolder.getContext().setAuthentication(getAuthentication());
         VeiculoEntity veiculoEntity = getVeiculoEntity();
         veiculoEntity.setIdVeiculo(10);
+
         when(veiculoRepository.findById(anyInt())).thenReturn(Optional.of(veiculoEntity));
 
         // Ação (ACT)
@@ -114,7 +120,6 @@ public class VeiculoServiceTest {
         Integer busca = 10;
         when(veiculoRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-
         // Ação (ACT)
         veiculoService.findById(busca, false);
     }
@@ -123,6 +128,7 @@ public class VeiculoServiceTest {
     public void deveTestarDeleteComSucesso() throws RegraDeNegocioException {
         // Criar variaveis (SETUP)
         Integer id = 10;
+        SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
         //pessoaRepository.findById(id)
         VeiculoEntity veiculoEntity = getVeiculoEntity();
@@ -133,55 +139,32 @@ public class VeiculoServiceTest {
         veiculoService.delete(id);
 
         // Verificação (ASSERT)
-        // verificar se chamou pelo menos 1 vez o metodo pessoaRepository.delete(pessoaEntityRecuperada);
-        verify(veiculoRepository, times(1)).delete(any());
-
-        // emailService.sendEmail(pessoaEntityRecuperada, base);
-        verify(emailService, times(1)).sendEmail(any(), any());
+        verify(veiculoRepository, times(1)).deleteById(any());
+        verify(logService, times(1)).salvarLog(any());
     }
 
     @Test
     public void deveTestarUpdateComSucesso() throws RegraDeNegocioException {
         // SETUP
         Integer id= 10;
-        PessoaCreateDTO pessoaCreateDTO = getPessoaCreateDTO();
+        VeiculoCreateDTO veiculoCreateDTO = getVeiculoCreateDTO();
+        SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-        // findById(id);
-        PessoaEntity pessoaEntity1 = getPessoaEntity();
-        pessoaEntity1.setNome("Fulano de tal");
-        pessoaEntity1.setIdPessoa(10);
-        when(pessoaRepository.findById(anyInt())).thenReturn(Optional.of(pessoaEntity1));
+        VeiculoEntity veiculoEntity = getVeiculoEntity();
+        veiculoEntity.setModelo("Civic");
+        veiculoEntity.setIdVeiculo(10);
+        when(veiculoRepository.findById(anyInt())).thenReturn(Optional.of(veiculoEntity));
 
-        // pessoaRepository.save(pessoaEntityRecuperada);
-        PessoaEntity pessoaEntity = getPessoaEntity();
-        when(pessoaRepository.save(any())).thenReturn(pessoaEntity);
-
-        // ACT
-        PessoaDTO pessoaDTO = pessoaService.update(id, pessoaCreateDTO);
-
-        // ASSERT
-        assertNotNull(pessoaDTO);
-        assertNotEquals("Fulano de tal", pessoaDTO.getNome());
-    }
-
-    @Test
-    public void deveTestarListPaginadoComSucesso(){
-        // SETUP
-        Integer pagina = 10;
-        Integer quantidade = 5;
-
-        //pessoaRepository.findAll(pageable);
-        PessoaEntity pessoaEntity = getPessoaEntity();
-        Page<PessoaEntity> paginaMock = new PageImpl<>(List.of(pessoaEntity));
-        when(pessoaRepository.findAll(any(Pageable.class))).thenReturn(paginaMock);
+        VeiculoEntity veiculoEntity1 = getVeiculoEntity();
+        when(veiculoRepository.save(any())).thenReturn(veiculoEntity1);
 
         // ACT
-        Page<PessoaEntity> paginaSolicitada = pessoaService.listPaginado(pagina, quantidade);
+        VeiculoDTO veiculoDTO = veiculoService.update(id, veiculoCreateDTO);
 
         // ASSERT
-        assertNotNull(paginaSolicitada);
-        assertEquals(1, paginaSolicitada.getSize());
-        assertEquals(1, paginaSolicitada.getTotalElements());
+        Assertions.assertNotNull(veiculoDTO);
+        Assertions.assertNotEquals("Civic", veiculoDTO.getModelo());
+        verify(logService, times(1)).salvarLog(any());
     }
 
     private static VeiculoEntity getVeiculoEntity() {
@@ -209,5 +192,9 @@ public class VeiculoServiceTest {
         veiculoCreateDTO.setValorLocacao(220.0);
         return veiculoCreateDTO;
     }
+
+    private static UsernamePasswordAuthenticationToken getAuthentication(){
+        return new UsernamePasswordAuthenticationToken(1, null, Collections.emptyList());
+    }
 }
-}
+
