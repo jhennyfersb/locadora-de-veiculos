@@ -77,11 +77,11 @@ public class EnderecoService {
                 enderecoPagina);
     }
 
-    public EnderecoEntity converterEntity(EnderecoCreateDTO enderecoCreateDTO) {
+    private EnderecoEntity converterEntity(EnderecoCreateDTO enderecoCreateDTO) {
         return objectMapper.convertValue(enderecoCreateDTO, EnderecoEntity.class);
     }
 
-    public EnderecoDTO converterEmDTO(EnderecoEntity enderecoEntity) {
+    private EnderecoDTO converterEmDTO(EnderecoEntity enderecoEntity) {
         return objectMapper.convertValue(enderecoEntity, EnderecoDTO.class);
     }
 

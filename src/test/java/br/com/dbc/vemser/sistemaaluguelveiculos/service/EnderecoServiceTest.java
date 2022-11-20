@@ -1,12 +1,14 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoCreateDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.PageDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.EnderecoEntity;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.FuncionarioEntity;
+import br.com.dbc.vemser.sistemaaluguelveiculos.entity.VeiculoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.factory.EnderecoFactory;
+import br.com.dbc.vemser.sistemaaluguelveiculos.factory.FuncionarioFactory;
+import br.com.dbc.vemser.sistemaaluguelveiculos.factory.VeiculoFactory;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.EnderecoRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,6 +32,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -89,6 +92,61 @@ public class EnderecoServiceTest {
         Assertions.assertEquals(1, paginaSolicitada.getElementos().size());
 
     }
+
+    @Test
+    public void deveTestarUpdateComSucesso() throws RegraDeNegocioException {
+        // SETUP
+        Integer id= 10;
+        EnderecoCreateDTO enderecoCreateDTO = EnderecoFactory.getEnderecoCreateDTO();
+        SecurityContextHolder.getContext().setAuthentication(getAuthentication());
+
+        EnderecoEntity enderecoEntity = EnderecoFactory.getEnderecoEntity();
+        enderecoEntity.setCidade("Franca");
+        enderecoEntity.setIdEndereco(id);
+
+        when(enderecoRepository.save(any())).thenReturn(EnderecoFactory.getEnderecoEntity());
+
+        // ACT
+        EnderecoDTO enderecoDTO = enderecoService.update(id, enderecoCreateDTO);
+
+        // ASSERT
+        Assertions.assertNotNull(enderecoDTO);
+        Assertions.assertNotEquals("Franca", enderecoDTO.getCidade());
+        verify(logService, times(1)).salvarLog(any());
+    }
+
+    @Test
+    public void deveTestarDeleteComSucesso() throws RegraDeNegocioException {
+        // Criar variaveis (SETUP)
+        Integer id = 10;
+        SecurityContextHolder.getContext().setAuthentication(getAuthentication());
+
+        // Ação (ACT)
+        enderecoService.delete(id);
+        // Verificação (ASSERT)
+        verify(enderecoRepository, times(1)).deleteById(anyInt());
+        verify(logService, times(1)).salvarLog(any());
+    }
+
+    @Test
+    public void deveTestarfindEnderecoByIdClienteComSucesso() throws RegraDeNegocioException {
+        Integer pagina = 10;
+        Integer quantidade = 5;
+        Integer idCliente = 2;
+        EnderecoEntity enderecoEntity = EnderecoFactory.getEnderecoEntity();
+        enderecoEntity.setIdCliente(idCliente);
+        SecurityContextHolder.getContext().setAuthentication(getAuthentication());
+        Page<EnderecoEntity> paginaMock = new PageImpl<>(List.of(enderecoEntity));
+        when(enderecoRepository.findByIdClienteLike(anyInt(),any(Pageable.class))).thenReturn(paginaMock);
+
+        PageDTO<EnderecoDTO> paginaSolicitada = enderecoService.findEnderecoByIdCliente(idCliente,pagina,quantidade);
+
+        Assertions.assertNotNull(paginaSolicitada);
+        Assertions.assertEquals(5, paginaSolicitada.getTamanho());
+        Assertions.assertEquals(1, paginaSolicitada.getElementos().size());
+        Assertions.assertEquals(2, paginaSolicitada.getElementos().get(0).getIdCliente());
+    }
+
     private static UsernamePasswordAuthenticationToken getAuthentication(){
         return new UsernamePasswordAuthenticationToken(1, null, Collections.emptyList());
     }

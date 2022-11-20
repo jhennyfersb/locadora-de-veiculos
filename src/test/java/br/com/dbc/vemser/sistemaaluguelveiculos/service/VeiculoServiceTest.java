@@ -153,10 +153,9 @@ public class VeiculoServiceTest {
         VeiculoEntity veiculoEntity = VeiculoFactory.getVeiculoEntity();
         veiculoEntity.setModelo("Civic");
         veiculoEntity.setIdVeiculo(10);
-        when(veiculoRepository.findById(anyInt())).thenReturn(Optional.of(veiculoEntity));
 
-        VeiculoEntity veiculoEntity1 = VeiculoFactory.getVeiculoEntity();
-        when(veiculoRepository.save(any())).thenReturn(veiculoEntity1);
+        when(veiculoRepository.findById(anyInt())).thenReturn(Optional.of(veiculoEntity));
+        when(veiculoRepository.save(any())).thenReturn(VeiculoFactory.getVeiculoEntity());
 
         // ACT
         VeiculoDTO veiculoDTO = veiculoService.update(id, veiculoCreateDTO);

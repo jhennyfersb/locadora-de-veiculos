@@ -161,8 +161,7 @@ public class FuncionarioServiceTest {
         funcionarioEntity.setIdFuncionario(id);
         when(funcionarioRepository.getById(anyInt())).thenReturn(funcionarioEntity);
 
-        FuncionarioEntity funcionarioEntity1 = FuncionarioFactory.getFuncionarioEntity();
-        when(funcionarioRepository.save(any())).thenReturn(funcionarioEntity1);
+        when(funcionarioRepository.save(any())).thenReturn(FuncionarioFactory.getFuncionarioEntity());
 
         // ACT
         FuncionarioDTO funcionarioDTO = funcionarioService.update(id, funcionarioCreateDTO);
