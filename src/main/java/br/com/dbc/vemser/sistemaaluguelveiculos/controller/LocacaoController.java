@@ -45,7 +45,7 @@ public class LocacaoController implements LocacaoControllerInterface {
 
     @GetMapping("/{idLocacao}")
     public LocacaoDTO listByIdLocacao(@PathVariable("idLocacao") Integer id) throws RegraDeNegocioException {
-        return locacaoService.findById(id,true);
+        return locacaoService.findDtoById(id);
     }
 
     @PostMapping

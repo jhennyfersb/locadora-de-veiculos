@@ -10,12 +10,10 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioExcepti
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.CartaoCreditoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,7 +62,7 @@ public class CartaoCreditoService {
         return objectMapper.convertValue(cartaoCreditoCreateDTO, CartaoCreditoEntity.class);
     }
 
-    public CartaoCreditoDTO converterEmDTO(CartaoCreditoEntity cartaoCreditoEntity) {
+    private CartaoCreditoDTO converterEmDTO(CartaoCreditoEntity cartaoCreditoEntity) {
         return objectMapper.convertValue(cartaoCreditoEntity, CartaoCreditoDTO.class);
     }
 
@@ -79,7 +77,7 @@ public class CartaoCreditoService {
 
     }
 
-    public CartaoCreditoEntity findById(Integer id) throws RegraDeNegocioException {
+    private CartaoCreditoEntity findById(Integer id) throws RegraDeNegocioException {
         return cartaoCreditoRepository.findById(id)
                 .orElseThrow(() -> new RegraDeNegocioException("Cartão não encontrado."));
     }

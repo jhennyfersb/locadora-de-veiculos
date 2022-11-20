@@ -6,7 +6,6 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LogDTOContador;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.LogEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.EntityLog;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.TipoLog;
-import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.LogRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

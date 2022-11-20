@@ -19,7 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,25 +33,25 @@ public class VeiculoService {
         veiculoEntity.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.valueOf("DISPONIVEL"));
         VeiculoDTO veiculoDTO = converterEmDTO(veiculoRepository.save(veiculoEntity));
         String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        logService.salvarLog(new LogCreateDTO(TipoLog.CREATE,"CPF logado: "+cpf, EntityLog.VEICULO));
+        logService.salvarLog(new LogCreateDTO(TipoLog.CREATE, "CPF logado: " + cpf, EntityLog.VEICULO));
         return veiculoDTO;
     }
 
     public VeiculoDTO update(Integer idVeiculo, VeiculoCreateDTO veiculo) throws RegraDeNegocioException {
-        this.findById(idVeiculo,false);
+        this.findById(idVeiculo);
         VeiculoEntity veiculoEntity = converterEntity(veiculo);
         veiculoEntity.setIdVeiculo(idVeiculo);
         VeiculoDTO veiculoDTO = converterEmDTO(veiculoRepository.save(veiculoEntity));
         String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        logService.salvarLog(new LogCreateDTO(TipoLog.UPDATE,"CPF logado: "+cpf, EntityLog.VEICULO));
+        logService.salvarLog(new LogCreateDTO(TipoLog.UPDATE, "CPF logado: " + cpf, EntityLog.VEICULO));
         return veiculoDTO;
     }
 
     public void delete(Integer idVeiculo) throws RegraDeNegocioException {
-        findById(idVeiculo,false);
+        findById(idVeiculo);
         veiculoRepository.deleteById(idVeiculo);
         String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        logService.salvarLog(new LogCreateDTO(TipoLog.DELETE,"CPF logado: "+cpf, EntityLog.VEICULO));
+        logService.salvarLog(new LogCreateDTO(TipoLog.DELETE, "CPF logado: " + cpf, EntityLog.VEICULO));
     }
 
     public PageDTO<VeiculoDTO> list(Integer pagina, Integer tamanho) throws RegraDeNegocioException {
@@ -64,7 +63,7 @@ public class VeiculoService {
                 .map(this::converterEmDTO)
                 .collect(Collectors.toList());
         String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        logService.salvarLog(new LogCreateDTO(TipoLog.READ,"CPF logado: "+cpf, EntityLog.VEICULO));
+        logService.salvarLog(new LogCreateDTO(TipoLog.READ, "CPF logado: " + cpf, EntityLog.VEICULO));
         return new PageDTO<>(listar.getTotalElements(),
                 listar.getTotalPages(),
                 pagina,
@@ -81,7 +80,7 @@ public class VeiculoService {
                 .collect(Collectors.toList());
 
         String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        logService.salvarLog(new LogCreateDTO(TipoLog.READ,"CPF logado: "+cpf, EntityLog.VEICULO));
+        logService.salvarLog(new LogCreateDTO(TipoLog.READ, "CPF logado: " + cpf, EntityLog.VEICULO));
         return lista;
     }
 
@@ -89,22 +88,24 @@ public class VeiculoService {
         return objectMapper.convertValue(veiculoCreateDTO, VeiculoEntity.class);
     }
 
-    public VeiculoDTO converterEmDTO(VeiculoEntity veiculo) {
+    private VeiculoDTO converterEmDTO(VeiculoEntity veiculo) {
         return objectMapper.convertValue(veiculo, VeiculoDTO.class);
     }
 
-    public VeiculoDTO findById(Integer id,boolean gerarLog) throws RegraDeNegocioException {
+    public VeiculoDTO findDtoById(Integer id) throws RegraDeNegocioException {
 
-        Optional<VeiculoEntity> veiculoRecuperado = veiculoRepository.findById(id);
-        if (veiculoRecuperado.isEmpty()) {
-            throw new RegraDeNegocioException("Veículo não encontrado");
-        }
-        if(gerarLog){
-            String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-            logService.salvarLog(new LogCreateDTO(TipoLog.READ,"CPF logado: "+cpf, EntityLog.VEICULO));
-        }
-        return objectMapper.convertValue(veiculoRecuperado.get(), VeiculoDTO.class);
+        VeiculoEntity veiculoRecuperado = findById(id);
 
+        String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        logService.salvarLog(new LogCreateDTO(TipoLog.READ, "CPF logado: " + cpf, EntityLog.VEICULO));
+
+        return objectMapper.convertValue(veiculoRecuperado, VeiculoDTO.class);
+
+    }
+
+    private VeiculoEntity findById(Integer id) throws RegraDeNegocioException {
+        return veiculoRepository.findById(id)
+                .orElseThrow(() -> new RegraDeNegocioException("Veiculo não encontrado"));
     }
 
 }

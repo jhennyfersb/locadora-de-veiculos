@@ -87,27 +87,19 @@ public class LocacaoServiceTest {
                 .findByCpf(any())).thenReturn(Optional.of(FuncionarioFactory.getFuncionarioEntity()));
         when(clienteRepository.findById(any())).thenReturn(Optional.of(ClienteFactory.getClienteEntity()));
         when(veiculoRepository.findById(any())).thenReturn(Optional.of(VeiculoFactory.getVeiculoEntity()));
-        when(cartaoCreditoRepository.findById(any())).thenReturn(Optional.of(CartaoCreditoFactory
-                .getCartaoCreditoEntity()));
+        when(cartaoCreditoRepository.findById(any())).thenReturn(Optional.of(CartaoCreditoFactory.getCartaoCreditoEntity()));
         when(locacaoRepository.save(any())).thenReturn(LocacaoFactory.getLocacaoEntity());
-        converterEntitysEmDTO();
+
         LocacaoDTO locacaoDTO = locacaoService.create(locacaoCreateDTO);
         Assertions.assertNotNull(locacaoDTO);
         Assertions.assertNotNull(locacaoDTO.getIdLocacao());
         Assertions.assertEquals(2, locacaoDTO.getClienteEntity().getIdCliente());
+        verify(emailService,times(1)).sendEmail(anyString(),anyString());
+        verify(relatorioLocacaoRepository,times(1)).save(any());
         verify(logService, times(1)).salvarLog(any());
     }
 
-    private void converterEntitysEmDTO() {
-        when(clienteService.converterEmDTO(any()))
-                .thenCallRealMethod();
-        when(veiculoService.converterEmDTO(any()))
-                .thenCallRealMethod();
-        when(cartaoCreditoService.converterEmDTO(any()))
-                .thenCallRealMethod();
-        when(funcionarioService.converterEmDTO(any()))
-                .thenCallRealMethod();
-    }
+
 
     @Test
     public void deveTestarDeleteComSucesso() throws RegraDeNegocioException {
@@ -115,7 +107,6 @@ public class LocacaoServiceTest {
         LocacaoEntity locacaoEntity = LocacaoFactory.getLocacaoEntity();
         locacaoEntity.setIdLocacao(2);
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
-        converterEntitysEmDTO();
         when(locacaoRepository.findById(anyInt())).thenReturn(Optional.of(locacaoEntity));
         locacaoService.delete(id);
         verify(locacaoRepository,times(1)).deleteById(any());
@@ -128,7 +119,7 @@ public class LocacaoServiceTest {
         LocacaoEntity locacaoEntity = LocacaoFactory.getLocacaoEntity();
         locacaoEntity.setIdLocacao(busca);
         when(locacaoRepository.findById(anyInt())).thenReturn(Optional.of(locacaoEntity));
-        LocacaoDTO locacaoDTO = locacaoService.findById(busca, false);
+        LocacaoDTO locacaoDTO = locacaoService.findDtoById(busca);
 
         Assertions.assertNotNull(locacaoDTO);
         Assertions.assertEquals(3,locacaoDTO.getIdLocacao());
@@ -137,7 +128,7 @@ public class LocacaoServiceTest {
     public void findByIdComErro() throws RegraDeNegocioException {
         Integer busca = 1;
         when(locacaoRepository.findById(anyInt())).thenReturn(Optional.empty());
-        locacaoService.findById(busca,false);
+        locacaoService.findDtoById(busca);
     }
 
     @Test
@@ -147,14 +138,12 @@ public class LocacaoServiceTest {
         LocacaoEntity locacaoEntity = LocacaoFactory.getLocacaoEntity();
         locacaoEntity.setIdLocacao(10);
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
-        when(funcionarioRepository
-                .findByCpf(any())).thenReturn(Optional.of(FuncionarioFactory.getFuncionarioEntity()));
-        when(clienteService.findById(any(),eq(false))).thenReturn(ClienteFactory.getClienteCreateDTO());
-        when(veiculoService.findById(any(),eq(false))).thenReturn(VeiculoFactory.getVeiculoDTO());
-        when(cartaoCreditoService.findById(any())).thenReturn(CartaoCreditoFactory.getCartaoCreditoEntity());
-        converterEntitysEmDTO();
-
-        when(locacaoRepository.findById(anyInt())).thenReturn(Optional.of(locacaoEntity));
+        when(funcionarioService.findByLogin(any())).thenReturn(Optional.of(FuncionarioFactory.getFuncionarioEntity()));
+        when(funcionarioService.getIdLoggedUser()).thenReturn("1");
+        when(clienteService.findDToById(any())).thenReturn(ClienteFactory.getClienteDTO());
+        when(veiculoService.findDtoById(any())).thenReturn(VeiculoFactory.getVeiculoDTO());
+        when(locacaoRepository.findById(any())).thenReturn(Optional.of(LocacaoFactory.getLocacaoEntity()));
+        when(cartaoCreditoService.findDtoById(any())).thenReturn(CartaoCreditoFactory.getCartaoCreditoCreateDTO());
         when(locacaoRepository.save(any())).thenReturn(locacaoEntity);
 
         LocacaoDTO locacaoDTO = locacaoService.update(id,locacaoCreateDTO);

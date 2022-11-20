@@ -1,14 +1,12 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.*;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoCreateDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.PageDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.EnderecoEntity;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.FuncionarioEntity;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.VeiculoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.factory.EnderecoFactory;
-import br.com.dbc.vemser.sistemaaluguelveiculos.factory.FuncionarioFactory;
-import br.com.dbc.vemser.sistemaaluguelveiculos.factory.VeiculoFactory;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.EnderecoRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,7 +30,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;

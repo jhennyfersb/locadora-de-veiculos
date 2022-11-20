@@ -14,7 +14,7 @@ public class ClienteFactory {
                 Collections.emptySet(),
                 Collections.emptySet());
     }
-    public static ClienteDTO getClienteCreateDTO(){
+    public static ClienteDTO getClienteDTO(){
        return new ClienteDTO(getClienteEntity().getIdCliente());
     }
 }

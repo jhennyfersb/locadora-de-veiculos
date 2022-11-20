@@ -18,7 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,7 +30,7 @@ public class EnderecoService {
 
 
     public EnderecoDTO create(EnderecoCreateDTO enderecoCreateDTO) throws RegraDeNegocioException {
-        clienteService.findById(enderecoCreateDTO.getIdCliente(), false);
+        clienteService.findById(enderecoCreateDTO.getIdCliente());
         String cpfFuncionarioLogado = SecurityContextHolder
                 .getContext().getAuthentication().getPrincipal().toString();
         logService.salvarLog(new LogCreateDTO(TipoLog.CREATE, "CPF logado: " + cpfFuncionarioLogado, EntityLog.ENDERECO));
@@ -41,7 +40,7 @@ public class EnderecoService {
 
     public void delete(Integer id) throws RegraDeNegocioException {
 
-        clienteService.findById(id, false);
+        clienteService.findById(id);
         enderecoRepository.deleteById(id);
         String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         logService.salvarLog(new LogCreateDTO(TipoLog.DELETE, "CPF logado: " + cpf, EntityLog.ENDERECO));
@@ -49,7 +48,7 @@ public class EnderecoService {
     }
 
     public EnderecoDTO update(Integer id, EnderecoCreateDTO enderecoCreateDTO) throws RegraDeNegocioException {
-        clienteService.findById(id, false);
+        clienteService.findById(id);
         EnderecoEntity enderecoEntity = converterEntity(enderecoCreateDTO);
         enderecoEntity.setIdEndereco(id);
 
@@ -85,19 +84,21 @@ public class EnderecoService {
         return objectMapper.convertValue(enderecoEntity, EnderecoDTO.class);
     }
 
-    public EnderecoDTO findById(Integer id, boolean gerarLog) throws RegraDeNegocioException {
-        Optional<EnderecoEntity> enderecoEntityRecuperado = enderecoRepository.findById(id);
+    public EnderecoDTO findDtoById(Integer id) throws RegraDeNegocioException {
+        EnderecoEntity enderecoEntityRecuperado = findById(id);
 
-        if (enderecoEntityRecuperado == null) {
-            throw new RegraDeNegocioException("Endereço não encontrado");
-        }
-        if (gerarLog) {
-            String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-            logService.salvarLog(new LogCreateDTO(TipoLog.READ, "CPF logado: " + cpf, EntityLog.ENDERECO));
-        }
+        String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        logService.salvarLog(new LogCreateDTO(TipoLog.READ, "CPF logado: " + cpf, EntityLog.ENDERECO));
+
         return objectMapper.convertValue(enderecoEntityRecuperado, EnderecoDTO.class);
 
     }
+
+    private EnderecoEntity findById(Integer id) throws RegraDeNegocioException {
+        return enderecoRepository.findById(id)
+                .orElseThrow(() -> new RegraDeNegocioException("Endereço não encontrado"));
+    }
+
 
     public PageDTO<EnderecoDTO> findEnderecoByIdCliente(Integer idCliente, Integer pagina, Integer tamanho) throws RegraDeNegocioException {
 

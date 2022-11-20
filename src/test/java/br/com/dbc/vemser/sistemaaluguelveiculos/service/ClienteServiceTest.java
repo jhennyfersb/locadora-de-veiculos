@@ -2,14 +2,10 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ClienteCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ClienteDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ContatoCreateDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ContatoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.ClienteEntity;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.ContatoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.factory.ClienteFactory;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.ClienteRepository;
-import br.com.dbc.vemser.sistemaaluguelveiculos.repository.ContatoRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -61,7 +57,7 @@ public class ClienteServiceTest {
     public void deveTestarCreateComSucesso() throws RegraDeNegocioException {
         // Criar variaveis (SETUP)
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
-        ClienteCreateDTO clienteCreateDTO = ClienteFactory.getClienteCreateDTO();
+        ClienteCreateDTO clienteCreateDTO = ClienteFactory.getClienteDTO();
         ClienteEntity clienteEntity = ClienteFactory.getClienteEntity();
 
         when(clienteRepository.save(any())).thenReturn(clienteEntity);
@@ -87,7 +83,7 @@ public class ClienteServiceTest {
         clienteService.delete(id);
         // Verificação (ASSERT)
         verify(clienteRepository,times(1)).deleteById(anyInt());
-        verify(logService, times(2)).salvarLog(any());
+        verify(logService, times(1)).salvarLog(any());
     }
 
     @Test
@@ -99,11 +95,11 @@ public class ClienteServiceTest {
         when(clienteRepository.findById(anyInt())).thenReturn(Optional.of(ClienteFactory.getClienteEntity()));
         when(clienteRepository.save(any())).thenReturn(ClienteFactory.getClienteEntity());
         // Ação (ACT)
-        ClienteDTO clienteDTO = clienteService.update(id,ClienteFactory.getClienteCreateDTO());
+        ClienteDTO clienteDTO = clienteService.update(id,ClienteFactory.getClienteDTO());
         // Verificação (ASSERT)
         assertNotNull(clienteDTO);
         assertEquals("05671239451",clienteDTO.getCpf());
-        verify(logService, times(2)).salvarLog(any());
+        verify(logService, times(1)).salvarLog(any());
     }
 
     @Test
@@ -134,7 +130,7 @@ public class ClienteServiceTest {
         when(clienteRepository.findById(anyInt())).thenReturn(Optional.of(ClienteFactory.getClienteEntity()));
 
         // Ação (ACT)
-        ClienteDTO contato = clienteService.findById(id,false);
+        ClienteDTO contato = clienteService.findDToById(id);
 
         // Verificação (ASSERT)
         assertNotNull(contato);

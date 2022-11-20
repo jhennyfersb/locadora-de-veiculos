@@ -4,8 +4,6 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ContatoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ContatoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.ClienteEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.ContatoEntity;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.EntityLog;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.TipoLog;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.ContatoRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -21,9 +19,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.util.ReflectionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;

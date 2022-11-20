@@ -2,16 +2,10 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.CartaoCreditoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.CartaoCreditoDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ContatoCreateDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ContatoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.CartaoCreditoEntity;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.ClienteEntity;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.ContatoEntity;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.BandeiraCartao;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.factory.CartaoCreditoFactory;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.CartaoCreditoRepository;
-import br.com.dbc.vemser.sistemaaluguelveiculos.repository.ContatoRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

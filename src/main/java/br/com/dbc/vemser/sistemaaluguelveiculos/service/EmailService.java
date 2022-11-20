@@ -41,7 +41,7 @@ public class EmailService {
             mimeMessageHelper.setFrom(from);
             mimeMessageHelper.setTo(destinatario);
             mimeMessageHelper.setSubject("Aluguel de Veiculos");
-            mimeMessageHelper.setText(geContentFromTemplate(dados, "email-template.ftl"), true);
+            mimeMessageHelper.setText(getContentFromTemplate(dados, "email-template.ftl"), true);
             emailSender.send(mimeMessageHelper.getMimeMessage());
 
         } catch (MessagingException | IOException | TemplateException e) {
@@ -49,7 +49,7 @@ public class EmailService {
         }
     }
 
-    public String geContentFromTemplate(Map<String, Object> dados,
+    private String getContentFromTemplate(Map<String, Object> dados,
                                         String templateName) throws IOException, TemplateException {
         Template template = fmConfiguration.getTemplate(templateName);
         return FreeMarkerTemplateUtils.processTemplateIntoString(template, dados);

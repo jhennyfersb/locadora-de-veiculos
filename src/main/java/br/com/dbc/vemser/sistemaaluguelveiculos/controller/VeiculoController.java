@@ -38,7 +38,7 @@ public class VeiculoController implements VeiculoControllerInterface {
 
     @GetMapping("/{idVeiculo}")
     public VeiculoDTO listByIdVeiculo(@PathVariable("idVeiculo") Integer id) throws RegraDeNegocioException {
-        return veiculoService.findById(id, true);
+        return veiculoService.findDtoById(id);
     }
 
     @PostMapping

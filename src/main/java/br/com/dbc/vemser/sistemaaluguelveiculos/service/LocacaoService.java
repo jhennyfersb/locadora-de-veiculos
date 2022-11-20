@@ -71,48 +71,47 @@ public class LocacaoService {
 
         relatorioLocacaoRepository.save(relatorioLocacaoDTO);
         String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        logService.salvarLog(new LogCreateDTO(TipoLog.CREATE,"CPF logado: "+cpf, EntityLog.LOCACAO));
+        logService.salvarLog(new LogCreateDTO(TipoLog.CREATE, "CPF logado: " + cpf, EntityLog.LOCACAO));
         return converterEmDTO(locacaoSave);
     }
 
     public void delete(Integer id) throws RegraDeNegocioException {
 
-        LocacaoDTO locacaoEntityDeletada = findById(id,false);
+        LocacaoDTO locacaoEntityDeletada = converterEmDTO(findById(id));
         locacaoRepository.deleteById(id);
         locacaoEntityDeletada.getVeiculoEntity().setDisponibilidadeVeiculo(DisponibilidadeVeiculo.DISPONIVEL);
         veiculoRepository.save(objectMapper.convertValue(locacaoEntityDeletada.getVeiculoEntity(), VeiculoEntity.class));
         String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        logService.salvarLog(new LogCreateDTO(TipoLog.DELETE,"CPF logado: "+cpf, EntityLog.LOCACAO));
+        logService.salvarLog(new LogCreateDTO(TipoLog.DELETE, "CPF logado: " + cpf, EntityLog.LOCACAO));
     }
 
-    public LocacaoDTO findById(Integer idLocacao,boolean gerarLog) throws RegraDeNegocioException {
+    public LocacaoDTO findDtoById(Integer idLocacao) throws RegraDeNegocioException {
 
-        Optional<LocacaoEntity> locacaoEntityRecuperada = locacaoRepository.findById(idLocacao);
+        LocacaoEntity locacaoEntityRecuperada = findById(idLocacao);
 
-        if (locacaoEntityRecuperada.isPresent()) {
-            if(gerarLog){
-                String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-                logService.salvarLog(new LogCreateDTO(TipoLog.READ,"CPF logado: "+cpf, EntityLog.LOCACAO));
-            }
-            return converterEmDTO(locacaoEntityRecuperada.get());
-        } else {
-            throw new RegraDeNegocioException("Locação não encontrada");
-        }
+        String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        logService.salvarLog(new LogCreateDTO(TipoLog.READ, "CPF logado: " + cpf, EntityLog.LOCACAO));
+
+        return converterEmDTO(locacaoEntityRecuperada);
+
+    }
+
+    private LocacaoEntity findById(Integer id) throws RegraDeNegocioException {
+        return locacaoRepository.findById(id)
+                .orElseThrow(() -> new RegraDeNegocioException("Locação não encontrado"));
     }
 
     public LocacaoDTO update(Integer id, LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
 
-        FuncionarioDTO funcionarioDTO = funcionarioService
-                .converterEmDTO(funcionarioRepository.findByCpf(funcionarioService.getIdLoggedUser()).get());
-        ClienteDTO clienteDTO = clienteService.findById(locacaoCreateDTO.getIdCliente(),false);
-        VeiculoDTO veiculoDTO = veiculoService.findById(locacaoCreateDTO.getIdVeiculo(),false);
-
-        LocacaoEntity locacaoEntity = objectMapper.convertValue(this.findById(id,false), LocacaoEntity.class);
+        FuncionarioDTO funcionarioDTO = objectMapper.convertValue(funcionarioService.findByLogin(funcionarioService.getIdLoggedUser()).get(),FuncionarioDTO.class);
+        ClienteDTO clienteDTO = clienteService.findDToById(locacaoCreateDTO.getIdCliente());
+        VeiculoDTO veiculoDTO = veiculoService.findDtoById(locacaoCreateDTO.getIdVeiculo());
+        LocacaoEntity locacaoEntity = findById(id);
         if (veiculoDTO.getDisponibilidadeVeiculo().getDisponibilidade() == 1 &&
                 locacaoEntity.getVeiculoEntity().getIdVeiculo() != locacaoCreateDTO.getIdVeiculo()) {
             throw new RegraDeNegocioException("Veiculo selecionado alugado.");
         }
-        CartaoCreditoEntity cartaoCreditoEntity = cartaoCreditoService.findById(locacaoCreateDTO.getIdCartaoCredito());
+        CartaoCreditoEntity cartaoCreditoEntity = objectMapper.convertValue(cartaoCreditoService.findDtoById(locacaoCreateDTO.getIdCartaoCredito()),CartaoCreditoEntity.class);
 
         locacaoEntity.setVeiculoEntity(objectMapper.convertValue(veiculoDTO, VeiculoEntity.class));
         locacaoEntity.setClienteEntity(objectMapper.convertValue(clienteDTO, ClienteEntity.class));
@@ -134,7 +133,7 @@ public class LocacaoService {
         locacaoEntityAdicionada.getVeiculoEntity().alterarDisponibilidadeVeiculo();
         veiculoRepository.save(locacaoEntityAdicionada.getVeiculoEntity());
         String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        logService.salvarLog(new LogCreateDTO(TipoLog.UPDATE,"CPF logado: "+cpf, EntityLog.LOCACAO));
+        logService.salvarLog(new LogCreateDTO(TipoLog.UPDATE, "CPF logado: " + cpf, EntityLog.LOCACAO));
         return converterEmDTO(locacaoEntityAdicionada);
 
     }
@@ -146,7 +145,7 @@ public class LocacaoService {
                     .map(this::converterEmDTO)
                     .collect(Collectors.toList());
             String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-            logService.salvarLog(new LogCreateDTO(TipoLog.READ,"CPF logado: "+cpf, EntityLog.LOCACAO));
+            logService.salvarLog(new LogCreateDTO(TipoLog.READ, "CPF logado: " + cpf, EntityLog.LOCACAO));
             return lista;
         } catch (PersistenceException e) {
             throw new RegraDeNegocioException("Erro ao listar no banco de dados.");
@@ -201,9 +200,9 @@ public class LocacaoService {
     }
 
     public LocacaoDTO converterEmDTO(LocacaoEntity locacaoEntity) {
-        ClienteDTO clienteDTO = clienteService.converterEmDTO(locacaoEntity.getClienteEntity());
-        VeiculoDTO veiculoDTO = veiculoService.converterEmDTO(locacaoEntity.getVeiculoEntity());
-        CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.converterEmDTO(locacaoEntity.getCartaoCreditoEntity());
+        ClienteDTO clienteDTO = objectMapper.convertValue(locacaoEntity.getClienteEntity(),ClienteDTO.class);
+        VeiculoDTO veiculoDTO = objectMapper.convertValue(locacaoEntity.getVeiculoEntity(),VeiculoDTO.class);
+        CartaoCreditoDTO cartaoCreditoDTO = objectMapper.convertValue(locacaoEntity.getCartaoCreditoEntity(),CartaoCreditoDTO.class);
         FuncionarioDTO funcionarioDTO = funcionarioService.converterEmDTO(locacaoEntity.getFuncionarioEntity());
 
         return new LocacaoDTO(locacaoEntity.getIdLocacao(),

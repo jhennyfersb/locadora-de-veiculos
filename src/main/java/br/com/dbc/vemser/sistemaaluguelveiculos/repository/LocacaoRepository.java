@@ -1,6 +1,5 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.repository;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacaoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacaoPorCidadeDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioLocacaoPorClienteDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.LocacaoEntity;

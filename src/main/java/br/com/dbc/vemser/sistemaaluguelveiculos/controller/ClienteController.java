@@ -3,10 +3,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
 import br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces.ClienteControllerInterface;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ClienteCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ClienteDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LogCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioClienteDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.EntityLog;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.TipoLog;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.service.ClienteService;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +36,7 @@ public class ClienteController implements ClienteControllerInterface {
 
     @GetMapping("/{idCliente}")
     public ClienteDTO listByIdCliente(@PathVariable("idCliente") Integer id) throws RegraDeNegocioException {
-        return clienteService.findById(id,false);
+        return clienteService.findDToById(id);
     }
 
     @PostMapping

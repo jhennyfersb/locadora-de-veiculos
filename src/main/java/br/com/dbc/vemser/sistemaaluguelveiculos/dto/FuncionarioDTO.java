@@ -1,6 +1,5 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.dto;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.CargoEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;

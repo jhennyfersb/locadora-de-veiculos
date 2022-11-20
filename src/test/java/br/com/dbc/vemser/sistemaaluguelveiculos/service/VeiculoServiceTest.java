@@ -4,7 +4,6 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.dto.PageDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.VeiculoEntity;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.DisponibilidadeVeiculo;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.factory.VeiculoFactory;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.VeiculoRepository;
@@ -110,18 +109,11 @@ public class VeiculoServiceTest {
         when(veiculoRepository.findById(anyInt())).thenReturn(Optional.of(veiculoEntity));
 
 
-        VeiculoDTO veiculoDTO = veiculoService.findById(busca, false);
+        VeiculoDTO veiculoDTO = veiculoService.findDtoById(busca);
 
 
         Assertions.assertNotNull(veiculoDTO);
         Assertions.assertEquals(10, veiculoDTO.getIdVeiculo());
-    }
-
-    @Test(expected = RegraDeNegocioException.class)
-    public void deveTestarFindByIdComErro() throws RegraDeNegocioException {
-        Integer busca = 10;
-        when(veiculoRepository.findById(anyInt())).thenReturn(Optional.empty());
-        veiculoService.findById(busca, false);
     }
 
     @Test

@@ -5,7 +5,6 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ClienteDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LogCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioClienteDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.ClienteEntity;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.ContatoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.EntityLog;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.TipoLog;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
@@ -16,7 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,7 +34,7 @@ public class ClienteService {
     }
 
     public ClienteDTO update(Integer idCliente, ClienteCreateDTO cliente) throws RegraDeNegocioException {
-        this.findById(idCliente,false);
+        this.findById(idCliente);
         ClienteEntity clienteEntity = converterEntity(cliente);
         clienteEntity.setIdCliente(idCliente);
         ;
@@ -47,7 +45,7 @@ public class ClienteService {
     }
 
     public void delete(Integer idCliente) throws RegraDeNegocioException {
-        this.findById(idCliente,false);
+        this.findById(idCliente);
         String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         logService.salvarLog(new LogCreateDTO(TipoLog.DELETE, "CPF logado: " + cpf, EntityLog.CLIENTE));
         clienteRepository.deleteById(idCliente);
@@ -62,15 +60,15 @@ public class ClienteService {
         return clienteDTOList;
     }
 
-    public ClienteEntity converterEntity(ClienteCreateDTO clienteCreateDTO) {
+    private ClienteEntity converterEntity(ClienteCreateDTO clienteCreateDTO) {
         return objectMapper.convertValue(clienteCreateDTO, ClienteEntity.class);
     }
 
-    public ClienteDTO converterEmDTO(ClienteEntity clienteEntity) {
+    private ClienteDTO converterEmDTO(ClienteEntity clienteEntity) {
         return objectMapper.convertValue(clienteEntity, ClienteDTO.class);
     }
 
-    public ClienteDTO findById(Integer id,boolean retirarIssoFuturamente) throws RegraDeNegocioException {
+    public ClienteDTO findDToById(Integer id) throws RegraDeNegocioException {
 
         ClienteEntity clienteEntityRecuperado = findById(id);
 
