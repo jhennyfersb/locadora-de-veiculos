@@ -23,7 +23,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -63,8 +65,6 @@ public class LocacaoServiceTest {
     @InjectMocks
     private LocacaoService locacaoService;
 
-    UsernamePasswordAuthenticationToken dto
-            = new UsernamePasswordAuthenticationToken(1, null, Collections.emptyList());
 
     @Before
     public void init() {
@@ -79,14 +79,14 @@ public class LocacaoServiceTest {
     }
 
     @Test
-    public void create() throws RegraDeNegocioException {
+    public void deveTestarCreateComSucesso() throws RegraDeNegocioException {
 
         LocacaoCreateDTO locacaoCreateDTO = LocacaoFactory.getLocacaoCreateDTO();
-        SecurityContextHolder.getContext().setAuthentication(dto);
+        SecurityContextHolder.getContext().setAuthentication(getAuthentication());
         when(funcionarioRepository
                 .findByCpf(any())).thenReturn(Optional.of(FuncionarioFactory.getFuncionarioEntity()));
         when(clienteRepository.findById(any())).thenReturn(Optional.of(ClienteFactory.getClienteEntity()));
-        when(veiculoRepository.findById(any())).thenReturn(Optional.of(VeiculoFactory.getVeiculo()));
+        when(veiculoRepository.findById(any())).thenReturn(Optional.of(VeiculoFactory.getVeiculoEntity()));
         when(cartaoCreditoRepository.findById(any())).thenReturn(Optional.of(CartaoCreditoFactory
                 .getCartaoCreditoEntity()));
         when(locacaoRepository.save(any())).thenReturn(LocacaoFactory.getLocacaoEntity());
@@ -110,11 +110,11 @@ public class LocacaoServiceTest {
     }
 
     @Test
-    public void delete() throws RegraDeNegocioException {
+    public void deveTestarDeleteComSucesso() throws RegraDeNegocioException {
         Integer id = 2;
         LocacaoEntity locacaoEntity = LocacaoFactory.getLocacaoEntity();
         locacaoEntity.setIdLocacao(2);
-        SecurityContextHolder.getContext().setAuthentication(dto);
+        SecurityContextHolder.getContext().setAuthentication(getAuthentication());
         converterEntitysEmDTO();
         when(locacaoRepository.findById(anyInt())).thenReturn(Optional.of(locacaoEntity));
         locacaoService.delete(id);
@@ -123,7 +123,7 @@ public class LocacaoServiceTest {
     }
 
     @Test
-    public void findById() throws RegraDeNegocioException {
+    public void deveTestarFindByIdComSucesso() throws RegraDeNegocioException {
         Integer busca = 3;
         LocacaoEntity locacaoEntity = LocacaoFactory.getLocacaoEntity();
         locacaoEntity.setIdLocacao(busca);
@@ -141,12 +141,12 @@ public class LocacaoServiceTest {
     }
 
     @Test
-    public void update() throws RegraDeNegocioException {
+    public void deveTestarUpdateComSucesso() throws RegraDeNegocioException {
         Integer id= 10;
         LocacaoCreateDTO locacaoCreateDTO = LocacaoFactory.getLocacaoCreateDTO();
         LocacaoEntity locacaoEntity = LocacaoFactory.getLocacaoEntity();
         locacaoEntity.setIdLocacao(10);
-        SecurityContextHolder.getContext().setAuthentication(dto);
+        SecurityContextHolder.getContext().setAuthentication(getAuthentication());
         when(funcionarioRepository
                 .findByCpf(any())).thenReturn(Optional.of(FuncionarioFactory.getFuncionarioEntity()));
         when(clienteService.findById(any(),eq(false))).thenReturn(ClienteFactory.getClienteCreateDTO());
@@ -166,7 +166,22 @@ public class LocacaoServiceTest {
         Assertions.assertEquals(4, locacaoDTO.getCartaoCreditoEntity().getIdCartaoCredito());
 
     }
+    @Test
+    public void deveTestarListComSucesso() throws RegraDeNegocioException {
+        List<LocacaoEntity> lista = new ArrayList<>();
+        lista.add(LocacaoFactory.getLocacaoEntity());
+        SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
+        when(locacaoRepository.findAll()).thenReturn(lista);
+        List<LocacaoDTO> list = locacaoService.list();
+
+        Assertions.assertNotNull(list);
+        Assertions.assertTrue(list.size() > 0);
+        Assertions.assertEquals(1,lista.size());
+    }
+    private static UsernamePasswordAuthenticationToken getAuthentication(){
+        return new UsernamePasswordAuthenticationToken(1, null, Collections.emptyList());
+    }
 
 
 }

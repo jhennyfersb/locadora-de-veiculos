@@ -3,6 +3,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.EnderecoDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.PageDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.EnderecoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.factory.EnderecoFactory;
@@ -20,11 +21,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -47,12 +52,13 @@ public class EnderecoServiceTest {
             = new UsernamePasswordAuthenticationToken(1, null, Collections.emptyList());
 
     @Before
-    public void init(){
+    public void init() {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         ReflectionTestUtils.setField(enderecoService, "objectMapper", objectMapper);
     }
+
     @Test
     public void deveTestarCreateComSucesso() throws RegraDeNegocioException {
         EnderecoCreateDTO enderecoCreateDTO = EnderecoFactory.getEnderecoCreateDTO();
@@ -67,4 +73,23 @@ public class EnderecoServiceTest {
         verify(logService, times(1)).salvarLog(any());
     }
 
+    @Test
+    public void deveTestarListPaginadoComSucesso() throws RegraDeNegocioException {
+        Integer pagina = 10;
+        Integer quantidade = 5;
+        EnderecoEntity enderecoEntity = EnderecoFactory.getEnderecoEntity();
+        SecurityContextHolder.getContext().setAuthentication(getAuthentication());
+        Page<EnderecoEntity> paginaMock = new PageImpl<>(List.of(enderecoEntity));
+        when(enderecoRepository.findAll(any(Pageable.class))).thenReturn(paginaMock);
+
+        PageDTO<EnderecoDTO> paginaSolicitada = enderecoService.list(pagina,quantidade);
+
+        Assertions.assertNotNull(paginaSolicitada);
+        Assertions.assertEquals(5, paginaSolicitada.getTamanho());
+        Assertions.assertEquals(1, paginaSolicitada.getElementos().size());
+
+    }
+    private static UsernamePasswordAuthenticationToken getAuthentication(){
+        return new UsernamePasswordAuthenticationToken(1, null, Collections.emptyList());
+    }
 }

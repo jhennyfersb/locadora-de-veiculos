@@ -96,25 +96,15 @@ public class VeiculoService {
     public VeiculoDTO findById(Integer id,boolean gerarLog) throws RegraDeNegocioException {
 
         Optional<VeiculoEntity> veiculoRecuperado = veiculoRepository.findById(id);
-        if (veiculoRecuperado == null) {
+        if (veiculoRecuperado.isEmpty()) {
             throw new RegraDeNegocioException("Veículo não encontrado");
         }
         if(gerarLog){
             String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
             logService.salvarLog(new LogCreateDTO(TipoLog.READ,"CPF logado: "+cpf, EntityLog.VEICULO));
         }
-        return objectMapper.convertValue(veiculoRecuperado, VeiculoDTO.class);
+        return objectMapper.convertValue(veiculoRecuperado.get(), VeiculoDTO.class);
 
     }
 
-
-
-
-//    public void alterarDisponibilidadeVeiculo(VeiculoEntity veiculoEntity) {
-//        if (veiculoEntity.getDisponibilidadeVeiculo().getDisponibilidade() == 1) {
-//            veiculoEntity.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.DISPONIVEL);
-//        } else if (veiculoEntity.getDisponibilidadeVeiculo().getDisponibilidade() == 2) {
-//            veiculoEntity.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.ALUGADO);
-//        }
-//    }
 }

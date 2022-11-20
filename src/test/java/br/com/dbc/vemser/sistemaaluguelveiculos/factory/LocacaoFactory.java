@@ -11,7 +11,7 @@ public class LocacaoFactory {
                 LocalDate.now(),
                 LocalDate.now().plusDays(3),
                 ClienteFactory.getClienteEntity(),
-                VeiculoFactory.getVeiculo(),
+                VeiculoFactory.getVeiculoEntity(),
                 CartaoCreditoFactory.getCartaoCreditoEntity(),
                 FuncionarioFactory.getFuncionarioEntity());
         locacaoEntity.setValorLocacao(234.00);

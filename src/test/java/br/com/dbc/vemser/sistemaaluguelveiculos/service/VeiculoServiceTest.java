@@ -6,6 +6,7 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.dto.VeiculoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.VeiculoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.DisponibilidadeVeiculo;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
+import br.com.dbc.vemser.sistemaaluguelveiculos.factory.VeiculoFactory;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.VeiculoRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,10 +15,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +37,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class VeiculoServiceTest {
     @InjectMocks // classe principal de testes
     private VeiculoService veiculoService;
@@ -57,8 +61,8 @@ public class VeiculoServiceTest {
     @Test
     public void deveTestarCreateComSucesso() throws RegraDeNegocioException {
         // Criar variaveis (SETUP)
-        VeiculoCreateDTO veiculoCreateDTO = getVeiculoCreateDTO();
-        VeiculoEntity veiculoEntity = getVeiculoEntity();
+        VeiculoCreateDTO veiculoCreateDTO = VeiculoFactory.getVeiculoCreateDTO();
+        VeiculoEntity veiculoEntity = VeiculoFactory.getVeiculoEntity();
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
         veiculoEntity.setIdVeiculo(10);
@@ -79,7 +83,7 @@ public class VeiculoServiceTest {
         // Criar variaveis (SETUP)
         Integer pagina = 10;
         Integer quantidade = 5;
-        VeiculoEntity veiculoEntity = getVeiculoEntity();
+        VeiculoEntity veiculoEntity = VeiculoFactory.getVeiculoEntity();
         Page<VeiculoEntity> paginaMock = new PageImpl<>(List.of(veiculoEntity));
 
         when(veiculoRepository.findAll(any(Pageable.class))).thenReturn(paginaMock);
@@ -101,26 +105,22 @@ public class VeiculoServiceTest {
         // Criar variaveis (SETUP)
         Integer busca = 10;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
-        VeiculoEntity veiculoEntity = getVeiculoEntity();
+        VeiculoEntity veiculoEntity = VeiculoFactory.getVeiculoEntity();
         veiculoEntity.setIdVeiculo(busca);
-
         when(veiculoRepository.findById(anyInt())).thenReturn(Optional.of(veiculoEntity));
 
-        // Ação (ACT)
+
         VeiculoDTO veiculoDTO = veiculoService.findById(busca, false);
 
-        // Verificação (ASSERT)
+
         Assertions.assertNotNull(veiculoDTO);
         Assertions.assertEquals(10, veiculoDTO.getIdVeiculo());
     }
 
     @Test(expected = RegraDeNegocioException.class)
     public void deveTestarFindByIdComErro() throws RegraDeNegocioException {
-        // Criar variaveis (SETUP)
         Integer busca = 10;
         when(veiculoRepository.findById(anyInt())).thenReturn(Optional.empty());
-
-        // Ação (ACT)
         veiculoService.findById(busca, false);
     }
 
@@ -131,7 +131,7 @@ public class VeiculoServiceTest {
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
         //pessoaRepository.findById(id)
-        VeiculoEntity veiculoEntity = getVeiculoEntity();
+        VeiculoEntity veiculoEntity = VeiculoFactory.getVeiculoEntity();
         veiculoEntity.setIdVeiculo(10);
         when(veiculoRepository.findById(anyInt())).thenReturn(Optional.of(veiculoEntity));
 
@@ -147,15 +147,15 @@ public class VeiculoServiceTest {
     public void deveTestarUpdateComSucesso() throws RegraDeNegocioException {
         // SETUP
         Integer id= 10;
-        VeiculoCreateDTO veiculoCreateDTO = getVeiculoCreateDTO();
+        VeiculoCreateDTO veiculoCreateDTO = VeiculoFactory.getVeiculoCreateDTO();
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-        VeiculoEntity veiculoEntity = getVeiculoEntity();
+        VeiculoEntity veiculoEntity = VeiculoFactory.getVeiculoEntity();
         veiculoEntity.setModelo("Civic");
         veiculoEntity.setIdVeiculo(10);
         when(veiculoRepository.findById(anyInt())).thenReturn(Optional.of(veiculoEntity));
 
-        VeiculoEntity veiculoEntity1 = getVeiculoEntity();
+        VeiculoEntity veiculoEntity1 = VeiculoFactory.getVeiculoEntity();
         when(veiculoRepository.save(any())).thenReturn(veiculoEntity1);
 
         // ACT
@@ -167,31 +167,7 @@ public class VeiculoServiceTest {
         verify(logService, times(1)).salvarLog(any());
     }
 
-    private static VeiculoEntity getVeiculoEntity() {
-        VeiculoEntity veiculoEntity = new VeiculoEntity();
-        veiculoEntity.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.DISPONIVEL);
-        veiculoEntity.setAno(2022);
-        veiculoEntity.setCor("Preto");
-        veiculoEntity.setMarca("Honda");
-        veiculoEntity.setModelo("Fit");
-        veiculoEntity.setPlaca("KLA3030");
-        veiculoEntity.setQuilometragem(2500.0);
-        veiculoEntity.setValorLocacao(220.0);
-        return veiculoEntity;
-    }
 
-    private static VeiculoCreateDTO getVeiculoCreateDTO() {
-        VeiculoCreateDTO veiculoCreateDTO = new VeiculoCreateDTO();
-        veiculoCreateDTO.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.DISPONIVEL);
-        veiculoCreateDTO.setAno(2022);
-        veiculoCreateDTO.setCor("Preto");
-        veiculoCreateDTO.setMarca("Honda");
-        veiculoCreateDTO.setModelo("Fit");
-        veiculoCreateDTO.setPlaca("KLA3030");
-        veiculoCreateDTO.setQuilometragem(2500.0);
-        veiculoCreateDTO.setValorLocacao(220.0);
-        return veiculoCreateDTO;
-    }
 
     private static UsernamePasswordAuthenticationToken getAuthentication(){
         return new UsernamePasswordAuthenticationToken(1, null, Collections.emptyList());
