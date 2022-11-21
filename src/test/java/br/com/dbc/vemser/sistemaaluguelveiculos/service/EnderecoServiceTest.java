@@ -48,8 +48,6 @@ public class EnderecoServiceTest {
 
     @Mock
     private ClienteService clienteService;
-    UsernamePasswordAuthenticationToken dto
-            = new UsernamePasswordAuthenticationToken(1, null, Collections.emptyList());
 
     @Before
     public void init() {
@@ -63,7 +61,7 @@ public class EnderecoServiceTest {
     public void deveTestarCreateComSucesso() throws RegraDeNegocioException {
         EnderecoCreateDTO enderecoCreateDTO = EnderecoFactory.getEnderecoCreateDTO();
         EnderecoEntity enderecoEntity = EnderecoFactory.getEnderecoEntity();
-        SecurityContextHolder.getContext().setAuthentication(dto);
+        SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
         when(enderecoRepository.save(any())).thenReturn(enderecoEntity);
         EnderecoDTO enderecoDTORetorno = enderecoService.create(enderecoCreateDTO);

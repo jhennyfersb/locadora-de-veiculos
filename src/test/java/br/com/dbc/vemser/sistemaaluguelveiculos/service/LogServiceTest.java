@@ -50,7 +50,6 @@ public class LogServiceTest {
         ReflectionTestUtils.setField(logService, "objectMapper", objectMapper);
     }
 
-    // imcompleto. não sei como testar o que é passado kkkk
     @Test
     public void deveTestarSalvarLogComSucesso() {
         // Criar variaveis (SETUP)
