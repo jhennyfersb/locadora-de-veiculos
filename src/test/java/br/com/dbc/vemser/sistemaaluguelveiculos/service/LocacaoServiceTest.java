@@ -56,10 +56,10 @@ public class LocacaoServiceTest {
     @Mock
     private CartaoCreditoService cartaoCreditoService;
     @Mock
-    private  EmailService emailService;
+    private EmailService emailService;
     private ObjectMapper objectMapper = new ObjectMapper();
     @Mock
-    private  RelatorioLocacaoRepository relatorioLocacaoRepository;
+    private RelatorioLocacaoRepository relatorioLocacaoRepository;
     @Mock
     private LogService logService;
     @InjectMocks
@@ -94,23 +94,22 @@ public class LocacaoServiceTest {
         Assertions.assertNotNull(locacaoDTO);
         Assertions.assertNotNull(locacaoDTO.getIdLocacao());
         Assertions.assertEquals(2, locacaoDTO.getClienteEntity().getIdCliente());
-        verify(emailService,times(1)).sendEmail(anyString(),anyString());
-        verify(relatorioLocacaoRepository,times(1)).save(any());
+        verify(emailService, times(1)).sendEmail(anyString(), anyString());
+        verify(relatorioLocacaoRepository, times(1)).save(any());
         verify(logService, times(1)).salvarLog(any());
     }
-
 
 
     @Test
     public void deveTestarDeleteComSucesso() throws RegraDeNegocioException {
         Integer id = 2;
         LocacaoEntity locacaoEntity = LocacaoFactory.getLocacaoEntity();
-        locacaoEntity.setIdLocacao(2);
+        locacaoEntity.setIdLocacao(id);
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
         when(locacaoRepository.findById(anyInt())).thenReturn(Optional.of(locacaoEntity));
         locacaoService.delete(id);
-        verify(locacaoRepository,times(1)).deleteById(any());
-        verify(logService,times(1)).salvarLog(any());
+        verify(locacaoRepository, times(1)).deleteById(any());
+        verify(logService, times(1)).salvarLog(any());
     }
 
     @Test
@@ -118,6 +117,7 @@ public class LocacaoServiceTest {
         Integer busca = 3;
         LocacaoEntity locacaoEntity = LocacaoFactory.getLocacaoEntity();
         locacaoEntity.setIdLocacao(busca);
+        SecurityContextHolder.getContext().setAuthentication(getAuthentication());
         when(locacaoRepository.findById(anyInt())).thenReturn(Optional.of(locacaoEntity));
         LocacaoDTO locacaoDTO = locacaoService.findDtoById(busca);
 
@@ -133,30 +133,41 @@ public class LocacaoServiceTest {
 
     @Test
     public void deveTestarUpdateComSucesso() throws RegraDeNegocioException {
-        Integer id= 10;
+        Integer id = 10;
+        String qtLog = "1";
+        Integer idVeiculo = 2;
+        Integer idCartao = 4;
         LocacaoCreateDTO locacaoCreateDTO = LocacaoFactory.getLocacaoCreateDTO();
         LocacaoEntity locacaoEntity = LocacaoFactory.getLocacaoEntity();
-        locacaoEntity.setIdLocacao(10);
+        locacaoEntity.setIdLocacao(id);
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
-        when(funcionarioService.findByLogin(any())).thenReturn(Optional.of(FuncionarioFactory.getFuncionarioEntity()));
-        when(funcionarioService.getIdLoggedUser()).thenReturn("1");
-        when(clienteService.findDToById(any())).thenReturn(ClienteFactory.getClienteDTO());
-        when(veiculoService.findDtoById(any())).thenReturn(VeiculoFactory.getVeiculoDTO());
-        when(locacaoRepository.findById(any())).thenReturn(Optional.of(LocacaoFactory.getLocacaoEntity()));
-        when(cartaoCreditoService.findDtoById(any())).thenReturn(CartaoCreditoFactory.getCartaoCreditoCreateDTO());
+        when(funcionarioService.findByLogin(any()))
+                .thenReturn(Optional.of(FuncionarioFactory.getFuncionarioEntity()));
+        when(funcionarioService.getIdLoggedUser())
+                .thenReturn(qtLog);
+        when(clienteService.findDToById(any()))
+                .thenReturn(ClienteFactory.getClienteDTO());
+        when(veiculoService.findDtoById(any()))
+                .thenReturn(VeiculoFactory.getVeiculoDTO());
+        when(locacaoRepository.findById(any()))
+                .thenReturn(Optional.of(LocacaoFactory.getLocacaoEntity()));
+        when(cartaoCreditoService.findDtoById(any()))
+                .thenReturn(CartaoCreditoFactory.getCartaoCreditoCreateDTO());
         when(locacaoRepository.save(any())).thenReturn(locacaoEntity);
 
-        LocacaoDTO locacaoDTO = locacaoService.update(id,locacaoCreateDTO);
+        LocacaoDTO locacaoDTO = locacaoService.update(id, locacaoCreateDTO);
 
         Assertions.assertNotNull(locacaoDTO);
         Assertions.assertNotNull(locacaoDTO.getIdLocacao());
-        Assertions.assertEquals(2, locacaoDTO.getVeiculoEntity().getIdVeiculo());
+        Assertions.assertEquals(idVeiculo, locacaoDTO.getVeiculoEntity().getIdVeiculo());
         Assertions.assertEquals(id, locacaoDTO.getIdLocacao());
-        Assertions.assertEquals(4, locacaoDTO.getCartaoCreditoEntity().getIdCartaoCredito());
+        Assertions.assertEquals(idCartao, locacaoDTO.getCartaoCreditoEntity().getIdCartaoCredito());
 
     }
+
     @Test
     public void deveTestarListComSucesso() throws RegraDeNegocioException {
+        Integer qtList = 1;
         List<LocacaoEntity> lista = new ArrayList<>();
         lista.add(LocacaoFactory.getLocacaoEntity());
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
@@ -166,10 +177,13 @@ public class LocacaoServiceTest {
 
         Assertions.assertNotNull(list);
         Assertions.assertTrue(list.size() > 0);
-        Assertions.assertEquals(1,lista.size());
+        Assertions.assertEquals(qtList, lista.size());
     }
-    private static UsernamePasswordAuthenticationToken getAuthentication(){
-        return new UsernamePasswordAuthenticationToken(1, null, Collections.emptyList());
+
+    private static UsernamePasswordAuthenticationToken getAuthentication() {
+        return new UsernamePasswordAuthenticationToken(1,
+                null,
+                Collections.emptyList());
     }
 
 

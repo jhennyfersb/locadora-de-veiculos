@@ -54,66 +54,65 @@ public class CartaoCreditoServiceTest {
 
     @Test
     public void deveTestarCreateComSucesso() throws RegraDeNegocioException {
-        // Criar variaveis (SETUP)
+
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
         CartaoCreditoCreateDTO cartaoCreditoCreateDTO = CartaoCreditoFactory.getCartaoCreditoCreateDTO();
         CartaoCreditoEntity cartaoCreditoEntity = CartaoCreditoFactory.getCartaoCreditoEntity();
-
-
         when(cartaoCreditoRepository.save(any())).thenReturn(cartaoCreditoEntity);
 
-        // Ação (ACT)
         CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.create(cartaoCreditoCreateDTO);
 
-        // Verificação (ASSERT)
         assertNotNull(cartaoCreditoDTO);
         assertNotNull(cartaoCreditoDTO.getIdCartaoCredito());
         verify(logService, times(1)).salvarLog(any());
     }
 
     @Test
-    public void deveTestarDeleteComSucesso() throws RegraDeNegocioException{
-        // Criar variaveis (SETUP)
+    public void deveTestarDeleteComSucesso() throws RegraDeNegocioException {
+
         Integer id = 10;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-        when(cartaoCreditoRepository.findById(anyInt())).thenReturn(Optional.of(CartaoCreditoFactory.getCartaoCreditoEntity()));
-        // Ação (ACT)
+        when(cartaoCreditoRepository.findById(anyInt()))
+                .thenReturn(Optional.of(CartaoCreditoFactory.getCartaoCreditoEntity()));
         cartaoCreditoService.delete(id);
-        // Verificação (ASSERT)
-        verify(cartaoCreditoRepository,times(1)).deleteById(anyInt());
+
+        verify(cartaoCreditoRepository, times(1)).deleteById(anyInt());
         verify(logService, times(1)).salvarLog(any());
     }
 
     @Test
-    public void deveTestarUpdateComSucesso() throws RegraDeNegocioException{
-        // Criar variaveis (SETUP)
+    public void deveTestarUpdateComSucesso() throws RegraDeNegocioException {
+
         Integer id = 10;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-        when(cartaoCreditoRepository.findById(anyInt())).thenReturn(Optional.of(CartaoCreditoFactory.getCartaoCreditoEntity()));
-        when(cartaoCreditoRepository.save(any())).thenReturn(CartaoCreditoFactory.getCartaoCreditoEntity());
-        // Ação (ACT)
-        CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.update(id,CartaoCreditoFactory.getCartaoCreditoCreateDTO());
-        // Verificação (ASSERT)
+        when(cartaoCreditoRepository.findById(anyInt()))
+                .thenReturn(Optional.of(CartaoCreditoFactory.getCartaoCreditoEntity()));
+        when(cartaoCreditoRepository.save(any()))
+                .thenReturn(CartaoCreditoFactory.getCartaoCreditoEntity());
+
+        CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.update(id,
+                CartaoCreditoFactory.getCartaoCreditoCreateDTO());
+
         assertNotNull(cartaoCreditoDTO);
-        assertEquals("9595 9898 9492 8788",cartaoCreditoDTO.getNumero());
+        assertEquals("9595 9898 9492 8788", cartaoCreditoDTO.getNumero());
         verify(logService, times(1)).salvarLog(any());
     }
 
     @Test
-    public void deveTestarListComSucesso() throws RegraDeNegocioException{
-        // Criar variaveis (SETUP)
-        // pessoaRepository.findAll()
-        SecurityContextHolder.getContext().setAuthentication(getAuthentication());
+    public void deveTestarListComSucesso() throws RegraDeNegocioException {
+
+        SecurityContextHolder.getContext()
+                .setAuthentication(getAuthentication());
         List<CartaoCreditoEntity> lista = new ArrayList<>();
         lista.add(CartaoCreditoFactory.getCartaoCreditoEntity());
         when(cartaoCreditoRepository.findAll()).thenReturn(lista);
 
-        // Ação (ACT)
+
         List<CartaoCreditoDTO> list = cartaoCreditoService.list();
 
-        // Verificação (ASSERT)
+
         assertNotNull(list);
         assertTrue(list.size() > 0);
         assertEquals(1, lista.size());
@@ -121,25 +120,23 @@ public class CartaoCreditoServiceTest {
     }
 
     @Test
-    public void deveTestarFindComSucesso() throws RegraDeNegocioException{
-        // Criar variaveis (SETUP)
+    public void deveTestarFindComSucesso() throws RegraDeNegocioException {
         Integer id = 4;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-        when(cartaoCreditoRepository.findById(anyInt())).thenReturn(Optional.of(CartaoCreditoFactory.getCartaoCreditoEntity()));
+        when(cartaoCreditoRepository.findById(anyInt())).thenReturn(Optional.of(CartaoCreditoFactory
+                .getCartaoCreditoEntity()));
+        CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService
+                .findDtoById(id);
 
-        // Ação (ACT)
-        CartaoCreditoDTO cartaoCreditoDTO = cartaoCreditoService.findDtoById(id);
-
-        // Verificação (ASSERT)
         assertNotNull(cartaoCreditoDTO);
-        assertEquals(cartaoCreditoDTO.getIdCartaoCredito(),id);
+        assertEquals(cartaoCreditoDTO.getIdCartaoCredito(), id);
         verify(logService, times(1)).salvarLog(any());
     }
 
 
-
-    private static UsernamePasswordAuthenticationToken getAuthentication(){
-        return new UsernamePasswordAuthenticationToken("00000000000", null, Collections.emptyList());
+    private static UsernamePasswordAuthenticationToken getAuthentication() {
+        return new UsernamePasswordAuthenticationToken("00000000000",
+                null, Collections.emptyList());
     }
 }

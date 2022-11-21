@@ -34,7 +34,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LogServiceTest {
-    @InjectMocks // classe principal de testes
+    @InjectMocks
     private LogService logService;
 
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -52,7 +52,6 @@ public class LogServiceTest {
 
     @Test
     public void deveTestarSalvarLogComSucesso() {
-        // Criar variaveis (SETUP)
         LogCreateDTO logCreateDTO = getLogCreateDTO();
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
         SimpleDateFormat sdfComplete = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -64,16 +63,13 @@ public class LogServiceTest {
 
         when(logRepository.save(any())).thenReturn(log);
 
-        // Ação (ACT)
         logService.salvarLog(logCreateDTO);
 
-        // Verificação (ASSERT)
         verify(logRepository, times(1)).save(any());
     }
 
     @Test
     public void deveTestarListComSucesso() {
-        // Criar variaveis (SETUP)
         LogEntity logEntity = getLogEntity();
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
         List<LogEntity> list = new ArrayList<>();
@@ -81,10 +77,9 @@ public class LogServiceTest {
 
         when(logRepository.findAll()).thenReturn(list);
 
-//        // ACT
+
         List<LogDTO> logDTOList = logService.listAllLogs();
 
-//        // ASSERT
         Assertions.assertNotNull(logDTOList);
         Assertions.assertTrue(logDTOList.size() > 0);
         Assertions.assertEquals(1, logDTOList.size());
@@ -92,7 +87,6 @@ public class LogServiceTest {
 
     @Test
     public void deveTestarListLogsByTipoLogComSucesso() {
-        // Criar variaveis (SETUP)
         LogEntity logEntity = getLogEntity();
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
         List<LogEntity> list = new ArrayList<>();
@@ -100,10 +94,8 @@ public class LogServiceTest {
 
         when(logRepository.findAllByTipoLog(TipoLog.CREATE)).thenReturn(list);
 
-        // ACT
         List<LogDTO> logDTOList = logService.listLogsByTipoLog(TipoLog.CREATE);
 
-        // ASSERT
         Assertions.assertNotNull(logDTOList);
         Assertions.assertTrue(logDTOList.size() > 0);
         Assertions.assertEquals(1, logDTOList.size());
@@ -118,10 +110,8 @@ public class LogServiceTest {
 
         when(logRepository.countByTipoLog(TipoLog.CREATE)).thenReturn(1);
 
-        // ACT
         LogDTOContador logDTOContador = logService.countLogsByTipo(TipoLog.CREATE);
 
-        // ASSERT
         Assertions.assertNotNull(logDTOContador);
         Assertions.assertEquals(1, logDTOContador.getQuantidade());
     }
@@ -146,7 +136,9 @@ public class LogServiceTest {
     }
 
     private static UsernamePasswordAuthenticationToken getAuthentication(){
-        return new UsernamePasswordAuthenticationToken(1, null, Collections.emptyList());
+        return new UsernamePasswordAuthenticationToken(1,
+                null,
+                Collections.emptyList());
     }
 }
 

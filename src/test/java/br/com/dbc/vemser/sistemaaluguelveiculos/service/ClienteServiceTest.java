@@ -33,7 +33,7 @@ import static org.mockito.Mockito.*;
 
 public class ClienteServiceTest {
 
-    @InjectMocks // classe principal de testes
+    @InjectMocks
     private ClienteService clienteService;
 
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -45,6 +45,7 @@ public class ClienteServiceTest {
 
     @Mock
     private ClienteRepository clienteRepository;
+
     @Before
     public void init() {
         objectMapper.registerModule(new JavaTimeModule());
@@ -55,17 +56,14 @@ public class ClienteServiceTest {
 
     @Test
     public void deveTestarCreateComSucesso() throws RegraDeNegocioException {
-        // Criar variaveis (SETUP)
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
         ClienteCreateDTO clienteCreateDTO = ClienteFactory.getClienteDTO();
         ClienteEntity clienteEntity = ClienteFactory.getClienteEntity();
 
         when(clienteRepository.save(any())).thenReturn(clienteEntity);
-
-        // Ação (ACT)
         ClienteDTO clienteDTO = clienteService.create(clienteCreateDTO);
 
-        // Verificação (ASSERT)
+
         assertNotNull(clienteDTO);
         assertNotNull(clienteDTO.getIdCliente());
         assertEquals(2, clienteDTO.getIdCliente());
@@ -73,48 +71,44 @@ public class ClienteServiceTest {
     }
 
     @Test
-    public void deveTestarDeleteComSucesso() throws RegraDeNegocioException{
-        // Criar variaveis (SETUP)
+    public void deveTestarDeleteComSucesso() throws RegraDeNegocioException {
         Integer id = 2;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-        when(clienteRepository.findById(anyInt())).thenReturn(Optional.of(ClienteFactory.getClienteEntity()));
-        // Ação (ACT)
+        when(clienteRepository.findById(anyInt()))
+                .thenReturn(Optional.of(ClienteFactory.getClienteEntity()));
         clienteService.delete(id);
-        // Verificação (ASSERT)
-        verify(clienteRepository,times(1)).deleteById(anyInt());
+        verify(clienteRepository, times(1)).deleteById(anyInt());
         verify(logService, times(1)).salvarLog(any());
     }
 
     @Test
-    public void deveTestarUpdateComSucesso() throws RegraDeNegocioException{
-        // Criar variaveis (SETUP)
+    public void deveTestarUpdateComSucesso() throws RegraDeNegocioException {
         Integer id = 1;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-        when(clienteRepository.findById(anyInt())).thenReturn(Optional.of(ClienteFactory.getClienteEntity()));
+        when(clienteRepository.findById(anyInt()))
+                .thenReturn(Optional.of(ClienteFactory.getClienteEntity()));
         when(clienteRepository.save(any())).thenReturn(ClienteFactory.getClienteEntity());
-        // Ação (ACT)
-        ClienteDTO clienteDTO = clienteService.update(id,ClienteFactory.getClienteDTO());
-        // Verificação (ASSERT)
+
+        ClienteDTO clienteDTO = clienteService.update(id, ClienteFactory.getClienteDTO());
+
         assertNotNull(clienteDTO);
-        assertEquals("05671239451",clienteDTO.getCpf());
+        assertEquals("05671239451", clienteDTO.getCpf());
         verify(logService, times(1)).salvarLog(any());
     }
 
     @Test
     public void deveTestarListComSucesso() throws RegraDeNegocioException {
-        // Criar variaveis (SETUP)
-        // pessoaRepository.findAll()
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
         List<ClienteEntity> lista = new ArrayList<>();
         lista.add(ClienteFactory.getClienteEntity());
         when(clienteRepository.findAll()).thenReturn(lista);
 
-        // Ação (ACT)
+
         List<ClienteDTO> list = clienteService.list();
 
-        // Verificação (ASSERT)
+
         assertNotNull(list);
         assertTrue(list.size() > 0);
         assertEquals(1, lista.size());
@@ -123,24 +117,21 @@ public class ClienteServiceTest {
 
     @Test
     public void deveTestarFindComSucesso() throws RegraDeNegocioException {
-        // Criar variaveis (SETUP)
         Integer id = 2;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-        when(clienteRepository.findById(anyInt())).thenReturn(Optional.of(ClienteFactory.getClienteEntity()));
+        when(clienteRepository.findById(anyInt()))
+                .thenReturn(Optional.of(ClienteFactory.getClienteEntity()));
 
-        // Ação (ACT)
         ClienteDTO contato = clienteService.findDToById(id);
 
-        // Verificação (ASSERT)
         assertNotNull(contato);
         assertEquals(contato.getIdCliente(), id);
         verify(logService, times(1)).salvarLog(any());
     }
 
 
-
-    private static UsernamePasswordAuthenticationToken getAuthentication(){
+    private static UsernamePasswordAuthenticationToken getAuthentication() {
         return new UsernamePasswordAuthenticationToken("00000000000",
                 null, Collections.emptyList());
     }

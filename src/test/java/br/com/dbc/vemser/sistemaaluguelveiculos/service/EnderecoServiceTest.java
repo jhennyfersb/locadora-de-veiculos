@@ -79,7 +79,6 @@ public class EnderecoServiceTest {
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
         Page<EnderecoEntity> paginaMock = new PageImpl<>(List.of(enderecoEntity));
         when(enderecoRepository.findAll(any(Pageable.class))).thenReturn(paginaMock);
-
         PageDTO<EnderecoDTO> paginaSolicitada = enderecoService.list(pagina,quantidade);
 
         Assertions.assertNotNull(paginaSolicitada);
@@ -90,7 +89,6 @@ public class EnderecoServiceTest {
 
     @Test
     public void deveTestarUpdateComSucesso() throws RegraDeNegocioException {
-        // SETUP
         Integer id= 10;
         EnderecoCreateDTO enderecoCreateDTO = EnderecoFactory.getEnderecoCreateDTO();
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
@@ -101,10 +99,8 @@ public class EnderecoServiceTest {
 
         when(enderecoRepository.save(any())).thenReturn(EnderecoFactory.getEnderecoEntity());
 
-        // ACT
         EnderecoDTO enderecoDTO = enderecoService.update(id, enderecoCreateDTO);
 
-        // ASSERT
         Assertions.assertNotNull(enderecoDTO);
         Assertions.assertNotEquals("Franca", enderecoDTO.getCidade());
         verify(logService, times(1)).salvarLog(any());
@@ -112,13 +108,11 @@ public class EnderecoServiceTest {
 
     @Test
     public void deveTestarDeleteComSucesso() throws RegraDeNegocioException {
-        // Criar variaveis (SETUP)
         Integer id = 10;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-        // Ação (ACT)
         enderecoService.delete(id);
-        // Verificação (ASSERT)
+
         verify(enderecoRepository, times(1)).deleteById(anyInt());
         verify(logService, times(1)).salvarLog(any());
     }
@@ -134,7 +128,8 @@ public class EnderecoServiceTest {
         Page<EnderecoEntity> paginaMock = new PageImpl<>(List.of(enderecoEntity));
         when(enderecoRepository.findByIdClienteLike(anyInt(),any(Pageable.class))).thenReturn(paginaMock);
 
-        PageDTO<EnderecoDTO> paginaSolicitada = enderecoService.findEnderecoByIdCliente(idCliente,pagina,quantidade);
+        PageDTO<EnderecoDTO> paginaSolicitada = enderecoService
+                .findEnderecoByIdCliente(idCliente,pagina,quantidade);
 
         Assertions.assertNotNull(paginaSolicitada);
         Assertions.assertEquals(5, paginaSolicitada.getTamanho());

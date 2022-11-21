@@ -38,7 +38,7 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 @ExtendWith(MockitoExtension.class)
 public class VeiculoServiceTest {
-    @InjectMocks // classe principal de testes
+    @InjectMocks
     private VeiculoService veiculoService;
 
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -59,18 +59,16 @@ public class VeiculoServiceTest {
 
     @Test
     public void deveTestarCreateComSucesso() throws RegraDeNegocioException {
-        // Criar variaveis (SETUP)
+        Integer id = 10;
         VeiculoCreateDTO veiculoCreateDTO = VeiculoFactory.getVeiculoCreateDTO();
         VeiculoEntity veiculoEntity = VeiculoFactory.getVeiculoEntity();
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-        veiculoEntity.setIdVeiculo(10);
+        veiculoEntity.setIdVeiculo(id);
         when(veiculoRepository.save(any())).thenReturn(veiculoEntity);
 
-        // Ação (ACT)
         VeiculoDTO veiculoDTO = veiculoService.create(veiculoCreateDTO);
 
-        // Verificação (ASSERT)
         Assertions.assertNotNull(veiculoDTO);
         Assertions.assertNotNull(veiculoDTO.getIdVeiculo());
         Assertions.assertEquals("Honda", veiculoDTO.getMarca());
@@ -79,7 +77,6 @@ public class VeiculoServiceTest {
 
     @Test
     public void deveTestarListComSucesso() throws RegraDeNegocioException {
-        // Criar variaveis (SETUP)
         Integer pagina = 10;
         Integer quantidade = 5;
         VeiculoEntity veiculoEntity = VeiculoFactory.getVeiculoEntity();
@@ -89,10 +86,8 @@ public class VeiculoServiceTest {
 
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-//        // ACT
         PageDTO<VeiculoDTO> paginaSolicitada = veiculoService.list(pagina, quantidade);
 
-//        // ASSERT
         Assertions.assertNotNull(paginaSolicitada);
         Assertions.assertEquals(1, paginaSolicitada.getQuantidadePaginas());
         Assertions.assertEquals(1, paginaSolicitada.getTotalElementos());
@@ -101,7 +96,6 @@ public class VeiculoServiceTest {
 
     @Test
     public void deveTestarFindByIdComSucesso() throws RegraDeNegocioException {
-        // Criar variaveis (SETUP)
         Integer busca = 10;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
         VeiculoEntity veiculoEntity = VeiculoFactory.getVeiculoEntity();
@@ -118,50 +112,45 @@ public class VeiculoServiceTest {
 
     @Test
     public void deveTestarDeleteComSucesso() throws RegraDeNegocioException {
-        // Criar variaveis (SETUP)
         Integer id = 10;
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
-        //pessoaRepository.findById(id)
         VeiculoEntity veiculoEntity = VeiculoFactory.getVeiculoEntity();
-        veiculoEntity.setIdVeiculo(10);
+        veiculoEntity.setIdVeiculo(id);
         when(veiculoRepository.findById(anyInt())).thenReturn(Optional.of(veiculoEntity));
 
-        // Ação (ACT)
         veiculoService.delete(id);
 
-        // Verificação (ASSERT)
         verify(veiculoRepository, times(1)).deleteById(any());
         verify(logService, times(1)).salvarLog(any());
     }
 
     @Test
     public void deveTestarUpdateComSucesso() throws RegraDeNegocioException {
-        // SETUP
-        Integer id= 10;
+        Integer id = 10;
+        String modelo = "Civic";
         VeiculoCreateDTO veiculoCreateDTO = VeiculoFactory.getVeiculoCreateDTO();
         SecurityContextHolder.getContext().setAuthentication(getAuthentication());
 
         VeiculoEntity veiculoEntity = VeiculoFactory.getVeiculoEntity();
-        veiculoEntity.setModelo("Civic");
-        veiculoEntity.setIdVeiculo(10);
-
+        veiculoEntity.setModelo(modelo);
+        veiculoEntity.setIdVeiculo(id);
         when(veiculoRepository.findById(anyInt())).thenReturn(Optional.of(veiculoEntity));
         when(veiculoRepository.save(any())).thenReturn(VeiculoFactory.getVeiculoEntity());
 
-        // ACT
         VeiculoDTO veiculoDTO = veiculoService.update(id, veiculoCreateDTO);
 
-        // ASSERT
+
         Assertions.assertNotNull(veiculoDTO);
         Assertions.assertNotEquals("Civic", veiculoDTO.getModelo());
         verify(logService, times(1)).salvarLog(any());
     }
 
 
-
-    private static UsernamePasswordAuthenticationToken getAuthentication(){
-        return new UsernamePasswordAuthenticationToken(1, null, Collections.emptyList());
+    private static UsernamePasswordAuthenticationToken getAuthentication() {
+        return new UsernamePasswordAuthenticationToken(1,
+                null,
+                Collections.emptyList());
     }
 }
 
