@@ -7,5 +7,6 @@ public enum EntityLog {
     ENDERECO,
     FUNCIONARIO,
     CARTAO_CREDITO,
-    CONTATO
+    CONTATO,
+    CUPOM
 }

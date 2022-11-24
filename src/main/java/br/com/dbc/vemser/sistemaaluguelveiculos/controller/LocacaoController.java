@@ -4,6 +4,7 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces.LocacaoCon
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.service.LocacaoService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -49,7 +50,7 @@ public class LocacaoController implements LocacaoControllerInterface {
     }
 
     @PostMapping
-    public ResponseEntity<LocacaoDTO> create(@Valid @RequestBody LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
+    public ResponseEntity<LocacaoDTO> create(@Valid @RequestBody LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException, JsonProcessingException {
         log.info("Criando locação...");
         LocacaoDTO locacaoDTO = locacaoService.create(locacaoCreateDTO);
         log.info("Locação criada");

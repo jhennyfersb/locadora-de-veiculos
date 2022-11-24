@@ -1,4 +1,4 @@
-package br.com.dbc.vemser.sistemaaluguelveiculos.dto;
+package br.com.dbc.vemser.sistemaaluguelveiculos.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CupomDTO {
+public class CupomEntity {
 
     private String id;
 

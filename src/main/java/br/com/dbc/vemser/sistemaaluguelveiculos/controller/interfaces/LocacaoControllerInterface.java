@@ -2,6 +2,7 @@ package br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.*;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -77,7 +78,7 @@ public interface LocacaoControllerInterface {
             }
     )
     @PostMapping
-    ResponseEntity<LocacaoDTO> create(@Valid @RequestBody LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException;
+    ResponseEntity<LocacaoDTO> create(@Valid @RequestBody LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException, JsonProcessingException;
 
     @Operation(summary = "Atualizar um registro de locação.", description = "Atualiza um cadastro de locação no banco de dados.")
     @ApiResponses(

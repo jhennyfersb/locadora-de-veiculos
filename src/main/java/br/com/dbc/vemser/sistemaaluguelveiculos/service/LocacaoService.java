@@ -7,6 +7,7 @@ import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.EntityLog;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.TipoLog;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,13 +32,24 @@ public class LocacaoService {
     private final ClienteService clienteService;
     private final VeiculoService veiculoService;
     private final CartaoCreditoService cartaoCreditoService;
+    private final ProdutorService produtorService;
+    private final CupomService cupomService;
 
     private final ObjectMapper objectMapper;
     private final EmailService emailService;
     private final LogService logService;
 
-    public LocacaoDTO create(LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
+    public LocacaoDTO create(LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException, JsonProcessingException {
         LocacaoEntity locacaoEntity = criarLocacaoAPartirDeIds(locacaoCreateDTO);
+        ContatoEntity contato = locacaoEntity.getClienteEntity().getContatoEntities().stream().toList().get(0);
+
+        if (!locacaoCreateDTO.getCupom().trim().isEmpty()) {
+            CupomDTO cupomDTO = cupomService.findCupom(locacaoCreateDTO.getCupom());
+            locacaoEntity.setValorLocacao(locacaoEntity.getValorLocacao()*(1-(cupomDTO.getDesconto()/100)));
+            cupomDTO.setAtivo(false);
+            cupomService.save(cupomDTO);
+        }
+        produtorService.enviarMensagem(contato.getEmail());
         LocacaoEntity locacaoSave = locacaoRepository.save(locacaoEntity);
 
         String base = "Olá, Você acaba de realizar uma locação.<br>" +
@@ -102,7 +114,8 @@ public class LocacaoService {
 
     public LocacaoDTO update(Integer id, LocacaoCreateDTO locacaoCreateDTO) throws RegraDeNegocioException {
 
-        FuncionarioDTO funcionarioDTO = objectMapper.convertValue(funcionarioService.findByLogin(funcionarioService.getIdLoggedUser()).get(),FuncionarioDTO.class);
+        FuncionarioDTO funcionarioDTO = objectMapper.convertValue(funcionarioService.findByLogin(funcionarioService
+                .getIdLoggedUser()).get(), FuncionarioDTO.class);
         ClienteDTO clienteDTO = clienteService.findDToById(locacaoCreateDTO.getIdCliente());
         VeiculoDTO veiculoDTO = veiculoService.findDtoById(locacaoCreateDTO.getIdVeiculo());
         LocacaoEntity locacaoEntity = findById(id);
@@ -110,7 +123,8 @@ public class LocacaoService {
                 locacaoEntity.getVeiculoEntity().getIdVeiculo() != locacaoCreateDTO.getIdVeiculo()) {
             throw new RegraDeNegocioException("Veiculo selecionado alugado.");
         }
-        CartaoCreditoEntity cartaoCreditoEntity = objectMapper.convertValue(cartaoCreditoService.findDtoById(locacaoCreateDTO.getIdCartaoCredito()),CartaoCreditoEntity.class);
+        CartaoCreditoEntity cartaoCreditoEntity = objectMapper.convertValue(cartaoCreditoService
+                .findDtoById(locacaoCreateDTO.getIdCartaoCredito()), CartaoCreditoEntity.class);
 
         locacaoEntity.setVeiculoEntity(objectMapper.convertValue(veiculoDTO, VeiculoEntity.class));
         locacaoEntity.setClienteEntity(objectMapper.convertValue(clienteDTO, ClienteEntity.class));
@@ -170,7 +184,8 @@ public class LocacaoService {
             if (veiculo.get().getDisponibilidadeVeiculo().getDisponibilidade() == 1) {
                 throw new RegraDeNegocioException("Veiculo selecionado alugado.");
             }
-            Optional<CartaoCreditoEntity> cartaoCreditoEntity = cartaoCreditoRepository.findById(locacaoCreateDTO.getIdCartaoCredito());
+            Optional<CartaoCreditoEntity> cartaoCreditoEntity = cartaoCreditoRepository
+                    .findById(locacaoCreateDTO.getIdCartaoCredito());
             if (cartaoCreditoEntity.isEmpty()) {
                 throw new RegraDeNegocioException("Cartão de crédito não encontrado.");
             }
@@ -192,6 +207,7 @@ public class LocacaoService {
             locacaoEntity.setValorLocacao(d2.toDays() * locacaoEntity.getVeiculoEntity().getValorLocacao());
             locacaoEntity.getVeiculoEntity().alterarDisponibilidadeVeiculo();
 
+
             return locacaoEntity;
         } catch (PersistenceException e) {
             throw new RegraDeNegocioException("Erro ao instanciar locação.");
@@ -199,9 +215,10 @@ public class LocacaoService {
     }
 
     public LocacaoDTO converterEmDTO(LocacaoEntity locacaoEntity) {
-        ClienteDTO clienteDTO = objectMapper.convertValue(locacaoEntity.getClienteEntity(),ClienteDTO.class);
-        VeiculoDTO veiculoDTO = objectMapper.convertValue(locacaoEntity.getVeiculoEntity(),VeiculoDTO.class);
-        CartaoCreditoDTO cartaoCreditoDTO = objectMapper.convertValue(locacaoEntity.getCartaoCreditoEntity(),CartaoCreditoDTO.class);
+        ClienteDTO clienteDTO = objectMapper.convertValue(locacaoEntity.getClienteEntity(), ClienteDTO.class);
+        VeiculoDTO veiculoDTO = objectMapper.convertValue(locacaoEntity.getVeiculoEntity(), VeiculoDTO.class);
+        CartaoCreditoDTO cartaoCreditoDTO = objectMapper.convertValue(locacaoEntity
+                .getCartaoCreditoEntity(), CartaoCreditoDTO.class);
         FuncionarioDTO funcionarioDTO = funcionarioService.converterEmDTO(locacaoEntity.getFuncionarioEntity());
 
         return new LocacaoDTO(locacaoEntity.getIdLocacao(),

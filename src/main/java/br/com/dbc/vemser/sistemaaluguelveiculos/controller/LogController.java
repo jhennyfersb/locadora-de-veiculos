@@ -1,5 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller;
 
+import br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces.LogControllerInterface;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LogDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LogDTOContador;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.TipoLog;
@@ -16,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/log")
 
-public class LogController {
+public class LogController implements LogControllerInterface {
 
     private final LogService logService;
 

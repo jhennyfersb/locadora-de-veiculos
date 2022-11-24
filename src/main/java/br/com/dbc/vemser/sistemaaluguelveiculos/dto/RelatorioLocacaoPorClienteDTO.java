@@ -13,6 +13,6 @@ public class RelatorioLocacaoPorClienteDTO {
     private Integer idCliente;
     private String nome;
     private String cpf;
-    private Long quantidadeLocacao;
+    private long quantidadeLocacao;
 
 }

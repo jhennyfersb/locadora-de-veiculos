@@ -23,7 +23,8 @@ public class LocacaoFactory {
                 LocalDate.now().plusDays(2),
                 2,
                 2,
-                4);
+                4,
+               "");
     }
 
 }

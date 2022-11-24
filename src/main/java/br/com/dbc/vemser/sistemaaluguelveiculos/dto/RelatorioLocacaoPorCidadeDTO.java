@@ -11,5 +11,5 @@ import lombok.Setter;
 @Setter
 public class RelatorioLocacaoPorCidadeDTO {
     private String cidade;
-    private Long quantidadeLocacao;
+    private long quantidadeLocacao;
 }
