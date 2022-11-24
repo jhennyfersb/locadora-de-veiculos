@@ -68,7 +68,6 @@ public class LocacaoService {
         relatorioLocacaoDTO.setQuilometragem(locacaoSave.getVeiculoEntity().getQuilometragem());
         relatorioLocacaoDTO.setNomeFuncionario(locacaoSave.getFuncionarioEntity().getNome());
 
-
         relatorioLocacaoRepository.save(relatorioLocacaoDTO);
         String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         logService.salvarLog(new LogCreateDTO(TipoLog.CREATE, "CPF logado: " + cpf, EntityLog.LOCACAO));
