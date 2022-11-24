@@ -1,9 +1,7 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.factory;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoCreateDTO;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LocacaoDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.LocacaoEntity;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.LocalDate;
 
@@ -19,9 +17,7 @@ public class LocacaoFactory {
         locacaoEntity.setValorLocacao(234.00);
         return locacaoEntity;
     }
-    public static LocacaoDTO getLocacaoDTO(){
-        return new ObjectMapper().convertValue(getLocacaoEntity(), LocacaoDTO.class);
-    }
+
     public static LocacaoCreateDTO getLocacaoCreateDTO(){
        return new LocacaoCreateDTO(LocalDate.now(),
                 LocalDate.now().plusDays(2),

@@ -24,7 +24,7 @@ public class LogService {
     private final LogRepository logRepository;
     private final ObjectMapper objectMapper;
 
-    SimpleDateFormat sdfComplete = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    private final SimpleDateFormat sdfComplete = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
     public void salvarLog(LogCreateDTO logDTO) {
         var log = new LogEntity();
