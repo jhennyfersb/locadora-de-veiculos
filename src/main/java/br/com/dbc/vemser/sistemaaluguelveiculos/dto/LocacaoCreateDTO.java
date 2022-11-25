@@ -37,7 +37,7 @@ public class LocacaoCreateDTO {
     @Schema(description = "Id Cartão de crédito da locação.")
     private Integer idCartaoCredito;
 
-    @Schema(description = "cupom",example = " ")
+    @Schema(description = "cupom", example = " ")
     private String cupom;
 
 }

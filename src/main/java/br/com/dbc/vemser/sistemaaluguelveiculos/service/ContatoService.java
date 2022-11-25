@@ -1,17 +1,15 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.service;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.*;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ContatoCreateDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.ContatoDTO;
+import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LogCreateDTO;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.ContatoEntity;
-import br.com.dbc.vemser.sistemaaluguelveiculos.entity.EnderecoEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.EntityLog;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.TipoLog;
 import br.com.dbc.vemser.sistemaaluguelveiculos.exceptions.RegraDeNegocioException;
 import br.com.dbc.vemser.sistemaaluguelveiculos.repository.ContatoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +22,8 @@ public class ContatoService {
     private final ContatoRepository contatoRepository;
     private final ObjectMapper objectMapper;
     private final LogService logService;
+
+    private final ClienteService clienteService;
 
     public ContatoDTO create(ContatoCreateDTO contato) throws RegraDeNegocioException {
 
@@ -47,6 +47,8 @@ public class ContatoService {
 
         findById(id);
         ContatoEntity contatoEntity = converterEntity(contato);
+        contatoEntity.setIdContato(contato.getIdCliente());
+        contatoEntity.setClienteEntity(clienteService.findById(contato.getIdCliente()));
         contatoEntity.setIdContato(id);
         ContatoDTO contatoDTO = converterEmDTO(contatoRepository.save(contatoEntity));
         String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();

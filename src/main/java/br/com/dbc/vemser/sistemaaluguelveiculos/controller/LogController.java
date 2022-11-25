@@ -32,8 +32,8 @@ public class LogController implements LogControllerInterface {
     }
 
     @GetMapping("/count-logs-by-tipo")
-    public LogDTOContador getCountByTipoLog(TipoLog tipoLog) {
-        return logService.countLogsByTipo(tipoLog);
+    public List<LogDTOContador> getCountByTipoLog() {
+        return logService.countLogsByTipo();
     }
 
 }

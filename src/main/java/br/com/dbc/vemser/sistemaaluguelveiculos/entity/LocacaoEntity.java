@@ -1,6 +1,5 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.entity;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.CupomDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;

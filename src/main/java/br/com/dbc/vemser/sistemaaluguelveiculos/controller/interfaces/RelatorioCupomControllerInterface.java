@@ -1,6 +1,5 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.controller.interfaces;
 
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioCupom;
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioCupomDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

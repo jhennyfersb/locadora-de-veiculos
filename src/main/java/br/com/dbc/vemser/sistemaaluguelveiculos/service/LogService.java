@@ -41,10 +41,7 @@ public class LogService {
         return logRepository.findAllByTipoLog(tipoLog).stream().map(log -> objectMapper.convertValue(log, LogDTO.class)).collect(Collectors.toList());
     }
 
-    public LogDTOContador countLogsByTipo(TipoLog tipoLog) {
-        LogDTOContador log = new LogDTOContador();
-        log.setQuantidade(logRepository.countByTipoLog(tipoLog));
-        log.setTipoLog(tipoLog);
-        return log;
+    public List<LogDTOContador> countLogsByTipo() {
+        return logRepository.countByTipoLog();
     }
 }
