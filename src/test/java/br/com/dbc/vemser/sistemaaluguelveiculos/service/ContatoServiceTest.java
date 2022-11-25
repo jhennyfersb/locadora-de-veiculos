@@ -84,20 +84,20 @@ public class ContatoServiceTest {
     }
 
 
-    @Test
-    public void deveTestarUpdateComSucesso() throws RegraDeNegocioException {
-        Integer id = 10;
-        SecurityContextHolder.getContext().setAuthentication(getAuthentication());
-
-        when(contatoRepository.findById(anyInt())).thenReturn(Optional.of(getContatoEntity()));
-        when(contatoRepository.save(any())).thenReturn(getContatoEntity());
-
-        ContatoDTO contato = contatoService.update(id, getContatoCreateDTO());
-
-        assertNotNull(contato);
-        assertEquals("99595-1313", contato.getTelefone());
-        verify(logService, times(1)).salvarLog(any());
-    }
+//    @Test
+//    public void deveTestarUpdateComSucesso() throws RegraDeNegocioException {
+////        Integer id = 10;
+////        SecurityContextHolder.getContext().setAuthentication(getAuthentication());
+////
+////        when(contatoRepository.findById(anyInt())).thenReturn(Optional.of(getContatoEntity()));
+////        when(contatoRepository.save(any())).thenReturn(getContatoEntity());
+////
+////        ContatoDTO contato = contatoService.update(id, getContatoCreateDTO());
+////
+////        assertNotNull(contato);
+////        assertEquals("99595-1313", contato.getTelefone());
+////        verify(logService, times(1)).salvarLog(any());
+//    }
 
     @Test
     public void deveTestarListComSucesso() throws RegraDeNegocioException {

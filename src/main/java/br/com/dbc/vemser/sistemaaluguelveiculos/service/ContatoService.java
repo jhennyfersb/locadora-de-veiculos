@@ -25,6 +25,8 @@ public class ContatoService {
     private final ObjectMapper objectMapper;
     private final LogService logService;
 
+    private final ClienteService clienteService;
+
     public ContatoDTO create(ContatoCreateDTO contato) throws RegraDeNegocioException {
 
         ContatoEntity contatoEntityAdicionado = contatoRepository.save(converterEntity(contato));
@@ -47,6 +49,8 @@ public class ContatoService {
 
         findById(id);
         ContatoEntity contatoEntity = converterEntity(contato);
+        contatoEntity.setIdContato(contato.getIdCliente());
+        contatoEntity.setClienteEntity(clienteService.findById(contato.getIdCliente()));
         contatoEntity.setIdContato(id);
         ContatoDTO contatoDTO = converterEmDTO(contatoRepository.save(contatoEntity));
         String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();

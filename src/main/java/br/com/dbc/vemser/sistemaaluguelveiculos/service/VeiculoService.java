@@ -27,7 +27,6 @@ public class VeiculoService {
     private final VeiculoRepository veiculoRepository;
     private final ObjectMapper objectMapper;
     private final LogService logService;
-
     public VeiculoDTO create(VeiculoCreateDTO veiculo) throws RegraDeNegocioException {
         VeiculoEntity veiculoEntity = converterEntity(veiculo);
         veiculoEntity.setDisponibilidadeVeiculo(DisponibilidadeVeiculo.valueOf("DISPONIVEL"));

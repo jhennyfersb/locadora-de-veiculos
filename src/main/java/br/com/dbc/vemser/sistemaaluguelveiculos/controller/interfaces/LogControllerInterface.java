@@ -32,7 +32,7 @@ public interface LogControllerInterface {
     )
     @GetMapping
     List<LogDTO> listByTipoLog(TipoLog tipoLog);
-    @Operation(summary = "Retornar quantidades de vezes de log.", description = "Retorna quantidade de logs.")
+    @Operation(summary = "Retorna a quantidade de cada tipo de log", description = "Retorna quantidade de logs.")
     @ApiResponses(
             value = {
                     @ApiResponse(responseCode = "200", description = "Retorna quantidade de logs."),
@@ -41,5 +41,5 @@ public interface LogControllerInterface {
             }
     )
     @GetMapping
-    LogDTOContador getCountByTipoLog(TipoLog tipoLog);
+    List<LogDTOContador> getCountByTipoLog();
 }
