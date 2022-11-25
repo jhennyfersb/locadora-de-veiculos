@@ -52,6 +52,19 @@ public class LocacaoService {
         produtorService.enviarMensagem(contato.getEmail());
         LocacaoEntity locacaoSave = locacaoRepository.save(locacaoEntity);
 
+        String base = getString(locacaoSave);
+
+        emailService.sendEmail(base, locacaoSave.getFuncionarioEntity().getEmail());
+
+        RelatorioLocacaoDTO relatorioLocacaoDTO = getRelatorioLocacaoDTO(locacaoSave);
+
+        relatorioLocacaoRepository.save(relatorioLocacaoDTO);
+        String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        logService.salvarLog(new LogCreateDTO(TipoLog.CREATE, "CPF logado: " + cpf, EntityLog.LOCACAO));
+        return converterEmDTO(locacaoSave);
+    }
+
+    private static String getString(LocacaoEntity locacaoSave) {
         String base = "Olá, Você acaba de realizar uma locação.<br>" +
                 "Dados da locacação:<br>" +
                 "O identicador da locação é " + locacaoSave.getIdLocacao() + ".<br>" +
@@ -61,9 +74,10 @@ public class LocacaoService {
                 " de placa  " + locacaoSave.getVeiculoEntity().getPlaca() + "<br>" +
                 "Data da locação é " + locacaoSave.getDataLocacao() + ".<br>" +
                 "Data de devolução " + locacaoSave.getDataDevolucao() + "<br>";
+        return base;
+    }
 
-        emailService.sendEmail(base, locacaoSave.getFuncionarioEntity().getEmail());
-
+    private static RelatorioLocacaoDTO getRelatorioLocacaoDTO(LocacaoEntity locacaoSave) {
         RelatorioLocacaoDTO relatorioLocacaoDTO = new RelatorioLocacaoDTO();
 
         relatorioLocacaoDTO.setNomeCliente(locacaoSave.getClienteEntity().getNome());
@@ -79,11 +93,7 @@ public class LocacaoService {
         relatorioLocacaoDTO.setPlaca(locacaoSave.getVeiculoEntity().getPlaca());
         relatorioLocacaoDTO.setQuilometragem(locacaoSave.getVeiculoEntity().getQuilometragem());
         relatorioLocacaoDTO.setNomeFuncionario(locacaoSave.getFuncionarioEntity().getNome());
-
-        relatorioLocacaoRepository.save(relatorioLocacaoDTO);
-        String cpf = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        logService.salvarLog(new LogCreateDTO(TipoLog.CREATE, "CPF logado: " + cpf, EntityLog.LOCACAO));
-        return converterEmDTO(locacaoSave);
+        return relatorioLocacaoDTO;
     }
 
     public void delete(Integer id) throws RegraDeNegocioException {
