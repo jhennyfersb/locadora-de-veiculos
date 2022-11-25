@@ -1,7 +1,6 @@
 package br.com.dbc.vemser.sistemaaluguelveiculos.repository;
 
 import br.com.dbc.vemser.sistemaaluguelveiculos.dto.LogDTOContador;
-import br.com.dbc.vemser.sistemaaluguelveiculos.dto.RelatorioCupom;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.LogEntity;
 import br.com.dbc.vemser.sistemaaluguelveiculos.entity.enums.TipoLog;
 import org.springframework.data.mongodb.repository.Aggregation;

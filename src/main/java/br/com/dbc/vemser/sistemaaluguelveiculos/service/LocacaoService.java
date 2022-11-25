@@ -45,7 +45,7 @@ public class LocacaoService {
 
         if (!locacaoCreateDTO.getCupom().trim().isEmpty()) {
             CupomDTO cupomDTO = cupomService.findCupom(locacaoCreateDTO.getCupom());
-            locacaoEntity.setValorLocacao(locacaoEntity.getValorLocacao()*(1-(cupomDTO.getDesconto()/100)));
+            locacaoEntity.setValorLocacao(locacaoEntity.getValorLocacao() * (1 - (cupomDTO.getDesconto() / 100)));
             cupomDTO.setAtivo(false);
             cupomService.save(cupomDTO);
         }
