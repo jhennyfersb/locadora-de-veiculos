@@ -1,5 +1,28 @@
 # Trabalho final modulo Spring 
-# Locadora de Veículos
+Trabalho final do módulo spring de Java,
+onde está sendo utilizado diversos assuntos que foram abordados em treinamento, como por exemplo:
+- Spring Web:
+- Desenvolvimento Web com Spring Boot
+- Injeção de Dependencia
+- Bean Validation
+- Lombok 
+- FeignClient
+- Envio de E-mail
+- Swagger
+- Testes Unitários com Mockito
+
+
+- Spring Data:
+- Métodos de Consulta
+- Relacionamentos
+
+
+- Spring Security
+- Gerador de senha e recuperação (JWT)
+- Configuração de filtros por funcionalidades e regras de acesso
+
+# Locadora de veiculos
+
 Uma aplicação voltada para funcionários de locadoras de veículos que tem como função :
 - Facilitar registros e consultas de locações em banco de dados com segurança;
 - Realizar relatórios específicos para locadoras; 
@@ -25,3 +48,6 @@ Após registrar uma locação e realizar pagamento com cartão de credito gera c
 - Bruno Pelliciari
 - Jhennyfer Sobrinho
 - Lucas Miguel
+
+
+  
