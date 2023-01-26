@@ -48,6 +48,3 @@ Após registrar uma locação e realizar pagamento com cartão de credito gera c
 - Bruno Pelliciari
 - Jhennyfer Sobrinho
 - Lucas Miguel
-
-
-  
