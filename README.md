@@ -1,5 +1,4 @@
 # Trabalho final modulo Spring 
-# Locadora de Veículos
 Uma aplicação voltada para funcionários de locadoras de veículos que tem como função :
 - Facilitar registros e consultas de locações em banco de dados com segurança;
 - Realizar relatórios específicos para locadoras; 
