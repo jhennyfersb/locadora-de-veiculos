@@ -38,9 +38,6 @@ public class ProdutorService {
     @Value("${kafka.topic}")
     private String topic;
 
-//    @Value("$kafka.particao")
-//    private int particao;
-
     private final LogService logService;
 
     public void enviarMensagem(String email) throws JsonProcessingException {
